@@ -9,6 +9,19 @@
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },
+  "repository": {
+      "type": "git",
+      "url": "git+https://github.com/shenoy/vue-scrollama.git"
+  },
+  "keywords": [
+    "vue",
+    "scrollama"
+  ],
+  "author": "Vignesh Shenoy <vignesh.shenoy@gmail.com>",
+  "bugs": {
+      "url": "https://github.com/shenoy/vue-scrollama/issues"
+  },
+  "homepage": "https://github.com/shenoy/vue-scrollama#readme",
   "dependencies": {
     "scrollama": "^1.4.4"
   },
