@@ -1,15 +1,16 @@
 {
   "name": "vue-scrollama",
   "version": "0.1.0",
-  "private": true,
+  "description": "Scroll driven interactions with Vue + Scrollama",
+  "main": "dist/vue-scrollama.common.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --target lib --name vue-scrollama ./src/components/Scrollama.vue",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "vue": "^2.5.17"
+    "scrollama": "^1.4.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.5",
@@ -19,6 +20,7 @@
     "@vue/test-utils": "^1.0.0-beta.20",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
+    "vue": "^2.5.17",
     "vue-template-compiler": "^2.5.17"
   },
   "eslintConfig": {
