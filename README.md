@@ -57,10 +57,10 @@ Add a sticky graphic element if needed into slot with name `graphic`.
 ```html
 <template>
   <Scrollama @step-enter="stepHandler">
-    <div slot="graphic" class="graphic"></div> 
-    <div class="step" data-step="a"></div>
-    <div class="step" data-step="b"></div>
-    <div class="step" data-step="c"></div>
+    <div slot="graphic" class="graphic">...</div> 
+    <div class="step1" data-step="a">...</div>
+    <div class="step2" data-step="b">...</div>
+    <div class="step3" data-step="c">...</div>
   </Scrollama>
 </template>
 ```
@@ -76,24 +76,27 @@ Props passed to the `Scrollama` component will be passed on to [scrollama's setu
 * once
 * debug
 
+```html
+//example with offset
+<template>
+  <Scrollama @step-enter="stepHandler" :offset="0.8">
+      ...
+  </Scrollama>
+</template>
+```
+
 
 ### Multiple instances
 
-If you have multiple `Scrollama` components to be rendered together, pass on `id` as a prop.
+If you have more than one `Scrollama` components rendered at a time, pass on `id` as a prop.
 
 ```html
 <template>
-  <Scrollama @step-enter="firstStepHandler" id="first_scrollama">
-    <div slot="graphic" class="graphic"></div> 
-    <div class="step" data-step="a"></div>
-    <div class="step" data-step="b"></div>
-    <div class="step" data-step="c"></div>
+  <Scrollama @step-enter="stepHandler1" id="scrollama1">
+      ...
   </Scrollama>
-  <Scrollama @step-enter="secondStepHandler" id="second_scrollama">
-    <div slot="graphic" class="graphic"></div> 
-    <div class="step" data-step="x"></div>
-    <div class="step" data-step="y"></div>
-    <div class="step" data-step="z"></div>
+  <Scrollama @step-enter="stepHandler2" id="scrollama2">
+      ...
   </Scrollama>
 </template>
 ```
