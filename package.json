@@ -1,6 +1,6 @@
 {
   "name": "vue-scrollama",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scroll driven interactions with Vue + Scrollama",
   "main": "dist/vue-scrollama.common.js",
   "scripts": {
