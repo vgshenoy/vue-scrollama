@@ -6,13 +6,18 @@
     <div :id="`scroll-steps-${id}`" class="scroll-steps">
       <slot></slot>
     </div>
+    <resize-observer @notify="handleResize"/>
   </div>
 </template>
 
 <script>
-import scrollama from 'scrollama';
+import scrollama from 'scrollama'
+import { ResizeObserver } from 'vue-resize'
 
 export default {
+  components: {
+    ResizeObserver
+  },
   props: {
     id: {
       type: String,
@@ -22,9 +27,9 @@ export default {
       default: 'scrollama'
     }
   },
-  mounted() {
-    this.scroller = scrollama();
-
+  mounted () {
+    this.scroller = scrollama()
+    
     this.scroller
       .setup({
         step: `#scroll-steps-${this.id}>div`,
@@ -33,39 +38,38 @@ export default {
         ...this.$attrs
       })
       .onStepProgress(resp => {
-        this.$emit('progress', resp);
+        this.$emit('step-progress', resp)
       })
       .onStepEnter(resp => {
-        this.$emit('step-enter', resp);
+        this.$emit('step-enter', resp)
       })
       .onStepExit(resp => {
-        this.$emit('step-exit', resp);
+        this.$emit('step-exit', resp)
       })
       .onContainerEnter(resp => {
-        this.$emit('container-enter', resp);
+        this.$emit('container-enter', resp)
       })
       .onContainerExit(resp => {
-        this.$emit('container-exit', resp);
-      });
+        this.$emit('container-exit', resp)
+      })
 
-    this.handleResize();
+    this.handleResize()
   },
   methods: {
-    handleResize() {
-      this.scroller.resize();
+    handleResize () {
+      this.scroller.resize()
     }
   }
 };
 </script>
 
-<style scoped>
+<style>
 .scroll-container {
   position: relative;
 }
 .scroll-graphic {
   position: sticky;
   top: 0;
-  width: 100%;
   z-index: -1;
 }
 </style>
