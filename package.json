@@ -1,6 +1,6 @@
 {
   "name": "vue-scrollama",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Scroll driven interactions with Vue + Scrollama",
   "main": "dist/vue-scrollama.common.js",
   "scripts": {
@@ -26,8 +26,7 @@
   "homepage": "https://github.com/shenoy/vue-scrollama#readme",
   "dependencies": {
     "scrollama": "^1.4.4",
-    "vue-resize": "^0.4.4",
-    "vue-router": "^3.0.1"
+    "vue-resize": "^0.4.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.5",
@@ -38,6 +37,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
     "vue": "^2.5.17",
+    "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.17"
   },
   "eslintConfig": {
