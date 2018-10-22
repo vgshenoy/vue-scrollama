@@ -15,36 +15,43 @@ STATUS: Alpha
 
 ## Getting started
 
-Install the component with npm. Scrollama uses [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) and you'll want to manually add its polyfill `intersection-observer` for cross-browser support.
+Install the component with npm. Scrollama uses [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) under the hood and you'll want to manually add its polyfill `intersection-observer` for cross-browser support.
 
 ```sh
 npm install vue-scrollama intersection-observer
 ```
 
-Import and register a `vue-scrollama` component
+Import and register the `vue-scrollama` component
 
 ```es6
 import 'intersection-observer'
 import Scrollama from 'vue-scrollama'
 
+//register locally in a .vue component
 export default {
   components: {
     Scrollama
   }
 }
+
+//or globally
+Vue.component('Scrollama', Scrollama)
 ```
 
 ## Usage
 
-Put step elements to be triggered on scroll in slots exposed by the Scrollama component.
+Any elements put directly inside the `Scrollama` component will be considered as steps. As the user scrolls, step events will be triggered and emitted that can be handled as required
+
+* [step-enter](https://github.com/russellgoldenberg/scrollama#scrollamaonstepentercallback)
+* [step-exit](https://github.com/russellgoldenberg/scrollama#scrollamaonstepexitcallback)
+* [step-progress](https://github.com/russellgoldenberg/scrollama#scrollamaonstepprogresscallback)
 
 ```html
-// example with three steps
-// adjust height and style of steps using classes
-// when a step is triggered, `step-enter`, `step-exit`, `step-progress` events are emitted when triggered, which can be handled as desired
-// data-* attributes is useful to store instructions for use in a handler like 'stepHandler' in this example
+// example with three divs as steps
+// you can use classes to adjust the height and dimensions of a step
+// data-* attributes are useful to store instructions
 <template>
-  <Scrollama @step-enter="stepHandler">
+  <Scrollama @step-enter="stepEnterHandler" @step-progress="stepProgressHandler">
     <div class="step1" data-step="a">...</div>
     <div class="step2" data-step="b">...</div>
     <div class="step3" data-step="c">...</div>
@@ -55,8 +62,10 @@ Put step elements to be triggered on scroll in slots exposed by the Scrollama co
 ### Sticky Graphic
 Add a sticky graphic element if needed into slot with name `graphic`.
 ```html
+// same example but with a sticky graphic
+// you can use a class to adjust the style and dimensions of the graphic
 <template>
-  <Scrollama @step-enter="stepHandler">
+  <Scrollama @step-enter="stepEnterHandler">
     <div slot="graphic" class="graphic">...</div> 
     <div class="step1" data-step="a">...</div>
     <div class="step2" data-step="b">...</div>
@@ -67,7 +76,7 @@ Add a sticky graphic element if needed into slot with name `graphic`.
 
 ### Scrollama Options
 
-Props passed to the `Scrollama` component will be passed on to [scrollama's setup method](https://github.com/russellgoldenberg/scrollama/blob/master/README.md#api).
+Props passed to the `Scrollama` component will be passed on to scrollama's setup method. Have a look at the options [here](https://github.com/russellgoldenberg/scrollama/blob/master/README.md#api).
 
 * offset
 * progress
@@ -88,7 +97,7 @@ Props passed to the `Scrollama` component will be passed on to [scrollama's setu
 
 ### Multiple instances
 
-If you have more than one `Scrollama` components rendered at a time, pass on `id` as a prop.
+If you have more than one `Scrollama` components rendered at a time, you will need to pass on `id` as a prop.
 
 ```html
 <template>
