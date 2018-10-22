@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --name vue-scrollama ./src/components/Scrollama.vue",
-    "build-examples": "vue-cli-service build --dest examples",
+    "build-examples": "vue-cli-service build --dest docs",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
     "publish": "npm run build && npm publish --access public"
