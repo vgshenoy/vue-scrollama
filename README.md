@@ -45,6 +45,8 @@ Any elements put directly inside the `Scrollama` component will be considered as
 * [step-enter](https://github.com/russellgoldenberg/scrollama#scrollamaonstepentercallback)
 * [step-exit](https://github.com/russellgoldenberg/scrollama#scrollamaonstepexitcallback)
 * [step-progress](https://github.com/russellgoldenberg/scrollama#scrollamaonstepprogresscallback)
+* [container-enter](https://github.com/russellgoldenberg/scrollama#scrollamaoncontainerentercallback)
+* [container-exit](https://github.com/russellgoldenberg/scrollama#scrollamaoncontainerexitcallback)
 
 ```html
 // example with three divs as steps
@@ -76,7 +78,7 @@ Add a sticky graphic element if needed into slot with name `graphic`.
 
 ### Scrollama Options
 
-Props passed to the `Scrollama` component will be passed on to scrollama's setup method. Have a look at the options [here](https://github.com/russellgoldenberg/scrollama/blob/master/README.md#api).
+Props passed to the `Scrollama` component will be passed on to scrollama's setup method as documented here [here](https://github.com/russellgoldenberg/scrollama/blob/master/README.md#api).
 
 * offset
 * progress
