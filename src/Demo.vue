@@ -2,19 +2,21 @@
   <div id="app">
     <h1>vue-scrollama</h1>
     <h3>Demo</h3>
-    <div class="intro">
+    
+    <section class="section intro">
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex ipsam veritatis cupiditate voluptatibus quidem hic tenetur, suscipit sed cumque neque.</p>
+      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsum sed quidem enim nesciunt in sint, commodi id cumque odit ipsam sapiente, atque natus modi inventore alias. Consequatur doloribus debitis eos, vero vitae eveniet sapiente et alias incidunt enim sed natus ex accusamus quo temporibus quaerat porro hic officia voluptate obcaecati. Eos saepe vero totam, atque alias corrupti magnam voluptatibus quaerat!</p>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut qui molestiae modi vitae perferendis neque nostrum repellat, voluptatibus temporibus officiis fuga nemo alias sint pariatur numquam explicabo sit sed tempore architecto, dicta eaque laboriosam veritatis? Praesentium natus illum voluptas porro?</p>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut qui molestiae modi vitae perferendis neque nostrum repellat, voluptatibus temporibus officiis fuga nemo alias sint pariatur numquam explicabo sit sed tempore architecto, dicta eaque laboriosam veritatis? Praesentium natus illum voluptas porro?</p>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut qui molestiae modi vitae perferendis neque nostrum repellat, voluptatibus temporibus officiis fuga nemo alias sint pariatur numquam explicabo sit sed tempore architecto, dicta eaque laboriosam veritatis? Praesentium natus illum voluptas porro?</p>
-    </div>
-    <Scrollama @step-enter="stepHandler">
+    </section>
+
+    <Scrollama @step-enter="stepHandler" :debug="true">
       <!-- optional graphic slot here -->
       <div slot="graphic">
         <div class="graphic">
           {{currStep || 'Current step no appears here'}}
         </div>
       </div>
-      <!-- rest of the slots are considered steps -->
+      <!-- rest of the elements are considered as steps -->
       <div class="step" data-step-no="1">
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate praesentium asperiores ad. Libero id officia nisi fugit, non amet deserunt consectetur iusto dicta quia, reprehenderit minus maiores ad. Officia, explicabo?</p>
       </div>
@@ -28,11 +30,16 @@
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate praesentium asperiores ad. Libero id officia nisi fugit, non amet deserunt consectetur iusto dicta quia, reprehenderit minus maiores ad. Officia, explicabo?</p>
       </div>
     </Scrollama>
-    <div class="outro">
+    
+    <section class="section outro">
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex ipsam veritatis cupiditate voluptatibus quidem hic tenetur, suscipit sed cumque neque.</p>
+      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsum sed quidem enim nesciunt in sint, commodi id cumque odit ipsam sapiente, atque natus modi inventore alias. Consequatur doloribus debitis eos, vero vitae eveniet sapiente et alias incidunt enim sed natus ex accusamus quo temporibus quaerat porro hic officia voluptate obcaecati. Eos saepe vero totam, atque alias corrupti magnam voluptatibus quaerat!</p>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut qui molestiae modi vitae perferendis neque nostrum repellat, voluptatibus temporibus officiis fuga nemo alias sint pariatur numquam explicabo sit sed tempore architecto, dicta eaque laboriosam veritatis? Praesentium natus illum voluptas porro?</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex ipsam veritatis cupiditate voluptatibus quidem hic tenetur, suscipit sed cumque neque.</p>
+      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsum sed quidem enim nesciunt in sint, commodi id cumque odit ipsam sapiente, atque natus modi inventore alias. Consequatur doloribus debitis eos, vero vitae eveniet sapiente et alias incidunt enim sed natus ex accusamus quo temporibus quaerat porro hic officia voluptate obcaecati. Eos saepe vero totam, atque alias corrupti magnam voluptatibus quaerat!</p>
       <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut qui molestiae modi vitae perferendis neque nostrum repellat, voluptatibus temporibus officiis fuga nemo alias sint pariatur numquam explicabo sit sed tempore architecto, dicta eaque laboriosam veritatis? Praesentium natus illum voluptas porro?</p>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut qui molestiae modi vitae perferendis neque nostrum repellat, voluptatibus temporibus officiis fuga nemo alias sint pariatur numquam explicabo sit sed tempore architecto, dicta eaque laboriosam veritatis? Praesentium natus illum voluptas porro?</p>
-    </div>
+    </section>
+
   </div>
 </template>
 
@@ -50,8 +57,9 @@ export default {
     }
   },
   methods: {
-    stepHandler(e) {
-      this.currStep = e.element.dataset.stepNo
+    stepHandler({element, direction, index}) {
+      console.log(element, direction, index)
+      this.currStep = element.dataset.stepNo
     }
   }
 }
@@ -61,6 +69,13 @@ export default {
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 20px;
+  margin: 0;
+  padding: 0;
+}
+.section {
+  width: 90%;
+  max-width: 800px;
+  margin: 5rem auto;
   text-align: center;
 }
 .graphic {
@@ -74,12 +89,14 @@ body {
   font-size: 3rem;
 }
 .step {
+  padding-bottom: 50vh;
+}
+.step p {
   padding: 1rem;
   width: 60%;
   max-width: 50rem;
   margin: auto;
   background-color: #FFF;
   border: 1px solid #EEE;
-  margin-bottom: 50vh;
 }
 </style>
