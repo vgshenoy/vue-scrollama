@@ -1,6 +1,6 @@
 <template>
   <div :id="`scroll-container-${id}`" class="scroll-container">
-    <div :id="`scroll-graphic-${id}`" class="scroll-graphic">
+    <div :id="`scroll-graphic-${id}`" class="scroll-graphic" ref="scroll-graphic">
       <slot name="graphic"></slot>
     </div>
     <div :id="`scroll-steps-${id}`" class="scroll-steps">
@@ -13,6 +13,7 @@
 <script>
 import scrollama from 'scrollama'
 import { ResizeObserver } from 'vue-resize'
+import Stickyfill from 'stickyfilljs' 
 
 export default {
   components: {
@@ -28,8 +29,10 @@ export default {
     }
   },
   mounted () {
+    // polyfill for CSS position sticky
+    Stickyfill.add(this.$refs['scroll-graphic'])
+
     this.scroller = scrollama()
-    
     this.scroller
       .setup({
         step: `#scroll-steps-${this.id}>div`,
