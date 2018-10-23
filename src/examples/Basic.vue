@@ -13,9 +13,10 @@
 
 <script>
 
+// polyfill for IntersectionObserver
+import 'intersection-observer'
+// NOTE: In your projects, replace this import with import via npm like this: import Scrollama from 'vue-scrollama'
 import Scrollama from '../components/Scrollama.vue' 
-// NOTE: In your projects, import from npm like below
-// import Scrollama from 'vue-scrollama'
 
 export default {
   components: {
