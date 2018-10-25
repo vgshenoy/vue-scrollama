@@ -18,7 +18,10 @@
   },
   "keywords": [
     "vue",
-    "scrollama"
+    "scrollama",
+    "scroll",
+    "scroll-driven",
+    "scrollytelling"
   ],
   "author": "Vignesh Shenoy <vignesh.shenoy@gmail.com>",
   "bugs": {
