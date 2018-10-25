@@ -10,7 +10,7 @@
     "test:unit": "vue-cli-service test:unit",
     "publish": "npm run build && npm publish --access public",
     "build-examples": "vue-cli-service build --dest docs",
-    "publish-examples": "npm run build-examples && cp now.json docs/ && cd docs/ && now && now alias"
+    "publish-examples": "npm run build-examples && cp now.json docs/ && cd docs/ && now && now alias && rm -rf now.json"
   },
   "repository": {
     "type": "git",
