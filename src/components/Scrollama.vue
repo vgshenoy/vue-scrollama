@@ -73,6 +73,8 @@ export default {
 .scroll-graphic {
   position: sticky;
   top: 0;
-  z-index: -1;
+}
+.scroll-steps {
+  position: relative;
 }
 </style>
