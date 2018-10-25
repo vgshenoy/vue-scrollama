@@ -13,34 +13,16 @@ A Vue component to easily setup scroll-driven interactions (aka scrollytelling) 
 
 STATUS: Alpha
 
-## Getting started
+## Installation
 
-Install the component with npm. Scrollama uses [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) under the hood and you'll want to manually add its polyfill `intersection-observer` for cross-browser support.
+Install with npm. Scrollama uses [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) under the hood and you'll want to manually add its polyfill `intersection-observer` for cross-browser support.
 
 ```sh
 npm install vue-scrollama intersection-observer
 ```
-
-Import and register the `vue-scrollama` component
-
-```es6
-import 'intersection-observer'
-import Scrollama from 'vue-scrollama'
-
-//register locally in a .vue component
-export default {
-  components: {
-    Scrollama
-  }
-}
-
-//or globally
-Vue.component('Scrollama', Scrollama)
-```
-
 ## Usage
 
-Any elements put directly inside the `Scrollama` component will be considered as steps. As the user scrolls, step events will be triggered and emitted that can be handled as required
+Any elements placed directly inside a `Scrollama` component will be considered as steps. As the user scrolls, the following step events will be triggered and emitted:
 
 * [step-enter](https://github.com/russellgoldenberg/scrollama#scrollamaonstepentercallback)
 * [step-exit](https://github.com/russellgoldenberg/scrollama#scrollamaonstepexitcallback)
@@ -49,20 +31,39 @@ Any elements put directly inside the `Scrollama` component will be considered as
 * [container-exit](https://github.com/russellgoldenberg/scrollama#scrollamaoncontainerexitcallback)
 
 ```html
-// example with three divs as steps
+// example with three divs as steps and a 'step-enter' event handler
 // you can use classes to adjust the height and dimensions of a step
 // data-* attributes are useful to store instructions
 <template>
-  <Scrollama @step-enter="stepEnterHandler" @step-progress="stepProgressHandler">
+  <Scrollama @step-enter="stepEnterHandler">
     <div class="step1" data-step="a">...</div>
     <div class="step2" data-step="b">...</div>
     <div class="step3" data-step="c">...</div>
   </Scrollama>
 </template>
+
+<script>
+import 'intersection-observer' // for cross-browser support
+import Scrollama from 'vue-scrollama'
+
+export default {
+  components: {
+    Scrollama
+  },
+  methods: {
+    stepEnterHandler ({element, index, direction}) {
+      // handle the step-event as required here
+      console.log(element, index, direction)
+    }
+  }
+}
+
 ```
 
+
+
 ### Sticky Graphic
-Add a sticky graphic element if needed into slot with name `graphic`.
+To add a sticky graphic element, place it into a slot with name 'graphic'.
 ```html
 // same example but with a sticky graphic
 // you can use a class to adjust the style and dimensions of the graphic
@@ -78,7 +79,7 @@ Add a sticky graphic element if needed into slot with name `graphic`.
 
 ### Scrollama Options
 
-Props passed to the `Scrollama` component will be passed on to scrollama's setup method as documented here [here](https://github.com/russellgoldenberg/scrollama/blob/master/README.md#api).
+Props passed to the `Scrollama` component will be passed on to scrollama's setup method as documented [here](https://github.com/russellgoldenberg/scrollama/blob/master/README.md#api).
 
 * offset
 * progress
@@ -88,7 +89,7 @@ Props passed to the `Scrollama` component will be passed on to scrollama's setup
 * debug
 
 ```html
-//example with offset
+// example with offset option
 <template>
   <Scrollama @step-enter="stepHandler" :offset="0.8">
       ...
