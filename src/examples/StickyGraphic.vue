@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <Scrollama :debug="true" @step-enter="stepEnterHandler">
       <div slot="graphic" class="graphic">
         <p>{{currStepId}}</p>
@@ -18,7 +18,7 @@
 
 // polyfill for IntersectionObserver
 import 'intersection-observer'
-// NOTE: In your projects, replace this import with import via npm like this: import Scrollama from 'vue-scrollama'
+// NOTE: In your projects, import Scrollama from 'vue-srollama'
 import Scrollama from '../components/Scrollama.vue' 
 
 

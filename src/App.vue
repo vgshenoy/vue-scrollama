@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <h4><a href="https://github.com/shenoy/vue-scrollama">Vue-Scrollama</a></h4>
-    <h2>Examples</h2>
-    <div id="nav">
-      <router-link to="/basic">Basic</router-link>
-      <router-link to="/progress">Progress</router-link>
-      <router-link to="/stickygraphic">Sticky-Graphic</router-link>
-    </div>
+    <header>
+      <h2><a href="https://github.com/shenoy/vue-scrollama" target="_blank">Vue-Scrollama</a></h2>
+      <p>A Vue component to easily create scroll-driven interactions (aka scrollytelling). Uses <a href="https://github.com/russellgoldenberg/scrollama" target="_blank">Scrollama</a> under the hood.</p>
+      <p>Documentation <a href="https://github.com/shenoy/vue-scrollama/" target="_blank">here</a> and source code for the examples below <a href="https://github.com/shenoy/vue-scrollama/tree/master/src/examples" target="_blank">here</a>.</p>
+      <div id="nav">
+        <router-link to="/basic">Basic</router-link>
+        <router-link to="/progress">Progress</router-link>
+        <router-link to="/stickygraphic">Sticky-Graphic</router-link>
+      </div>
+    </header>
     <router-view/>
   </div>
 </template>
@@ -22,10 +25,14 @@ body {
 #app {
   padding-bottom: 100vh;
 }
+header {
+  max-width: 40rem;
+  margin: 0 auto;
+}
 #nav {
   width: 80%;
   max-width: 40rem;
-  margin: 1rem auto;
+  margin: 2rem auto;
   padding-bottom: 40vh;
   display: flex;
   justify-content: center;
@@ -33,8 +40,11 @@ body {
 #nav a {
   padding: 1rem;
   text-decoration: none;
+  text-transform: uppercase;
 }
 #nav a.router-link-active {
-  text-decoration: underline;
+  background-color: #666;
+  color: #FFF;
+  border-radius: 3px;
 }
 </style>

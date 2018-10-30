@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <Scrollama :debug="true" @step-enter="stepEnterHandler" @step-exit="stepExitHandler">
       <div 
         v-for="step in steps" :key="step.no"
@@ -15,7 +15,7 @@
 
 // polyfill for IntersectionObserver
 import 'intersection-observer'
-// NOTE: In your projects, replace this import with import via npm like this: import Scrollama from 'vue-scrollama'
+// NOTE: In your projects, import Scrollama from 'vue-srollama'
 import Scrollama from '../components/Scrollama.vue' 
 
 export default {

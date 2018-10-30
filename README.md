@@ -9,20 +9,20 @@
     </a>
 </p>
 
-A Vue component to easily setup scroll-driven interactions (aka scrollytelling) using [Scrollama](https://github.com/russellgoldenberg/scrollama).
+A Vue component to easily setup scroll-driven interactions (aka scrollytelling). Uses [Scrollama](https://github.com/russellgoldenberg/scrollama) under the hood.
 
-STATUS: Alpha
+[Live Demo](https://vue-scrollama.now.sh)
 
 ## Installation
-
-Install with npm. Scrollama uses [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) under the hood and you'll want to manually add its polyfill `intersection-observer` for cross-browser support.
 
 ```sh
 npm install vue-scrollama intersection-observer
 ```
-## Usage
+Scrollama makes use of [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) and you'll want to manually add its polyfill `intersection-observer` for cross-browser support.
 
-Any elements placed directly inside a `Scrollama` component will be considered as steps. As the user scrolls, the following step events will be triggered and emitted:
+## Basic Usage
+
+Any elements placed directly inside a `Scrollama` component will be considered as steps. As the user scrolls, step events will be triggered and emitted which you can handle as required.
 
 * [step-enter](https://github.com/russellgoldenberg/scrollama#scrollamaonstepentercallback)
 * [step-exit](https://github.com/russellgoldenberg/scrollama#scrollamaonstepexitcallback)
@@ -30,10 +30,11 @@ Any elements placed directly inside a `Scrollama` component will be considered a
 * [container-enter](https://github.com/russellgoldenberg/scrollama#scrollamaoncontainerentercallback)
 * [container-exit](https://github.com/russellgoldenberg/scrollama#scrollamaoncontainerexitcallback)
 
+Here's a simple example with three `<div>` elements as steps and a `step-enter` event
+
 ```html
-// example with three divs as steps and a 'step-enter' event handler
-// you can use classes to adjust the height and dimensions of a step
-// data-* attributes are useful to store instructions
+// classes are helpful to adjust the style and dimensions of a step
+// data-* attributes are useful to store instructions to be used in handlers
 <template>
   <Scrollama @step-enter="stepEnterHandler">
     <div class="step1" data-step="a">...</div>
@@ -61,12 +62,11 @@ export default {
 ```
 
 
-
 ### Sticky Graphic
-To add a sticky graphic element, place it into a slot with name 'graphic'.
+To add a sticky graphic element to the mix ([example](https://vue-scrollama.now.sh/#/stickygraphic)), place it into a slot with name 'graphic'.
+
 ```html
-// same example but with a sticky graphic
-// you can use a class to adjust the style and dimensions of the graphic
+// classes are helpful to adjust the style and dimensions of the graphic
 <template>
   <Scrollama @step-enter="stepEnterHandler">
     <div slot="graphic" class="graphic">...</div> 
