@@ -1,5 +1,5 @@
 <template>
-  <div :id="`scroll-container-${id}`" class="scroll-container">
+  <div :id="`scroll-container-${id}`" class="scroll-container" :class="{'with-graphic': $slots.graphic}">
     <div :id="`scroll-graphic-${id}`" class="scroll-graphic" ref="scroll-graphic">
       <slot name="graphic"></slot>
     </div>
@@ -79,5 +79,8 @@ export default {
 }
 .scroll-steps {
   position: relative;
+}
+.with-graphic .scroll-steps {
+  pointer-events: none;
 }
 </style>
