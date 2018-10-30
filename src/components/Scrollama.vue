@@ -13,7 +13,9 @@
 <script>
 import scrollama from 'scrollama'
 import { ResizeObserver } from 'vue-resize'
+import 'vue-resize/dist/vue-resize.css'
 import Stickyfill from 'stickyfilljs' 
+
 
 export default {
   components: {
@@ -67,7 +69,6 @@ export default {
 </script>
 
 <style scoped>
-@import 'vue-resize/dist/vue-resize.css';
 
 .scroll-container {
   position: relative;
