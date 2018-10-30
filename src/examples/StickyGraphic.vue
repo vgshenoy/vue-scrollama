@@ -60,7 +60,6 @@ export default {
 }
 .graphic {
   position: absolute;
-  /* transform: translateY(-50%); */
   right: 0;
   margin: 0 2.5vw;
   width: 60vw;
@@ -72,7 +71,5 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: 5rem;
-}
-.graphic p {
 }
 </style>
