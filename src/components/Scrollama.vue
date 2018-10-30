@@ -66,7 +66,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+@import 'vue-resize/dist/vue-resize.css';
+
 .scroll-container {
   position: relative;
 }
