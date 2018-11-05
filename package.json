@@ -1,16 +1,12 @@
 {
   "name": "vue-scrollama",
-  "version": "1.0.1",
-  "description": "Easy scroll driven interactions (aka scrollytelling) with Vue + Scrollama",
-  "main": "dist/vue-scrollama.common.js",
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name vue-scrollama ./src/components/Scrollama.vue",
-    "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
-    "publish": "npm run build && npm publish --access public",
-    "build-examples": "vue-cli-service build --dest docs",
-    "publish-examples": "npm run build-examples && cp now.json docs/ && cd docs/ && now --public && now alias && rm -rf now.json && cd .. && rm -rf docs/"
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/vue-scrollama.umd.js",
+  "module": "dist/vue-scrollama.esm.js",
+  "unpkg": "dist/vue-scrollama.min.js",
+  "browser": {
+    "./sfc": "src/vue-scrollama.vue"
   },
   "repository": {
     "type": "git",
@@ -27,70 +23,28 @@
   "bugs": {
     "url": "https://github.com/shenoy/vue-scrollama/issues"
   },
-  "homepage": "https://github.com/shenoy/vue-scrollama#readme",
+  "license": "MIT",
+  "scripts": {
+    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/vue-scrollama.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/vue-scrollama.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/vue-scrollama.min.js",
+    "publish": "npm run build && npm publish --access public"
+  },
   "dependencies": {
     "scrollama": "^1.4.4",
     "stickyfilljs": "^2.1.0",
     "vue-resize": "^0.4.4"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.5",
-    "@vue/cli-plugin-eslint": "^3.0.5",
-    "@vue/cli-plugin-unit-jest": "^3.0.5",
-    "@vue/cli-service": "^3.0.5",
-    "@vue/test-utils": "^1.0.0-beta.20",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^23.0.1",
-    "intersection-observer": "^0.5.1",
-    "vue": "^2.5.17",
-    "vue-router": "^3.0.1",
+    "@babel/core": "^7.1.2",
+    "minimist": "^1.2.0",
+    "rollup": "^0.66.2",
+    "rollup-plugin-buble": "^0.19.2",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-uglify-es": "0.0.1",
+    "rollup-plugin-vue": "^4.3.0",
     "vue-template-compiler": "^2.5.17"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ],
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json",
-      "vue"
-    ],
-    "transform": {
-      "^.+\\.vue$": "vue-jest",
-      ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
-      "^.+\\.jsx?$": "babel-jest"
-    },
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    },
-    "snapshotSerializers": [
-      "jest-serializer-vue"
-    ],
-    "testMatch": [
-      "**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
-    ],
-    "testURL": "http://localhost/"
   }
 }
