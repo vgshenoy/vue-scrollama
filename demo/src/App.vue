@@ -3,7 +3,7 @@
     <header>
       <h2><a href="https://github.com/shenoy/vue-scrollama" target="_blank">Vue-Scrollama</a></h2>
       <p>A Vue component to easily create scroll-driven interactions (aka scrollytelling). Uses <a href="https://github.com/russellgoldenberg/scrollama" target="_blank">Scrollama</a> under the hood.</p>
-      <p>Documentation <a href="https://github.com/shenoy/vue-scrollama/" target="_blank">here</a> and source code for the examples below <a href="https://github.com/shenoy/vue-scrollama/tree/master/src/examples" target="_blank">here</a>.</p>
+      <p>Documentation <a href="https://github.com/shenoy/vue-scrollama/" target="_blank">here</a> and source code for the examples below <a href="https://github.com/shenoy/vue-scrollama/tree/master/demo/src/views/" target="_blank">here</a>.</p>
       <div id="nav">
         <router-link to="/basic">Basic</router-link>
         <router-link to="/progress">Progress</router-link>

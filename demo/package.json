@@ -1,0 +1,21 @@
+{
+  "name": "examples",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "publish": "npm run build && cp now.json dist/ && cd dist/ && now --public && now alias"
+  },
+  "dependencies": {
+    "intersection-observer": "^0.5.1",
+    "vue": "^2.5.17",
+    "vue-router": "^3.0.1",
+    "vue-scrollama": "^1.0.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.5",
+    "@vue/cli-service": "^3.0.5",
+    "vue-template-compiler": "^2.5.17"
+  }
+}
