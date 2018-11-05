@@ -1,6 +1,6 @@
 {
   "name": "vue-scrollama",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/vue-scrollama.umd.js",
   "module": "dist/vue-scrollama.esm.js",
