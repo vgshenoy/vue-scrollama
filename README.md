@@ -96,19 +96,3 @@ Props passed to the `Scrollama` component will be passed on to scrollama's setup
   </Scrollama>
 </template>
 ```
-
-
-### Multiple instances
-
-If you have more than one `Scrollama` components rendered at a time, you will need to pass on `id` as a prop.
-
-```html
-<template>
-  <Scrollama @step-enter="stepHandler1" id="scrollama1">
-      ...
-  </Scrollama>
-  <Scrollama @step-enter="stepHandler2" id="scrollama2">
-      ...
-  </Scrollama>
-</template>
-```

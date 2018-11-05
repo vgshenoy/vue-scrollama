@@ -1,11 +1,11 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from "vue"
+import Router from "vue-router"
 
-import Basic from './examples/Basic'
-import Progress from './examples/Progress'
-import StickyGraphic from './examples/StickyGraphic'
+import Basic from './views/Basic'
+import Progress from './views/Progress'
+import StickyGraphic from './views/StickyGraphic'
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
   routes: [
@@ -26,4 +26,4 @@ export default new Router({
       component: StickyGraphic
     }
   ]
-});
+})
