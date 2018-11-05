@@ -1,13 +1,10 @@
 {
   "name": "vue-scrollama",
   "version": "1.0.2",
-  "description": "",
+  "description": "Easy scroll driven interactions (aka scrollytelling) with Vue + Scrollama",
   "main": "dist/vue-scrollama.umd.js",
   "module": "dist/vue-scrollama.esm.js",
   "unpkg": "dist/vue-scrollama.min.js",
-  "browser": {
-    "./sfc": "src/vue-scrollama.vue"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shenoy/vue-scrollama.git"
