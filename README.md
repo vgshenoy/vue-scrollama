@@ -11,7 +11,9 @@
 
 A Vue component to easily setup scroll-driven interactions (aka scrollytelling). Uses [Scrollama](https://github.com/russellgoldenberg/scrollama) under the hood.
 
-[Live Demo](https://vue-scrollama.now.sh)
+* [Live Demo](https://vue-scrollama.now.sh)
+
+* CodeSandbox ([Basic](https://codesandbox.io/s/5kn98j4w74), [Sticky Graphic 1](https://codesandbox.io/s/j3oy2k6lxv), [Sticky Graphic 2](https://codesandbox.io/s/jznvyjpr9w))
 
 ## Installation
 
@@ -96,3 +98,5 @@ Props passed to the `Scrollama` component will be passed on to scrollama's setup
   </Scrollama>
 </template>
 ```
+
+
