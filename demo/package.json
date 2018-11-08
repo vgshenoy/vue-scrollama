@@ -11,7 +11,7 @@
     "intersection-observer": "^0.5.1",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
-    "vue-scrollama": "^1.0.2"
+    "vue-scrollama": "^1.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.5",

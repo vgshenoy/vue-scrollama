@@ -3,7 +3,8 @@ import Router from "vue-router"
 
 import Basic from './views/Basic'
 import Progress from './views/Progress'
-import StickyGraphic from './views/StickyGraphic'
+import StickyGraphic1 from './views/StickyGraphic1'
+import StickyGraphic2 from './views/StickyGraphic2'
 
 Vue.use(Router)
 
@@ -22,8 +23,12 @@ export default new Router({
       component: Progress
     },
     {
-      path: '/stickygraphic',
-      component: StickyGraphic
+      path: '/stickygraphic1',
+      component: StickyGraphic1
+    },
+    {
+      path: '/stickygraphic2',
+      component: StickyGraphic2
     }
   ]
 })
