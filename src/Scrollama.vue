@@ -1,18 +1,19 @@
 <template>
-  <div :id="`scroll-container-${id}`" class="scroll-container" :class="{'with-graphic': $slots.graphic}">
-    <div :id="`scroll-graphic-${id}`" class="scroll-graphic" ref="scroll-graphic">
+  <div :id="`scrollama-container-${id}`" class="scrollama-container" :class="{'with-graphic': $slots.graphic}">
+    <div :id="`scrollama-graphic-${id}`" class="scrollama-graphic" ref="scrollama-graphic">
       <slot name="graphic"></slot>
     </div>
-    <div :id="`scroll-steps-${id}`" class="scroll-steps">
+    <div :id="`scrollama-steps-${id}`" class="scrollama-steps">
       <slot></slot>
     </div>
-    <resize-observer class="vue-scrollama-resize-observer" @notify="handleResize"/>
+    <resize-observer @notify="handleResize"/>
   </div>
 </template>
 
 <script>
 import scrollama from 'scrollama'
 import { ResizeObserver } from 'vue-resize'
+import 'vue-resize/dist/vue-resize.css'
 import Stickyfill from 'stickyfilljs' 
 
 
@@ -28,20 +29,20 @@ export default {
         return !/\s/.test(value);
       },
       default: () => {
-        return '_' + Math.random().toString(36).substr(2, 9)
+        return Math.random().toString(36).substr(2, 9)
       }
     }
   },
   mounted () {
     // polyfill for CSS position sticky
-    Stickyfill.add(this.$refs['scroll-graphic'])
+    Stickyfill.add(this.$refs['scrollama-graphic'])
 
     this.scroller = scrollama()
 
     const opts = Object.assign({}, this.$attrs, {
-      step: `#scroll-steps-${this.id}>div`,
-      container: `#scroll-container-${this.id}`,
-      graphic: `#scroll-graphic-${this.id}`,
+      step: `#scrollama-steps-${this.id}>div`,
+      container: `#scrollama-container-${this.id}`,
+      graphic: `#scrollama-graphic-${this.id}`,
     })
 
     this.scroller.setup(opts)
@@ -86,32 +87,17 @@ export default {
 };
 </script>
 
-<style scoped>
-.scroll-container {
+<style>
+.scrollama-container {
   position: relative;
 }
-.scroll-graphic {
+
+.scrollama-graphic {
   position: sticky;
   top: 0;
 }
-.scroll-steps {
+
+.scrollama-steps {
   position: relative;
-}
-.with-graphic .scroll-steps {
-  pointer-events: none;
-}
-.vue-scrollama-resize-observer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  pointer-events: none;
-  display: block;
-  overflow: hidden;
-  opacity: 0;
 }
 </style>

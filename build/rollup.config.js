@@ -5,6 +5,7 @@ import uglify from 'rollup-plugin-uglify-es';
 import minimist from 'minimist';
 import resolve from 'rollup-plugin-node-resolve';
 import cjs from 'rollup-plugin-commonjs'
+import css from 'rollup-plugin-css-only'
 
 const argv = minimist(process.argv.slice(2));
 
@@ -22,7 +23,8 @@ const config = {
     cjs({
       include: 'node_modules/**',
     }),
-    vue(),
+    css({ output: 'dist/vue-scrollama.css' }),
+    vue({ css: false }),
     buble()
   ],
 };

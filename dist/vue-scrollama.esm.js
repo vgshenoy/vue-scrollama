@@ -1462,14 +1462,14 @@ var script = {
     var this$1 = this;
 
     // polyfill for CSS position sticky
-    stickyfill.add(this.$refs['scroll-graphic']);
+    stickyfill.add(this.$refs['scrollama-graphic']);
 
     this.scroller = scrollama();
 
     var opts = Object.assign({}, this.$attrs, {
-      step: ("#scroll-steps-" + (this.id) + ">div"),
-      container: ("#scroll-container-" + (this.id)),
-      graphic: ("#scroll-graphic-" + (this.id)),
+      step: ("#scrollama-steps-" + (this.id) + ">div"),
+      container: ("#scrollama-container-" + (this.id)),
+      graphic: ("#scrollama-graphic-" + (this.id)),
     });
 
     this.scroller.setup(opts);
@@ -1515,7 +1515,6 @@ var script = {
 
 /* script */
             var __vue_script__ = script;
-            
 /* template */
 var __vue_render__ = function() {
   var _vm = this;
@@ -1524,17 +1523,17 @@ var __vue_render__ = function() {
   return _c(
     "div",
     {
-      staticClass: "scroll-container",
+      staticClass: "scrollama-container",
       class: { "with-graphic": _vm.$slots.graphic },
-      attrs: { id: "scroll-container-" + _vm.id }
+      attrs: { id: "scrollama-container-" + _vm.id }
     },
     [
       _c(
         "div",
         {
-          ref: "scroll-graphic",
-          staticClass: "scroll-graphic",
-          attrs: { id: "scroll-graphic-" + _vm.id }
+          ref: "scrollama-graphic",
+          staticClass: "scrollama-graphic",
+          attrs: { id: "scrollama-graphic-" + _vm.id }
         },
         [_vm._t("graphic")],
         2
@@ -1543,17 +1542,14 @@ var __vue_render__ = function() {
       _c(
         "div",
         {
-          staticClass: "scroll-steps",
-          attrs: { id: "scroll-steps-" + _vm.id }
+          staticClass: "scrollama-steps",
+          attrs: { id: "scrollama-steps-" + _vm.id }
         },
         [_vm._t("default")],
         2
       ),
       _vm._v(" "),
-      _c("resize-observer", {
-        staticClass: "vue-scrollama-resize-observer",
-        on: { notify: _vm.handleResize }
-      })
+      _c("resize-observer", { on: { notify: _vm.handleResize } })
     ],
     1
   )
@@ -1562,13 +1558,9 @@ var __vue_staticRenderFns__ = [];
 __vue_render__._withStripped = true;
 
   /* style */
-  var __vue_inject_styles__ = function (inject) {
-    if (!inject) { return }
-    inject("data-v-6e9cd324_0", { source: "\n.scroll-container[data-v-6e9cd324] {\n  position: relative;\n}\n.scroll-graphic[data-v-6e9cd324] {\n  position: sticky;\n  top: 0;\n}\n.scroll-steps[data-v-6e9cd324] {\n  position: relative;\n}\n.with-graphic .scroll-steps[data-v-6e9cd324] {\n  pointer-events: none;\n}\n.vue-scrollama-resize-observer[data-v-6e9cd324] {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: -1;\n  width: 100%;\n  height: 100%;\n  border: none;\n  background-color: transparent;\n  pointer-events: none;\n  display: block;\n  overflow: hidden;\n  opacity: 0;\n}\n", map: {"version":3,"sources":["/private/var/www/vue-scrollama/src/Scrollama.vue"],"names":[],"mappings":";AAyFA;EACA,mBAAA;CACA;AACA;EACA,iBAAA;EACA,OAAA;CACA;AACA;EACA,mBAAA;CACA;AACA;EACA,qBAAA;CACA;AACA;EACA,mBAAA;EACA,OAAA;EACA,QAAA;EACA,YAAA;EACA,YAAA;EACA,aAAA;EACA,aAAA;EACA,8BAAA;EACA,qBAAA;EACA,eAAA;EACA,iBAAA;EACA,WAAA;CACA","file":"Scrollama.vue","sourcesContent":["<template>\n  <div :id=\"`scroll-container-${id}`\" class=\"scroll-container\" :class=\"{'with-graphic': $slots.graphic}\">\n    <div :id=\"`scroll-graphic-${id}`\" class=\"scroll-graphic\" ref=\"scroll-graphic\">\n      <slot name=\"graphic\"></slot>\n    </div>\n    <div :id=\"`scroll-steps-${id}`\" class=\"scroll-steps\">\n      <slot></slot>\n    </div>\n    <resize-observer class=\"vue-scrollama-resize-observer\" @notify=\"handleResize\"/>\n  </div>\n</template>\n\n<script>\nimport scrollama from 'scrollama'\nimport { ResizeObserver } from 'vue-resize'\nimport Stickyfill from 'stickyfilljs' \n\n\nexport default {\n  name: 'Scrollama',\n  components: {\n    ResizeObserver\n  },\n  props: {\n    id: {\n      type: String,\n      validator: function(value) {\n        return !/\\s/.test(value);\n      },\n      default: () => {\n        return '_' + Math.random().toString(36).substr(2, 9)\n      }\n    }\n  },\n  mounted () {\n    // polyfill for CSS position sticky\n    Stickyfill.add(this.$refs['scroll-graphic'])\n\n    this.scroller = scrollama()\n\n    const opts = Object.assign({}, this.$attrs, {\n      step: `#scroll-steps-${this.id}>div`,\n      container: `#scroll-container-${this.id}`,\n      graphic: `#scroll-graphic-${this.id}`,\n    })\n\n    this.scroller.setup(opts)\n    \n    if(this.$listeners['step-progress']) {\n      this.scroller.onStepProgress(resp => {\n        this.$emit('step-progress', resp)\n      })\n    }\n\n    if(this.$listeners['step-enter']) {\n      this.scroller.onStepEnter(resp => {\n        this.$emit('step-enter', resp)\n      })\n    }\n\n    if(this.$listeners['step-exit']) {\n      this.scroller.onStepExit(resp => {\n        this.$emit('step-exit', resp)\n      })\n    }\n\n    if(this.$listeners['container-enter']) {\n      this.scroller.onContainerEnter(resp => {\n        this.$emit('container-enter', resp)\n      })\n    }\n\n    if(this.$listeners['container-exit']) {\n      this.scroller.onContainerExit(resp => {\n        this.$emit('container-exit', resp)\n      })\n    }\n\n    this.handleResize()\n  },\n  methods: {\n    handleResize () {\n      this.scroller.resize()\n    }\n  }\n};\n</script>\n\n<style scoped>\n.scroll-container {\n  position: relative;\n}\n.scroll-graphic {\n  position: sticky;\n  top: 0;\n}\n.scroll-steps {\n  position: relative;\n}\n.with-graphic .scroll-steps {\n  pointer-events: none;\n}\n.vue-scrollama-resize-observer {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: -1;\n  width: 100%;\n  height: 100%;\n  border: none;\n  background-color: transparent;\n  pointer-events: none;\n  display: block;\n  overflow: hidden;\n  opacity: 0;\n}\n</style>\n"]}, media: undefined });
-
-  };
+  var __vue_inject_styles__ = undefined;
   /* scoped */
-  var __vue_scope_id__ = "data-v-6e9cd324";
+  var __vue_scope_id__ = undefined;
   /* module identifier */
   var __vue_module_identifier__ = undefined;
   /* functional template */
@@ -1594,89 +1586,10 @@ __vue_render__._withStripped = true;
 
     component._scopeId = scope;
 
-    {
-      var hook;
-      if (style) {
-        hook = function(context) {
-          style.call(this, createInjector(context));
-        };
-      }
-
-      if (hook !== undefined) {
-        if (component.functional) {
-          // register for functional component in vue file
-          var originalRender = component.render;
-          component.render = function renderWithStyleInjection(h, context) {
-            hook.call(context);
-            return originalRender(h, context)
-          };
-        } else {
-          // inject component registration as beforeCreate hook
-          var existing = component.beforeCreate;
-          component.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-        }
-      }
-    }
-
     return component
   }
   /* style inject */
-  function __vue_create_injector__() {
-    var head = document.head || document.getElementsByTagName('head')[0];
-    var styles = __vue_create_injector__.styles || (__vue_create_injector__.styles = {});
-    var isOldIE =
-      typeof navigator !== 'undefined' &&
-      /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
-
-    return function addStyle(id, css) {
-      if (document.querySelector('style[data-vue-ssr-id~="' + id + '"]')) { return } // SSR styles are present.
-
-      var group = isOldIE ? css.media || 'default' : id;
-      var style = styles[group] || (styles[group] = { ids: [], parts: [], element: undefined });
-
-      if (!style.ids.includes(id)) {
-        var code = css.source;
-        var index = style.ids.length;
-
-        style.ids.push(id);
-
-        if (isOldIE) {
-          style.element = style.element || document.querySelector('style[data-group=' + group + ']');
-        }
-
-        if (!style.element) {
-          var el = style.element = document.createElement('style');
-          el.type = 'text/css';
-
-          if (css.media) { el.setAttribute('media', css.media); }
-          if (isOldIE) {
-            el.setAttribute('data-group', group);
-            el.setAttribute('data-next-index', '0');
-          }
-
-          head.appendChild(el);
-        }
-
-        if (isOldIE) {
-          index = parseInt(style.element.getAttribute('data-next-index'));
-          style.element.setAttribute('data-next-index', index + 1);
-        }
-
-        if (style.element.styleSheet) {
-          style.parts.push(code);
-          style.element.styleSheet.cssText = style.parts
-            .filter(Boolean)
-            .join('\n');
-        } else {
-          var textNode = document.createTextNode(code);
-          var nodes = style.element.childNodes;
-          if (nodes[index]) { style.element.removeChild(nodes[index]); }
-          if (nodes.length) { style.element.insertBefore(textNode, nodes[index]); }
-          else { style.element.appendChild(textNode); }
-        }
-      }
-    }
-  }
+  
   /* style inject SSR */
   
 
@@ -1688,7 +1601,7 @@ __vue_render__._withStripped = true;
     __vue_scope_id__,
     __vue_is_functional_template__,
     __vue_module_identifier__,
-    __vue_create_injector__,
+    undefined,
     undefined
   );
 
