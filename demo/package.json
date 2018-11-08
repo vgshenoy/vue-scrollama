@@ -5,9 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "publish": "npm run build && cp now.json dist/ && cd dist/ && now --public && now alias"
+    "publish-demo": "npm run build && cp now.json dist/ && cd dist/ && now --public && now alias"
   },
   "dependencies": {
+    "bulma": "^0.7.2",
     "intersection-observer": "^0.5.1",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
