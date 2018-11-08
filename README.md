@@ -61,7 +61,7 @@ export default {
   }
 }
 
-<style src="vue-scrollama/dist/vue-scrollama.csss"></style>
+<style src="vue-scrollama/dist/vue-scrollama.css"></style>
 
 <style>
 /* your styles here */
