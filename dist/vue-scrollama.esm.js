@@ -1454,7 +1454,7 @@ var script = {
         return !/\s/.test(value);
       },
       default: function () {
-        return '_' + Math.random().toString(36).substr(2, 9)
+        return Math.random().toString(36).substr(2, 9)
       }
     }
   },
