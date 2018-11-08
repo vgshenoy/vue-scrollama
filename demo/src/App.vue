@@ -5,9 +5,10 @@
       <p>A Vue component to easily create scroll-driven interactions (aka scrollytelling). Uses <a href="https://github.com/russellgoldenberg/scrollama" target="_blank">Scrollama</a> under the hood.</p>
       <p>Documentation <a href="https://github.com/shenoy/vue-scrollama/" target="_blank">here</a> and source code for the examples below <a href="https://github.com/shenoy/vue-scrollama/tree/master/demo/src/views/" target="_blank">here</a>.</p>
       <div id="nav">
-        <router-link to="/basic">Basic</router-link>
-        <router-link to="/progress">Progress</router-link>
-        <router-link to="/stickygraphic">Sticky-Graphic</router-link>
+        <router-link to="/basic">Basic</router-link> /
+        <router-link to="/progress">Progress</router-link> /
+        <router-link to="/stickygraphic1">Sticky-Graphic 1</router-link> /
+        <router-link to="/stickygraphic2">Sticky-Graphic 2</router-link>
       </div>
     </header>
     <router-view/>
@@ -26,21 +27,18 @@ body {
   padding-bottom: 100vh;
 }
 header {
-  max-width: 40rem;
+  max-width: 60rem;
   margin: 0 auto;
 }
 #nav {
-  width: 80%;
-  max-width: 40rem;
   margin: 2rem auto;
   padding-bottom: 40vh;
-  display: flex;
-  justify-content: center;
 }
 #nav a {
-  padding: 1rem;
+  padding: 0.5rem;
   text-decoration: none;
   text-transform: uppercase;
+  display: inline-block;
 }
 #nav a.router-link-active {
   background-color: #666;

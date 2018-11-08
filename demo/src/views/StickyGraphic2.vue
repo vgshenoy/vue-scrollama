@@ -47,27 +47,43 @@ export default {
 }
 </script>
 
+<style src="vue-scrollama/dist/vue-scrollama.css"></style>
+
+<style>
+/* overrides here */
+.scrollama-container {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.scrollama-graphic {
+  flex: 1;
+  height: 80vh;
+  top: 10vh;;
+}
+.scrollama-steps {
+  flex: 1;
+}
+</style>
+
 <style scoped>
 .step {
-  width: 30vw;
+  width: 80%;
+  max-width: 40rem;
   padding: 10rem 0;
-  margin: 3rem 2.5vw 10rem;
+  margin: 0 3rem 15rem;
   border: 1px solid #333;
+  background-color: white;
   display: flex;
   justify-content: center;
 }
 .step.is-active {
-  background-color: lightgoldenrodyellow;
+  background-color: beige;
 }
 .graphic {
-  position: absolute;
-  right: 0;
-  margin: 0 2.5vw;
-  width: 60vw;
-  top: 25vh;
-  height: 50vh;
+  height: 80vh;
   background-color: #DDD;
   border: 1px solid #333;
+  margin: 0 3rem;
   display: flex;
   align-items: center;
   justify-content: center;

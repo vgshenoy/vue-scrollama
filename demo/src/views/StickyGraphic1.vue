@@ -1,6 +1,9 @@
 <template>
   <div>
-    <Scrollama :debug="true" @step-enter="stepEnterHandler" @step-exit="stepExitHandler">
+    <Scrollama :debug="true" @step-enter="stepEnterHandler">
+      <div slot="graphic" class="graphic">
+        <p>{{currStepId}}</p>
+      </div>
       <div 
         v-for="step in steps" :key="step.no"
         :data-step-id="step.id"
@@ -18,6 +21,7 @@ import 'intersection-observer'
 // NOTE: In your projects, import Scrollama from 'vue-srollama'
 // import Scrollama from '../../../src/Scrollama' 
 import Scrollama from 'vue-scrollama'
+
 
 export default {
   components: {
@@ -38,26 +42,34 @@ export default {
     stepEnterHandler({element, direction, index}) {
       console.log({element, direction, index});
       this.currStepId = element.dataset.stepId
-    },
-    stepExitHandler({element, direction, index}) {
-      console.log({element, direction, index});
-      this.currStepId = null;
     }
   }
 }
 </script>
+
+<style src="vue-scrollama/dist/vue-scrollama.css"></style>
 
 <style scoped>
 .step {
   width: 80%;
   max-width: 40rem;
   padding: 10rem 0;
-  margin: 3rem auto 10rem;
+  margin: 3rem auto 15rem;
   border: 1px solid #333;
+  background-color: white;
   display: flex;
   justify-content: center;
 }
 .step.is-active {
   background-color: beige;
+}
+.graphic {
+  height: 80vh;
+  background-color: #DDD;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
 }
 </style>
