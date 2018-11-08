@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Scrollama :debug="true" @step-enter="stepEnterHandler">
+    <Scrollama :debug="true" @step-enter="stepEnterHandler" id="flexed">
       <div slot="graphic" class="graphic">
         <p>{{currStepId}}</p>
       </div>
@@ -49,19 +49,19 @@ export default {
 
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
 
-<style>
+<style lang="scss">
 /* overrides here */
-.scrollama-container {
+#scrollama-container-flexed {
   display: flex;
   flex-direction: row-reverse;
-}
-.scrollama-graphic {
-  flex: 1;
-  height: 80vh;
-  top: 10vh;;
-}
-.scrollama-steps {
-  flex: 1;
+  .scrollama-graphic {
+    flex: 1;
+    height: 80vh;
+    top: 10vh;;
+  }
+  .scrollama-steps {
+    flex: 1;
+  }
 }
 </style>
 

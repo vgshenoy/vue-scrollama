@@ -54,7 +54,7 @@ export default {
   width: 80%;
   max-width: 40rem;
   padding: 10rem 0;
-  margin: 3rem auto 15rem;
+  margin: 0 auto 15rem;
   border: 1px solid #333;
   background-color: white;
   display: flex;
@@ -68,6 +68,7 @@ export default {
   background-color: #DDD;
   border: 1px solid #333;
   display: flex;
+  margin: 0 3rem;
   align-items: center;
   justify-content: center;
   font-size: 5rem;
