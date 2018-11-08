@@ -1,48 +1,66 @@
 <template>
   <div id="app">
-    <header>
-      <h2><a href="https://github.com/shenoy/vue-scrollama" target="_blank">Vue-Scrollama</a></h2>
-      <p>A Vue component to easily create scroll-driven interactions (aka scrollytelling). Uses <a href="https://github.com/russellgoldenberg/scrollama" target="_blank">Scrollama</a> under the hood.</p>
-      <p>Documentation <a href="https://github.com/shenoy/vue-scrollama/" target="_blank">here</a> and source code for the examples below <a href="https://github.com/shenoy/vue-scrollama/tree/master/demo/src/views/" target="_blank">here</a>.</p>
-      <div id="nav">
-        <router-link to="/basic">Basic</router-link> /
-        <router-link to="/progress">Progress</router-link> /
-        <router-link to="/stickygraphic1">Sticky-Graphic 1</router-link> /
-        <router-link to="/stickygraphic2">Sticky-Graphic 2</router-link>
+    <div class="hero">
+      <div class="hero-body">
+        <div class="container">
+          <div class="title">
+            <a href="https://github.com/shenoy/vue-scrollama" target="_blank">Vue-Scrollama</a>
+          </div>
+          <div class="content">
+            <p>A Vue component to easily create scroll-driven interactions (aka scrollytelling)</p>
+            <p>
+              <a href="https://github.com/shenoy/vue-scrollama#vue-scrollama">Documentation on Github →</a>
+            </p>
+          </div>
+        </div>
       </div>
-    </header>
-    <router-view/>
+    </div>
+    <div class="title is-5">Examples</div>
+    <div class="tabs is-toggle is-centered is-rounded">
+      <ul>
+        <li v-for="r in routes" :key="r.path" :class="{'is-active': r.path == $route.path}">
+          <router-link :to="r.path">{{r.label}}</router-link>
+        </li>
+      </ul>
+    </div>
+    <div class="stage">
+      <router-view/>
+    </div>
   </div>
 </template>
 
-<style>
-body {
+<script>
+export default {
+  data() {
+    return {
+      routes: [
+        {path: '/basic', label: 'Basic'},
+        {path: '/progress', label: 'Progress'},
+        {path: '/stickygraphic1', label: 'Sticky Graphic 1'},
+        {path: '/stickygraphic2', label: 'Sticky Graphic 2'}
+      ]
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+@import '~bulma';
+
+#app {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-size: 18px;
   margin: 0;
-  padding: 0;
   text-align: center;
-}
-#app {
+  padding: 0;
   padding-bottom: 100vh;
 }
-header {
-  max-width: 60rem;
-  margin: 0 auto;
+.stage {
+  margin-top: 30vh;
 }
-#nav {
-  margin: 2rem auto;
-  padding-bottom: 40vh;
-}
-#nav a {
-  padding: 0.5rem;
-  text-decoration: none;
-  text-transform: uppercase;
-  display: inline-block;
-}
-#nav a.router-link-active {
-  background-color: #666;
-  color: #FFF;
-  border-radius: 3px;
+@media (max-width: 500px) {
+  .tabs {
+    font-size: 0.8rem;
+  }
 }
 </style>
