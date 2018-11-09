@@ -8,15 +8,23 @@
           </div>
           <div class="content">
             <p>A Vue component to easily create scroll-driven interactions (aka scrollytelling)</p>
-            <p>
-              <a href="https://github.com/shenoy/vue-scrollama#vue-scrollama">Documentation on Github →</a>
-            </p>
+            <div class="buttons">
+              <a href="https://github.com/shenoy/vue-scrollama#vue-scrollama" class="button is-medium" target="_blank">
+                <span class="icon">
+                  <i class="fab fa-github"></i>
+                </span>
+                <span>Documentation</span>
+              </a>
+              <a href="https://codesandbox.io/search?query=vue-scrollama%20shenoy&page=1&refinementList%5Bnpm_dependencies.dependency%5D%5B0%5D=vue-scrollama" target="_blank">
+                <img src="codesandbox.svg">
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="title is-5">Examples</div>
-    <div class="tabs is-toggle is-centered is-rounded">
+    <div class="title is-4">Examples</div>
+    <div class="tabs is-toggle is-centered">
       <ul>
         <li v-for="r in routes" :key="r.path" :class="{'is-active': r.path == $route.path}">
           <router-link :to="r.path">{{r.label}}</router-link>
@@ -26,6 +34,16 @@
     <div class="stage">
       <router-view/>
     </div>
+    <div class="debug-trigger-line" :style="{'top': triggerTop + 'px'}">
+      <p>OFFSET: {{$store.offset}}</p>
+    </div>
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>vue-scrollama</strong> by <a href="https://vigneshenoy.com">Vignesh Shenoy</a>. License <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+        </p>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -40,11 +58,17 @@ export default {
         {path: '/stickygraphic2', label: 'Sticky Graphic 2'}
       ]
     }
+  },
+  computed: {
+    triggerTop() {
+      return this.$store.offset * window.innerHeight
+    }
   }
 }
 </script>
 
 <style lang="scss">
+@import '~@fortawesome/fontawesome-free/css/all.css';
 @import '~bulma';
 
 #app {
@@ -53,14 +77,39 @@ export default {
   margin: 0;
   text-align: center;
   padding: 0;
-  padding-bottom: 100vh;
+}
+.footer {
+  margin-top: 100vh;
 }
 .stage {
-  margin-top: 30vh;
+  margin-top: 35vh;
+}
+.debug-trigger-line {
+  position: fixed;
+  left: 0px;
+  width: 100%;
+  height: 0px;
+  border-top: 2px dashed black;
+  z-index: 9999;
+  p {
+    text-align: left;
+    font-size: 12px;
+    font-family: monospace;
+    color: black;
+    margin: 0px;
+    padding: 6px;
+  }
+}
+.buttons {
+  display: flex;
+  justify-content: center;
 }
 @media (max-width: 500px) {
+  #app {
+    font-size: 14px;
+  }
   .tabs {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
   }
 }
 </style>

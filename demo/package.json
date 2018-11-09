@@ -8,9 +8,11 @@
     "publish-demo": "npm run build && cp now.json dist/ && cd dist/ && now --public && now alias"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.5.0",
     "bulma": "^0.7.2",
     "intersection-observer": "^0.5.1",
     "vue": "^2.5.17",
+    "vue-analytics": "^5.16.0",
     "vue-router": "^3.0.1",
     "vue-scrollama": "^1.1.0"
   },

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Scrollama :debug="true" :progress="true" @step-progress="stepProgressHandler">
+    <Scrollama :offset="$store.offset" :progress="true" @step-progress="stepProgressHandler">
       <div 
         v-for="step in steps" :key="step.no"
         :data-step-id="step.id"
@@ -18,7 +18,6 @@
 
 // polyfill for IntersectionObserver
 import 'intersection-observer'
-// NOTE: In your projects, import Scrollama from 'vue-srollama'
 // import Scrollama from '../../../src/Scrollama' 
 import Scrollama from 'vue-scrollama'
 
