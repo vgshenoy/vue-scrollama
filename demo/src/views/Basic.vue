@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Scrollama :debug="true" @step-enter="stepEnterHandler" @step-exit="stepExitHandler">
+    <Scrollama :offset="$store.offset" @step-enter="stepEnterHandler" @step-exit="stepExitHandler">
       <div 
         v-for="step in steps" :key="step.no"
         :data-step-id="step.id"

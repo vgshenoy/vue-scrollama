@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Scrollama :debug="true" @step-enter="stepEnterHandler" id="flexed">
+    <Scrollama :offset="$store.offset" @step-enter="stepEnterHandler" id="flexed">
       <div slot="graphic" class="graphic">
         <p>{{currStepId}}</p>
       </div>
@@ -18,7 +18,6 @@
 
 // polyfill for IntersectionObserver
 import 'intersection-observer'
-// NOTE: In your projects, import Scrollama from 'vue-srollama'
 // import Scrollama from '../../../src/Scrollama' 
 import Scrollama from 'vue-scrollama'
 
@@ -50,8 +49,8 @@ export default {
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
 
 <style lang="scss">
-/* overrides here */
-#scrollama-container-flexed {
+// overrides here
+#scrollama-container-flexed {  // id="flexed" passed as prop to Scrollama in template
   display: flex;
   flex-direction: row-reverse;
   .scrollama-graphic {

@@ -2,7 +2,9 @@ module.exports = {
   css: {
     loaderOptions: {
       postcss: {
-        path: '/examples/'
+        config: {
+          path: './'
+        }
       }
     }
   }

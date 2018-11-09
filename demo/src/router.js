@@ -6,9 +6,11 @@ import Progress from './views/Progress'
 import StickyGraphic1 from './views/StickyGraphic1'
 import StickyGraphic2 from './views/StickyGraphic2'
 
+import { page } from 'vue-analytics'
+
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -32,3 +34,10 @@ export default new Router({
     }
   ]
 })
+
+router.afterEach((to, from) => {
+  // console.log(to)
+  page(to)
+})
+
+export default router
