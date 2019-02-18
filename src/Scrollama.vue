@@ -39,47 +39,58 @@ export default {
 
     this.scroller = scrollama()
 
-    const opts = Object.assign({}, this.$attrs, {
-      step: `#scrollama-steps-${this.id}>div`,
-      container: `#scrollama-container-${this.id}`,
-      graphic: `#scrollama-graphic-${this.id}`,
-    })
-
-    this.scroller.setup(opts)
-    
-    if(this.$listeners['step-progress']) {
-      this.scroller.onStepProgress(resp => {
-        this.$emit('step-progress', resp)
+    this.setup()
+  },
+  beforeDestroy() {
+    this.scroller.destroy()
+  },
+  computed: {
+    opts() {
+      return Object.assign({}, this.$attrs, {
+        step: `#scrollama-steps-${this.id}>div`,
+        container: `#scrollama-container-${this.id}`,
+        graphic: `#scrollama-graphic-${this.id}`,
       })
     }
-
-    if(this.$listeners['step-enter']) {
-      this.scroller.onStepEnter(resp => {
-        this.$emit('step-enter', resp)
-      })
-    }
-
-    if(this.$listeners['step-exit']) {
-      this.scroller.onStepExit(resp => {
-        this.$emit('step-exit', resp)
-      })
-    }
-
-    if(this.$listeners['container-enter']) {
-      this.scroller.onContainerEnter(resp => {
-        this.$emit('container-enter', resp)
-      })
-    }
-
-    if(this.$listeners['container-exit']) {
-      this.scroller.onContainerExit(resp => {
-        this.$emit('container-exit', resp)
-      })
-    }
-
-    this.handleResize()
   },
   methods: {
+    setup() {
+      this.scroller.destroy() 
+      
+      this.scroller.setup(this.opts)
+
+      if(this.$listeners['step-progress']) {
+        this.scroller.onStepProgress(resp => {
+          this.$emit('step-progress', resp)
+        })
+      }
+
+      if(this.$listeners['step-enter']) {
+        this.scroller.onStepEnter(resp => {
+          this.$emit('step-enter', resp)
+        })
+      }
+
+      if(this.$listeners['step-exit']) {
+        this.scroller.onStepExit(resp => {
+          this.$emit('step-exit', resp)
+        })
+      }
+
+      if(this.$listeners['container-enter']) {
+        this.scroller.onContainerEnter(resp => {
+          this.$emit('container-enter', resp)
+        })
+      }
+
+      if(this.$listeners['container-exit']) {
+        this.scroller.onContainerExit(resp => {
+          this.$emit('container-exit', resp)
+        })
+      }
+
+      this.scroller.resize()
+    },
     handleResize () {
       this.scroller.resize()
     }
