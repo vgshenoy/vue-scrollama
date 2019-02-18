@@ -823,19 +823,21 @@ var ResizeObserver = { render: function render() {
 	name: 'resize-observer',
 
 	methods: {
-		notify: function notify() {
-			this.$emit('notify');
+		compareAndNotify: function compareAndNotify() {
+			if (this._w !== this.$el.offsetWidth || this._h !== this.$el.offsetHeight) {
+				this._w = this.$el.offsetWidth;
+				this._h = this.$el.offsetHeight;
+				this.$emit('notify');
+			}
 		},
 		addResizeHandlers: function addResizeHandlers() {
-			this._resizeObject.contentDocument.defaultView.addEventListener('resize', this.notify);
-			if (this._w !== this.$el.offsetWidth || this._h !== this.$el.offsetHeight) {
-				this.notify();
-			}
+			this._resizeObject.contentDocument.defaultView.addEventListener('resize', this.compareAndNotify);
+			this.compareAndNotify();
 		},
 		removeResizeHandlers: function removeResizeHandlers() {
 			if (this._resizeObject && this._resizeObject.onload) {
 				if (!isIE && this._resizeObject.contentDocument) {
-					this._resizeObject.contentDocument.defaultView.removeEventListener('resize', this.notify);
+					this._resizeObject.contentDocument.defaultView.removeEventListener('resize', this.compareAndNotify);
 				}
 				delete this._resizeObject.onload;
 			}
@@ -852,7 +854,6 @@ var ResizeObserver = { render: function render() {
 		});
 		var object = document.createElement('object');
 		this._resizeObject = object;
-		object.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;');
 		object.setAttribute('aria-hidden', 'true');
 		object.setAttribute('tabindex', -1);
 		object.onload = this.addResizeHandlers;
@@ -873,16 +874,13 @@ var ResizeObserver = { render: function render() {
 // Install the components
 function install(Vue) {
 	Vue.component('resize-observer', ResizeObserver);
-	/* -- Add more components here -- */
+	Vue.component('ResizeObserver', ResizeObserver);
 }
-
-/* -- Plugin definition & Auto-install -- */
-/* You shouldn't have to modify the code below */
 
 // Plugin
 var plugin = {
 	// eslint-disable-next-line no-undef
-	version: "0.4.4",
+	version: "0.4.5",
 	install: install
 };
 
@@ -1459,62 +1457,158 @@ var script = {
     }
   },
   mounted: function mounted () {
-    var this$1 = this;
-
     // polyfill for CSS position sticky
     stickyfill.add(this.$refs['scrollama-graphic']);
 
     this.scroller = scrollama();
 
-    var opts = Object.assign({}, this.$attrs, {
-      step: ("#scrollama-steps-" + (this.id) + ">div"),
-      container: ("#scrollama-container-" + (this.id)),
-      graphic: ("#scrollama-graphic-" + (this.id)),
-    });
-
-    this.scroller.setup(opts);
-    
-    if(this.$listeners['step-progress']) {
-      this.scroller.onStepProgress(function (resp) {
-        this$1.$emit('step-progress', resp);
-      });
+    this.setup();
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.scroller.destroy();
+  },
+  computed: {
+    opts: function opts() {
+      return Object.assign({}, this.$attrs, {
+        step: ("#scrollama-steps-" + (this.id) + ">div"),
+        container: ("#scrollama-container-" + (this.id)),
+        graphic: ("#scrollama-graphic-" + (this.id)),
+      })
     }
-
-    if(this.$listeners['step-enter']) {
-      this.scroller.onStepEnter(function (resp) {
-        this$1.$emit('step-enter', resp);
-      });
-    }
-
-    if(this.$listeners['step-exit']) {
-      this.scroller.onStepExit(function (resp) {
-        this$1.$emit('step-exit', resp);
-      });
-    }
-
-    if(this.$listeners['container-enter']) {
-      this.scroller.onContainerEnter(function (resp) {
-        this$1.$emit('container-enter', resp);
-      });
-    }
-
-    if(this.$listeners['container-exit']) {
-      this.scroller.onContainerExit(function (resp) {
-        this$1.$emit('container-exit', resp);
-      });
-    }
-
-    this.handleResize();
   },
   methods: {
+    setup: function setup() {
+      var this$1 = this;
+
+      this.scroller.destroy(); 
+      
+      this.scroller.setup(this.opts);
+
+      if(this.$listeners['step-progress']) {
+        this.scroller.onStepProgress(function (resp) {
+          this$1.$emit('step-progress', resp);
+        });
+      }
+
+      if(this.$listeners['step-enter']) {
+        this.scroller.onStepEnter(function (resp) {
+          this$1.$emit('step-enter', resp);
+        });
+      }
+
+      if(this.$listeners['step-exit']) {
+        this.scroller.onStepExit(function (resp) {
+          this$1.$emit('step-exit', resp);
+        });
+      }
+
+      if(this.$listeners['container-enter']) {
+        this.scroller.onContainerEnter(function (resp) {
+          this$1.$emit('container-enter', resp);
+        });
+      }
+
+      if(this.$listeners['container-exit']) {
+        this.scroller.onContainerExit(function (resp) {
+          this$1.$emit('container-exit', resp);
+        });
+      }
+
+      this.scroller.resize();
+    },
     handleResize: function handleResize () {
       this.scroller.resize();
     }
   }
 };
 
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
+/* server only */
+, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+  if (typeof shadowMode !== 'boolean') {
+    createInjectorSSR = createInjector;
+    createInjector = shadowMode;
+    shadowMode = false;
+  } // Vue.extend constructor export interop.
+
+
+  var options = typeof script === 'function' ? script.options : script; // render functions
+
+  if (template && template.render) {
+    options.render = template.render;
+    options.staticRenderFns = template.staticRenderFns;
+    options._compiled = true; // functional template
+
+    if (isFunctionalTemplate) {
+      options.functional = true;
+    }
+  } // scopedId
+
+
+  if (scopeId) {
+    options._scopeId = scopeId;
+  }
+
+  var hook;
+
+  if (moduleIdentifier) {
+    // server build
+    hook = function hook(context) {
+      // 2.3 injection
+      context = context || // cached call
+      this.$vnode && this.$vnode.ssrContext || // stateful
+      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
+      // 2.2 with runInNewContext: true
+
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__;
+      } // inject component styles
+
+
+      if (style) {
+        style.call(this, createInjectorSSR(context));
+      } // register component module identifier for async chunk inference
+
+
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier);
+      }
+    }; // used by ssr in case component is cached and beforeCreate
+    // never gets called
+
+
+    options._ssrRegister = hook;
+  } else if (style) {
+    hook = shadowMode ? function () {
+      style.call(this, createInjectorShadow(this.$root.$options.shadowRoot));
+    } : function (context) {
+      style.call(this, createInjector(context));
+    };
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // register for functional component in vue file
+      var originalRender = options.render;
+
+      options.render = function renderWithStyleInjection(h, context) {
+        hook.call(context);
+        return originalRender(h, context);
+      };
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate;
+      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+    }
+  }
+
+  return script;
+}
+
+var normalizeComponent_1 = normalizeComponent;
+
 /* script */
-            var __vue_script__ = script;
+var __vue_script__ = script;
 /* template */
 var __vue_render__ = function() {
   var _vm = this;
@@ -1565,36 +1659,13 @@ __vue_render__._withStripped = true;
   var __vue_module_identifier__ = undefined;
   /* functional template */
   var __vue_is_functional_template__ = false;
-  /* component normalizer */
-  function __vue_normalize__(
-    template, style, script$$1,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    var component = (typeof script$$1 === 'function' ? script$$1.options : script$$1) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "/private/var/www/vue-scrollama/src/Scrollama.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) { component.functional = true; }
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var component = __vue_normalize__(
+  var component = normalizeComponent_1(
     { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
     __vue_inject_styles__,
     __vue_script__,
