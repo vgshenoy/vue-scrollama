@@ -1,6 +1,6 @@
 {
   "name": "vue-scrollama",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Easy scroll driven interactions (aka scrollytelling) with Vue + Scrollama",
   "main": "dist/vue-scrollama.umd.js",
   "module": "dist/vue-scrollama.esm.js",
