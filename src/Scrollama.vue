@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import scrollama from 'scrollama'
-import { ResizeObserver } from 'vue-resize'
-import 'vue-resize/dist/vue-resize.css'
-import Stickyfill from 'stickyfilljs' 
+import scrollama from 'scrollama';
+import { ResizeObserver } from 'vue-resize';
+import 'vue-resize/dist/vue-resize.css';
+import Stickyfill from 'stickyfilljs';
 
 
 export default {
@@ -29,20 +29,20 @@ export default {
         return !/\s/.test(value);
       },
       default: () => {
-        return Math.random().toString(36).substr(2, 9)
+        return Math.random().toString(36).substr(2, 9);
       }
     }
   },
   mounted () {
     // polyfill for CSS position sticky
-    Stickyfill.add(this.$refs['scrollama-graphic'])
+    Stickyfill.add(this.$refs['scrollama-graphic']);
 
-    this.scroller = scrollama()
+    this.scroller = scrollama();
 
-    this.setup()
+    this.setup();
   },
   beforeDestroy() {
-    this.scroller.destroy()
+    this.scroller.destroy();
   },
   computed: {
     opts() {
@@ -50,49 +50,49 @@ export default {
         step: `#scrollama-steps-${this.id}>div`,
         container: `#scrollama-container-${this.id}`,
         graphic: `#scrollama-graphic-${this.id}`,
-      })
+      });
     }
   },
   methods: {
     setup() {
-      this.scroller.destroy() 
-      
-      this.scroller.setup(this.opts)
+      this.scroller.destroy();
+
+      this.scroller.setup(this.opts);
 
       if(this.$listeners['step-progress']) {
         this.scroller.onStepProgress(resp => {
           this.$emit('step-progress', resp)
-        })
+        });
       }
 
       if(this.$listeners['step-enter']) {
         this.scroller.onStepEnter(resp => {
-          this.$emit('step-enter', resp)
-        })
+          this.$emit('step-enter', resp);
+        });
       }
 
       if(this.$listeners['step-exit']) {
         this.scroller.onStepExit(resp => {
-          this.$emit('step-exit', resp)
-        })
+          this.$emit('step-exit', resp);
+        });
       }
 
       if(this.$listeners['container-enter']) {
         this.scroller.onContainerEnter(resp => {
-          this.$emit('container-enter', resp)
-        })
+          this.$emit('container-enter', resp);
+        });
       }
 
       if(this.$listeners['container-exit']) {
         this.scroller.onContainerExit(resp => {
-          this.$emit('container-exit', resp)
-        })
+          this.$emit('container-exit', resp);
+        });
       }
 
-      this.scroller.resize()
+      this.scroller.resize();
     },
     handleResize () {
-      this.scroller.resize()
+      this.scroller.resize();
     }
   }
 };

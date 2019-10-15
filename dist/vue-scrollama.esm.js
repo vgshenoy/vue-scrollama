@@ -1,36 +1,16 @@
-var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
-var scrollama = createCommonjsModule(function (module, exports) {
-(function (global, factory) {
-	module.exports = factory();
-}(commonjsGlobal, (function () {
 // DOM helper functions
 
 // private
 function selectionToArray(selection) {
-  var len = selection.length;
-  var result = [];
-  for (var i = 0; i < len; i += 1) {
+  const len = selection.length;
+  const result = [];
+  for (let i = 0; i < len; i += 1) {
     result.push(selection[i]);
   }
   return result;
 }
 
-// public
-function select(selector) {
-  if (selector instanceof Element) { return selector; }
-  else if (typeof selector === 'string')
-    { return document.querySelector(selector); }
-  return null;
-}
-
-function selectAll(selector, parent) {
-  if ( parent === void 0 ) { parent = document; }
-
+function selectAll(selector, parent = document) {
   if (typeof selector === 'string') {
     return selectionToArray(parent.querySelectorAll(selector));
   } else if (selector instanceof Element) {
@@ -43,28 +23,19 @@ function selectAll(selector, parent) {
   return [];
 }
 
-function getStepId(ref) {
-  var id = ref.id;
-  var i = ref.i;
-
-  return ("scrollama__debug-step--" + id + "-" + i);
+function getStepId({ id, i }) {
+  return `scrollama__debug-step--${id}-${i}`;
 }
 
-function getOffsetId(ref) {
-  var id = ref.id;
-
-  return ("scrollama__debug-offset--" + id);
+function getOffsetId({ id }) {
+  return `scrollama__debug-offset--${id}`;
 }
 
 // SETUP
 
-function setupOffset(ref) {
-  var id = ref.id;
-  var offsetVal = ref.offsetVal;
-  var stepClass = ref.stepClass;
-
-  var el = document.createElement('div');
-  el.setAttribute('id', getOffsetId({ id: id }));
+function setupOffset({ id, offsetVal, stepClass }) {
+  const el = document.createElement('div');
+  el.setAttribute('id', getOffsetId({ id }));
   el.setAttribute('class', 'scrollama__debug-offset');
 
   el.style.position = 'fixed';
@@ -74,8 +45,8 @@ function setupOffset(ref) {
   el.style.borderTop = '2px dashed black';
   el.style.zIndex = '9999';
 
-  var text = document.createElement('p');
-  text.innerText = "\"." + stepClass + "\" trigger: " + offsetVal;
+  const text = document.createElement('p');
+  text.innerText = `".${stepClass}" trigger: ${offsetVal}`;
   text.style.fontSize = '12px';
   text.style.fontFamily = 'monospace';
   text.style.color = 'black';
@@ -85,111 +56,92 @@ function setupOffset(ref) {
   document.body.appendChild(el);
 }
 
-function setup(ref) {
-  var id = ref.id;
-  var offsetVal = ref.offsetVal;
-  var stepEl = ref.stepEl;
-
-  var stepClass = stepEl[0].getAttribute('class');
-  setupOffset({ id: id, offsetVal: offsetVal, stepClass: stepClass });
+function setup({ id, offsetVal, stepEl }) {
+  const stepClass = stepEl[0].getAttribute('class');
+  setupOffset({ id, offsetVal, stepClass });
 }
 
 // UPDATE
-function updateOffset(ref) {
-  var id = ref.id;
-  var offsetMargin = ref.offsetMargin;
-  var offsetVal = ref.offsetVal;
-
-  var idVal = getOffsetId({ id: id });
-  var el = document.querySelector(("#" + idVal));
-  el.style.top = offsetMargin + "px";
+function updateOffset({ id, offsetMargin, offsetVal }) {
+  const idVal = getOffsetId({ id });
+  const el = document.querySelector(`#${idVal}`);
+  el.style.top = `${offsetMargin}px`;
 }
 
-function update(ref) {
-  var id = ref.id;
-  var stepOffsetHeight = ref.stepOffsetHeight;
-  var offsetMargin = ref.offsetMargin;
-  var offsetVal = ref.offsetVal;
-
-  updateOffset({ id: id, offsetMargin: offsetMargin });
+function update({ id, stepOffsetHeight, offsetMargin, offsetVal }) {
+  updateOffset({ id, offsetMargin });
 }
 
-function notifyStep(ref) {
-  var id = ref.id;
-  var index = ref.index;
-  var state = ref.state;
+function notifyStep({ id, index, state }) {
+  const idVal = getStepId({ id, i: index });
+  const elA = document.querySelector(`#${idVal}_above`);
+  const elB = document.querySelector(`#${idVal}_below`);
+  const display = state === 'enter' ? 'block' : 'none';
 
-  var idVal = getStepId({ id: id, i: index });
-  var elA = document.querySelector(("#" + idVal + "_above"));
-  var elB = document.querySelector(("#" + idVal + "_below"));
-  var display = state === 'enter' ? 'block' : 'none';
-
-  if (elA) { elA.style.display = display; }
-  if (elB) { elB.style.display = display; }
+  if (elA) elA.style.display = display;
+  if (elB) elB.style.display = display;
 }
 
 function scrollama() {
-  var ZERO_MOE = 1; // zero with some rounding margin of error
-  var callback = {};
-  var io = {};
+  const OBSERVER_NAMES = [
+    'stepAbove',
+    'stepBelow',
+    'stepProgress',
+    'viewportAbove',
+    'viewportBelow'
+  ];
 
-  var containerEl = null;
-  var graphicEl = null;
-  var stepEl = null;
+  const cb = {
+    stepEnter: () => {},
+    stepExit: () => {},
+    stepProgress: () => {}
+  };
+  const io = {};
 
-  var id = null;
-  var offsetVal = 0;
-  var offsetMargin = 0;
-  var vh = 0;
-  var ph = 0;
-  var stepOffsetHeight = null;
-  var stepOffsetTop = null;
-  var bboxGraphic = null;
+  let id = null;
+  let stepEl = [];
+  let stepOffsetHeight = [];
+  let stepOffsetTop = [];
+  let stepStates = [];
 
-  var isReady = false;
-  var isEnabled = false;
-  var debugMode = false;
-  var progressMode = false;
-  var progressThreshold = 0;
-  var preserveOrder = false;
-  var triggerOnce = false;
+  let offsetVal = 0;
+  let offsetMargin = 0;
+  let viewH = 0;
+  let pageH = 0;
+	let previousYOffset = 0;
+	let progressThreshold = 0;
 
-  var stepStates = null;
-  var containerState = null;
-  var previousYOffset = -1;
-  var direction = null;
+  let isReady = false;
+  let isEnabled = false;
+  let isDebug = false;
 
-  var exclude = [];
+  let progressMode = false;
+  let preserveOrder = false;
+  let triggerOnce = false;
 
-  // HELPERS
-  function generateId() {
-    var a = 'abcdefghijklmnopqrstuv';
-    var l = a.length;
-    var t = new Date().getTime();
-    var r = [0, 0, 0].map(function (d) { return a[Math.floor(Math.random() * l)]; }).join('');
-    return ("" + r + t);
+  let direction = 'down';
+
+  const exclude = [];
+
+  /*** HELPERS ***/
+  function generateInstanceID() {
+    const a = 'abcdefghijklmnopqrstuv';
+    const l = a.length;
+    const t = Date.now();
+    const r = [0, 0, 0].map(d => a[Math.floor(Math.random() * l)]).join('');
+    return `${r}${t}`;
   }
 
-  //www.gomakethings.com/how-to-get-an-elements-distance-from-the-top-of-the-page-with-vanilla-javascript/
   function getOffsetTop(el) {
-    // Set our distance placeholder
-    var distance = 0;
-
-    // Loop up the DOM
-    if (el.offsetParent) {
-      do {
-        distance += el.offsetTop;
-        el = el.offsetParent;
-      } while (el);
-    }
-
-    // Return our distance
-    return distance < 0 ? 0 : distance;
+    const { top } = el.getBoundingClientRect();
+    const scrollTop = window.pageYOffset;
+    const clientTop = document.body.clientTop || 0;
+    return top + scrollTop - clientTop;
   }
 
   function getPageHeight() {
-    var body = document.body;
-    var html = document.documentElement;
+    const body = document.body;
+    const html = document.documentElement;
 
     return Math.max(
       body.scrollHeight,
@@ -204,224 +156,203 @@ function scrollama() {
     return +element.getAttribute('data-scrollama-index');
   }
 
-  function updateDirection() {
-    if (window.pageYOffset > previousYOffset) { direction = 'down'; }
-    else if (window.pageYOffset < previousYOffset) { direction = 'up'; }
-    previousYOffset = window.pageYOffset;
+	function updateDirection() {
+		if (window.pageYOffset > previousYOffset) direction = 'down';
+		else if (window.pageYOffset < previousYOffset) direction = 'up';
+		previousYOffset = window.pageYOffset;
+	}
+
+  function disconnectObserver(name) {
+    if (io[name]) io[name].forEach(d => d.disconnect());
   }
 
   function handleResize() {
-    vh = window.innerHeight;
-    ph = getPageHeight();
+    viewH = window.innerHeight;
+    pageH = getPageHeight();
 
-    bboxGraphic = graphicEl ? graphicEl.getBoundingClientRect() : null;
+    offsetMargin = offsetVal * viewH;
 
-    offsetMargin = offsetVal * vh;
+    if (isReady) {
+      stepOffsetHeight = stepEl.map(el => el.getBoundingClientRect().height);
+      stepOffsetTop = stepEl.map(getOffsetTop);
+      if (isEnabled) updateIO();
+    }
 
-    stepOffsetHeight = stepEl ? stepEl.map(function (el) { return el.offsetHeight; }) : [];
-
-    stepOffsetTop = stepEl ? stepEl.map(getOffsetTop) : [];
-
-    if (isEnabled && isReady) { updateIO(); }
-
-    if (debugMode)
-      { update({ id: id, stepOffsetHeight: stepOffsetHeight, offsetMargin: offsetMargin, offsetVal: offsetVal }); }
+    if (isDebug) update({ id, stepOffsetHeight, offsetMargin, offsetVal });
   }
 
   function handleEnable(enable) {
-    if (enable && !isEnabled) {
-      if (isReady) { updateIO(); }
-      isEnabled = true;
-    } else if (!enable) {
-      if (io.top) { io.top.disconnect(); }
-      if (io.bottom) { io.bottom.disconnect(); }
-      if (io.stepAbove) { io.stepAbove.forEach(function (d) { return d.disconnect(); }); }
-      if (io.stepBelow) { io.stepBelow.forEach(function (d) { return d.disconnect(); }); }
-      if (io.stepProgress) { io.stepProgress.forEach(function (d) { return d.disconnect(); }); }
-      if (io.viewportAbove) { io.viewportAbove.forEach(function (d) { return d.disconnect(); }); }
-      if (io.viewportBelow) { io.viewportBelow.forEach(function (d) { return d.disconnect(); }); }
-      isEnabled = false;
+    if (enable && !isEnabled) { // enable a disabled scroller
+      if (isReady) { // enable a ready scroller
+        updateIO();
+      } else { // can't enable an unready scroller
+        console.error('scrollama error: enable() called before scroller was ready');
+        isEnabled = false;
+        return; // all is not well, don't set the requested state
+      }
     }
+    if (!enable && isEnabled) { // disable an enabled scroller
+      OBSERVER_NAMES.forEach(disconnectObserver);
+    }
+    isEnabled = enable; // all is well, set requested state
   }
 
   function createThreshold(height) {
-    var count = Math.ceil(height / progressThreshold);
-    var t = [];
-    var ratio = 1 / count;
-    for (var i = 0; i < count; i++) {
+    const count = Math.ceil(height / progressThreshold);
+    const t = [];
+    const ratio = 1 / count;
+    for (let i = 0; i < count; i++) {
       t.push(i * ratio);
     }
     return t;
   }
 
-  // NOTIFY CALLBACKS
+  /*** NOTIFY CALLBACKS ***/
+
+  function notifyStepProgress(element, progress) {
+    const index = getIndex(element);
+    if (progress !== undefined) stepStates[index].progress = progress;
+    const resp = { element, index, progress: stepStates[index].progress };
+
+    if (stepStates[index].state === 'enter') cb.stepProgress(resp);
+  }
+
   function notifyOthers(index, location) {
     if (location === 'above') {
       // check if steps above/below were skipped and should be notified first
-      for (var i = 0; i < index; i++) {
-        var ss = stepStates[i];
-        if (ss.state === 'enter') { notifyStepExit(stepEl[i], 'down'); }
-        if (ss.direction === 'up') {
+      for (let i = 0; i < index; i++) {
+        const ss = stepStates[i];
+        if (ss.state !== 'enter' && ss.direction !== 'down') {
           notifyStepEnter(stepEl[i], 'down', false);
           notifyStepExit(stepEl[i], 'down');
-        }
+        } else if (ss.state === 'enter') notifyStepExit(stepEl[i], 'down');
+        // else if (ss.direction === 'up') {
+        //   notifyStepEnter(stepEl[i], 'down', false);
+        //   notifyStepExit(stepEl[i], 'down');
+        // }
       }
     } else if (location === 'below') {
-      for (var i$1 = stepStates.length - 1; i$1 > index; i$1--) {
-        var ss$1 = stepStates[i$1];
-        if (ss$1.state === 'enter') {
-          notifyStepExit(stepEl[i$1], 'up');
+      for (let i = stepStates.length - 1; i > index; i--) {
+        const ss = stepStates[i];
+        if (ss.state === 'enter') {
+          notifyStepExit(stepEl[i], 'up');
         }
-        if (ss$1.direction === 'down') {
-          notifyStepEnter(stepEl[i$1], 'up', false);
-          notifyStepExit(stepEl[i$1], 'up');
+        if (ss.direction === 'down') {
+          notifyStepEnter(stepEl[i], 'up', false);
+          notifyStepExit(stepEl[i], 'up');
         }
       }
     }
   }
 
-  function notifyStepEnter(element, direction, check) {
-    if ( check === void 0 ) { check = true; }
-
-    var index = getIndex(element);
-    var resp = { element: element, index: index, direction: direction };
+  function notifyStepEnter(element, direction, check = true) {
+    const index = getIndex(element);
+    const resp = { element, index, direction };
 
     // store most recent trigger
     stepStates[index].direction = direction;
     stepStates[index].state = 'enter';
-
     if (preserveOrder && check && direction === 'down')
-      { notifyOthers(index, 'above'); }
+      notifyOthers(index, 'above');
 
     if (preserveOrder && check && direction === 'up')
-      { notifyOthers(index, 'below'); }
+      notifyOthers(index, 'below');
 
-    if (
-      callback.stepEnter &&
-      typeof callback.stepEnter === 'function' &&
-      !exclude[index]
-    ) {
-      callback.stepEnter(resp, stepStates);
-      if (debugMode) { notifyStep({ id: id, index: index, state: 'enter' }); }
-      if (triggerOnce) { exclude[index] = true; }
+    if (cb.stepEnter && !exclude[index]) {
+      cb.stepEnter(resp, stepStates);
+      if (isDebug) notifyStep({ id, index, state: 'enter' });
+      if (triggerOnce) exclude[index] = true;
     }
 
-    if (progressMode) {
-      if (direction === 'down') { notifyStepProgress(element, 0); }
-      else { notifyStepProgress(element, 1); }
-    }
+    if (progressMode) notifyStepProgress(element);
   }
 
   function notifyStepExit(element, direction) {
-    var index = getIndex(element);
-    var resp = { element: element, index: index, direction: direction };
+    const index = getIndex(element);
+    const resp = { element, index, direction };
+
+    if (progressMode) {
+      if (direction === 'down' && stepStates[index].progress < 1)
+        notifyStepProgress(element, 1);
+      else if (direction === 'up' && stepStates[index].progress > 0)
+        notifyStepProgress(element, 0);
+    }
 
     // store most recent trigger
     stepStates[index].direction = direction;
     stepStates[index].state = 'exit';
 
-    if (progressMode) {
-      if (direction === 'down') { notifyStepProgress(element, 1); }
-      else { notifyStepProgress(element, 0); }
-    }
-
-    if (callback.stepExit && typeof callback.stepExit === 'function') {
-      callback.stepExit(resp, stepStates);
-      if (debugMode) { notifyStep({ id: id, index: index, state: 'exit' }); }
-    }
+    cb.stepExit(resp, stepStates);
+    if (isDebug) notifyStep({ id, index, state: 'exit' });
   }
 
-  function notifyStepProgress(element, progress) {
-    var index = getIndex(element);
-    var resp = { element: element, index: index, progress: progress };
-    if (callback.stepProgress && typeof callback.stepProgress === 'function')
-      { callback.stepProgress(resp); }
-  }
+  /*** OBSERVER - INTERSECT HANDLING ***/
+  // this is good for entering while scrolling down + leaving while scrolling up
+  function intersectStepAbove([entry]) {
+    updateDirection();
+    const { isIntersecting, boundingClientRect, target } = entry;
 
-  function notifyContainerEnter() {
-    var resp = { direction: direction };
-    containerState.direction = direction;
-    containerState.state = 'enter';
+    // bottom = bottom edge of element from top of viewport
+    // bottomAdjusted = bottom edge of element from trigger
+    const { top, bottom } = boundingClientRect;
+    const topAdjusted = top - offsetMargin;
+    const bottomAdjusted = bottom - offsetMargin;
+    const index = getIndex(target);
+    const ss = stepStates[index];
+
+    // entering above is only when topAdjusted is negative
+    // and bottomAdjusted is positive
     if (
-      callback.containerEnter &&
-      typeof callback.containerEnter === 'function'
+      isIntersecting &&
+      topAdjusted <= 0 &&
+      bottomAdjusted >= 0 &&
+      direction === 'down' &&
+      ss.state !== 'enter'
     )
-      { callback.containerEnter(resp); }
+      notifyStepEnter(target, direction);
+
+    // exiting from above is when topAdjusted is positive and not intersecting
+    if (
+      !isIntersecting &&
+      topAdjusted > 0 &&
+      direction === 'up' &&
+      ss.state === 'enter'
+    )
+      notifyStepExit(target, direction);
   }
 
-  function notifyContainerExit() {
-    var resp = { direction: direction };
-    containerState.direction = direction;
-    containerState.state = 'exit';
-    if (callback.containerExit && typeof callback.containerExit === 'function')
-      { callback.containerExit(resp); }
-  }
-
-  // OBSERVER - INTERSECT HANDLING
-
-  // if TOP edge of step crosses threshold,
-  // bottom must be > 0 which means it is on "screen" (shifted by offset)
-  function intersectStepAbove(entries) {
+  // this is good for entering while scrolling up + leaving while scrolling down
+  function intersectStepBelow([entry]) {
     updateDirection();
-    entries.forEach(function (entry) {
-      var isIntersecting = entry.isIntersecting;
-      var boundingClientRect = entry.boundingClientRect;
-      var target = entry.target;
+    const { isIntersecting, boundingClientRect, target } = entry;
 
-      // bottom is how far bottom edge of el is from top of viewport
-      var bottom = boundingClientRect.bottom;
-      var height = boundingClientRect.height;
-      var bottomAdjusted = bottom - offsetMargin;
-      var index = getIndex(target);
-      var ss = stepStates[index];
+    // bottom = bottom edge of element from top of viewport
+    // bottomAdjusted = bottom edge of element from trigger
+    const { top, bottom } = boundingClientRect;
+    const topAdjusted = top - offsetMargin;
+    const bottomAdjusted = bottom - offsetMargin;
+    const index = getIndex(target);
+    const ss = stepStates[index];
 
-      if (bottomAdjusted >= -ZERO_MOE) {
-        if (isIntersecting && direction === 'down' && ss.state !== 'enter')
-          { notifyStepEnter(target, direction); }
-        else if (!isIntersecting && direction === 'up' && ss.state === 'enter')
-          { notifyStepExit(target, direction); }
-        else if (
-          !isIntersecting &&
-          bottomAdjusted >= height &&
-          direction === 'down' &&
-          ss.state === 'enter'
-        ) {
-          notifyStepExit(target, direction);
-        }
-      }
-    });
-  }
+    // entering below is only when bottomAdjusted is positive
+    // and topAdjusted is negative
+    if (
+      isIntersecting &&
+      topAdjusted <= 0 &&
+      bottomAdjusted >= 0 &&
+      direction === 'up' &&
+      ss.state !== 'enter'
+    )
+      notifyStepEnter(target, direction);
 
-  function intersectStepBelow(entries) {
-    updateDirection();
-    entries.forEach(function (entry) {
-      var isIntersecting = entry.isIntersecting;
-      var boundingClientRect = entry.boundingClientRect;
-      var target = entry.target;
-
-      var bottom = boundingClientRect.bottom;
-      var height = boundingClientRect.height;
-      var bottomAdjusted = bottom - offsetMargin;
-      var index = getIndex(target);
-      var ss = stepStates[index];
-
-      if (
-        bottomAdjusted >= -ZERO_MOE &&
-        bottomAdjusted < height &&
-        isIntersecting &&
-        direction === 'up' &&
-        ss.state !== 'enter'
-      ) {
-        notifyStepEnter(target, direction);
-      } else if (
-        bottomAdjusted <= ZERO_MOE &&
-        !isIntersecting &&
-        direction === 'down' &&
-        ss.state === 'enter'
-      ) {
-        notifyStepExit(target, direction);
-      }
-    });
+    // exiting from above is when bottomAdjusted is negative and not intersecting
+    if (
+      !isIntersecting &&
+      bottomAdjusted < 0 &&
+      direction === 'down' &&
+      ss.state === 'enter'
+    )
+      notifyStepExit(target, direction);
   }
 
   /*
@@ -429,192 +360,105 @@ function scrollama() {
 	skipping an enter/exit trigger), use this fallback to detect if it is
 	in view
 	*/
-  function intersectViewportAbove(entries) {
+  function intersectViewportAbove([entry]) {
     updateDirection();
-    entries.forEach(function (entry) {
-      var isIntersecting = entry.isIntersecting;
-      var target = entry.target;
-      var index = getIndex(target);
-      var ss = stepStates[index];
-      if (
-        isIntersecting &&
-        direction === 'down' &&
-        ss.state !== 'enter' &&
-        ss.direction !== 'down'
-      ) {
-        notifyStepEnter(target, 'down');
-        notifyStepExit(target, 'down');
-      }
-    });
-  }
+    const { isIntersecting, target } = entry;
+    const index = getIndex(target);
+    const ss = stepStates[index];
 
-  function intersectViewportBelow(entries) {
-    updateDirection();
-    entries.forEach(function (entry) {
-      var isIntersecting = entry.isIntersecting;
-      var target = entry.target;
-      var index = getIndex(target);
-      var ss = stepStates[index];
-      if (
-        isIntersecting &&
-        direction === 'up' &&
-        ss.state !== 'enter' &&
-        ss.direction !== 'up'
-      ) {
-        notifyStepEnter(target, 'up');
-        notifyStepExit(target, 'up');
-      }
-    });
-  }
-
-  function intersectStepProgress(entries) {
-    updateDirection();
-    entries.forEach(
-      function (ref) {
-        var isIntersecting = ref.isIntersecting;
-        var intersectionRatio = ref.intersectionRatio;
-        var boundingClientRect = ref.boundingClientRect;
-        var target = ref.target;
-
-        var bottom = boundingClientRect.bottom;
-        var bottomAdjusted = bottom - offsetMargin;
-
-        if (isIntersecting && bottomAdjusted >= -ZERO_MOE) {
-          notifyStepProgress(target, +intersectionRatio.toFixed(3));
-        }
-      }
-    );
-  }
-
-  function intersectTop(entries) {
-    updateDirection();
-    var ref = entries[0];
-    var isIntersecting = ref.isIntersecting;
-    var boundingClientRect = ref.boundingClientRect;
-    var top = boundingClientRect.top;
-    var bottom = boundingClientRect.bottom;
-
-    if (bottom > -ZERO_MOE) {
-      if (isIntersecting) { notifyContainerEnter(direction); }
-      else if (containerState.state === 'enter') { notifyContainerExit(direction); }
+    if (
+      isIntersecting &&
+      direction === 'down' &&
+      ss.direction !== 'down' &&
+      ss.state !== 'enter'
+    ) {
+      notifyStepEnter(target, 'down');
+      notifyStepExit(target, 'down');
     }
   }
 
-  function intersectBottom(entries) {
+  function intersectViewportBelow([entry]) {
     updateDirection();
-    var ref = entries[0];
-    var isIntersecting = ref.isIntersecting;
-    var boundingClientRect = ref.boundingClientRect;
-    var top = boundingClientRect.top;
-
-    if (top < ZERO_MOE) {
-      if (isIntersecting) { notifyContainerEnter(direction); }
-      else if (containerState.state === 'enter') { notifyContainerExit(direction); }
+    const { isIntersecting, target } = entry;
+    const index = getIndex(target);
+    const ss = stepStates[index];
+    if (
+      isIntersecting &&
+      direction === 'up' &&
+      ss.direction === 'down' &&
+      ss.state !== 'enter'
+    ) {
+      notifyStepEnter(target, 'up');
+      notifyStepExit(target, 'up');
     }
   }
 
-  // OBSERVER - CREATION
-
-  function updateTopIO() {
-    if (io.top) { io.top.unobserve(containerEl); }
-
-    var options = {
-      root: null,
-      rootMargin: (vh + "px 0px -" + vh + "px 0px"),
-      threshold: 0
-    };
-
-    io.top = new IntersectionObserver(intersectTop, options);
-    io.top.observe(containerEl);
+  function intersectStepProgress([entry]) {
+    updateDirection();
+    const {
+      isIntersecting,
+      intersectionRatio,
+      boundingClientRect,
+      target
+    } = entry;
+    const { bottom } = boundingClientRect;
+    const bottomAdjusted = bottom - offsetMargin;
+    if (isIntersecting && bottomAdjusted >= 0) {
+      notifyStepProgress(target, +intersectionRatio.toFixed(3));
+    }
   }
 
-  function updateBottomIO() {
-    if (io.bottom) { io.bottom.unobserve(containerEl); }
-    var options = {
-      root: null,
-      rootMargin: ("-" + (bboxGraphic.height) + "px 0px " + (bboxGraphic.height) + "px 0px"),
-      threshold: 0
-    };
-
-    io.bottom = new IntersectionObserver(intersectBottom, options);
-    io.bottom.observe(containerEl);
-  }
-
-  // top edge
-  function updateStepAboveIO() {
-    if (io.stepAbove) { io.stepAbove.forEach(function (d) { return d.disconnect(); }); }
-
-    io.stepAbove = stepEl.map(function (el, i) {
-      var marginTop = stepOffsetHeight[i];
-      var marginBottom = -vh + offsetMargin;
-      var rootMargin = marginTop + "px 0px " + marginBottom + "px 0px";
-
-      var options = {
-        root: null,
-        rootMargin: rootMargin,
-        threshold: 0
-      };
-
-      var obs = new IntersectionObserver(intersectStepAbove, options);
-      obs.observe(el);
-      return obs;
-    });
-  }
-
-  // bottom edge
-  function updateStepBelowIO() {
-    if (io.stepBelow) { io.stepBelow.forEach(function (d) { return d.disconnect(); }); }
-
-    io.stepBelow = stepEl.map(function (el, i) {
-      var marginTop = -offsetMargin;
-      var marginBottom = ph - vh + stepOffsetHeight[i] + offsetMargin;
-      var rootMargin = marginTop + "px 0px " + marginBottom + "px 0px";
-
-      var options = {
-        root: null,
-        rootMargin: rootMargin,
-        threshold: 0
-      };
-
-      var obs = new IntersectionObserver(intersectStepBelow, options);
-      obs.observe(el);
-      return obs;
-    });
-  }
-
+  /***  OBSERVER - CREATION ***/
   // jump into viewport
   function updateViewportAboveIO() {
-    if (io.viewportAbove) { io.viewportAbove.forEach(function (d) { return d.disconnect(); }); }
-    io.viewportAbove = stepEl.map(function (el, i) {
-      var marginTop = stepOffsetTop[i];
-      var marginBottom = -(vh - offsetMargin + stepOffsetHeight[i]);
-      var rootMargin = marginTop + "px 0px " + marginBottom + "px 0px";
-      var options = {
-        root: null,
-        rootMargin: rootMargin,
-        threshold: 0
-      };
-
-      var obs = new IntersectionObserver(intersectViewportAbove, options);
+    io.viewportAbove = stepEl.map((el, i) => {
+      const marginTop = pageH - stepOffsetTop[i];
+      const marginBottom = offsetMargin - viewH - stepOffsetHeight[i];
+      const rootMargin = `${marginTop}px 0px ${marginBottom}px 0px`;
+      const options = { rootMargin };
+      // console.log(options);
+      const obs = new IntersectionObserver(intersectViewportAbove, options);
       obs.observe(el);
       return obs;
     });
   }
 
   function updateViewportBelowIO() {
-    if (io.viewportBelow) { io.viewportBelow.forEach(function (d) { return d.disconnect(); }); }
-    io.viewportBelow = stepEl.map(function (el, i) {
-      var marginTop = -(offsetMargin + stepOffsetHeight[i]);
-      var marginBottom =
-        ph - stepOffsetTop[i] - stepOffsetHeight[i] - offsetMargin;
-      var rootMargin = marginTop + "px 0px " + marginBottom + "px 0px";
-      var options = {
-        root: null,
-        rootMargin: rootMargin,
-        threshold: 0
-      };
+    io.viewportBelow = stepEl.map((el, i) => {
+      const marginTop = -offsetMargin - stepOffsetHeight[i];
+      const marginBottom = offsetMargin - viewH + stepOffsetHeight[i] + pageH;
+      const rootMargin = `${marginTop}px 0px ${marginBottom}px 0px`;
+      const options = { rootMargin };
+      // console.log(options);
+      const obs = new IntersectionObserver(intersectViewportBelow, options);
+      obs.observe(el);
+      return obs;
+    });
+  }
 
-      var obs = new IntersectionObserver(intersectViewportBelow, options);
+  // look above for intersection
+  function updateStepAboveIO() {
+    io.stepAbove = stepEl.map((el, i) => {
+      const marginTop = -offsetMargin + stepOffsetHeight[i];
+      const marginBottom = offsetMargin - viewH;
+      const rootMargin = `${marginTop}px 0px ${marginBottom}px 0px`;
+      const options = { rootMargin };
+      // console.log(options);
+      const obs = new IntersectionObserver(intersectStepAbove, options);
+      obs.observe(el);
+      return obs;
+    });
+  }
+
+  // look below for intersection
+  function updateStepBelowIO() {
+    io.stepBelow = stepEl.map((el, i) => {
+      const marginTop = -offsetMargin;
+      const marginBottom = offsetMargin - viewH + stepOffsetHeight[i];
+      const rootMargin = `${marginTop}px 0px ${marginBottom}px 0px`;
+      const options = { rootMargin };
+      // console.log(options);
+      const obs = new IntersectionObserver(intersectStepBelow, options);
       obs.observe(el);
       return obs;
     });
@@ -622,89 +466,75 @@ function scrollama() {
 
   // progress progress tracker
   function updateStepProgressIO() {
-    if (io.stepProgress) { io.stepProgress.forEach(function (d) { return d.disconnect(); }); }
-
-    io.stepProgress = stepEl.map(function (el, i) {
-      var marginTop = stepOffsetHeight[i] - offsetMargin;
-      var marginBottom = -vh + offsetMargin;
-      var rootMargin = marginTop + "px 0px " + marginBottom + "px 0px";
-
-      var threshold = createThreshold(stepOffsetHeight[i]);
-      var options = {
-        root: null,
-        rootMargin: rootMargin,
-        threshold: threshold
-      };
-
-      var obs = new IntersectionObserver(intersectStepProgress, options);
+    io.stepProgress = stepEl.map((el, i) => {
+      const marginTop = stepOffsetHeight[i] - offsetMargin;
+      const marginBottom = -viewH + offsetMargin;
+      const rootMargin = `${marginTop}px 0px ${marginBottom}px 0px`;
+      const threshold = createThreshold(stepOffsetHeight[i]);
+      const options = { rootMargin, threshold };
+      // console.log(options);
+      const obs = new IntersectionObserver(intersectStepProgress, options);
       obs.observe(el);
       return obs;
     });
   }
 
   function updateIO() {
+    OBSERVER_NAMES.forEach(disconnectObserver);
+
     updateViewportAboveIO();
     updateViewportBelowIO();
     updateStepAboveIO();
     updateStepBelowIO();
 
-    if (progressMode) { updateStepProgressIO(); }
-
-    if (containerEl && graphicEl) {
-      updateTopIO();
-      updateBottomIO();
-    }
+    if (progressMode) updateStepProgressIO();
   }
 
-  // SETUP FUNCTIONS
+  /*** SETUP FUNCTIONS ***/
 
   function indexSteps() {
-    stepEl.forEach(function (el, i) { return el.setAttribute('data-scrollama-index', i); });
+    stepEl.forEach((el, i) => el.setAttribute('data-scrollama-index', i));
   }
 
   function setupStates() {
-    stepStates = stepEl.map(function () { return ({
+    stepStates = stepEl.map(() => ({
       direction: null,
-      state: null
-    }); });
-
-    containerState = { direction: null, state: null };
+      state: null,
+      progress: 0
+    }));
   }
 
   function addDebug() {
-    if (debugMode) { setup({ id: id, stepEl: stepEl, offsetVal: offsetVal }); }
+    if (isDebug) setup({ id, stepEl, offsetVal });
   }
 
-  var S = {};
+  const S = {};
 
-  S.setup = function (ref) {
-    var container = ref.container;
-    var graphic = ref.graphic;
-    var step = ref.step;
-    var offset = ref.offset; if ( offset === void 0 ) { offset = 0.5; }
-    var progress = ref.progress; if ( progress === void 0 ) { progress = false; }
-    var threshold = ref.threshold; if ( threshold === void 0 ) { threshold = 4; }
-    var debug = ref.debug; if ( debug === void 0 ) { debug = false; }
-    var order = ref.order; if ( order === void 0 ) { order = true; }
-    var once = ref.once; if ( once === void 0 ) { once = false; }
+  S.setup = ({
+    step,
+    offset = 0.5,
+    progress = false,
+    threshold = 4,
+    debug = false,
+    order = true,
+    once = false
+  }) => {
+    // create id unique to this scrollama instance
+    id = generateInstanceID();
 
-    id = generateId();
-    // elements
     stepEl = selectAll(step);
-    containerEl = container ? select(container) : null;
-    graphicEl = graphic ? select(graphic) : null;
 
-    // error if no step selected
     if (!stepEl.length) {
       console.error('scrollama error: no step elements');
       return S;
     }
 
     // options
-    debugMode = debug;
+    isDebug = debug;
     progressMode = progress;
     preserveOrder = order;
     triggerOnce = once;
+  
 
     S.offsetTrigger(offset);
     progressThreshold = Math.max(1, +threshold);
@@ -716,71 +546,63 @@ function scrollama() {
     indexSteps();
     setupStates();
     handleResize();
-    handleEnable(true);
+    S.enable();
     return S;
   };
 
-  S.resize = function () {
+  S.resize = () => {
     handleResize();
     return S;
   };
 
-  S.enable = function () {
+  S.enable = () => {
     handleEnable(true);
     return S;
   };
 
-  S.disable = function () {
+  S.disable = () => {
     handleEnable(false);
     return S;
   };
 
-  S.destroy = function () {
+  S.destroy = () => {
     handleEnable(false);
-    Object.keys(callback).forEach(function (c) { return (callback[c] = null); });
-    Object.keys(io).forEach(function (i) { return (io[i] = null); });
+    Object.keys(cb).forEach(c => (cb[c] = null));
+    Object.keys(io).forEach(i => (io[i] = null));
   };
 
-  S.offsetTrigger = function(x) {
+  S.offsetTrigger = x => {
     if (x && !isNaN(x)) {
+      if (x > 1) console.error('scrollama error: offset value is greater than 1. Fallbacks to 1.');
+      if (x < 0) console.error('scrollama error: offset value is lower than 0. Fallbacks to 0.');
       offsetVal = Math.min(Math.max(0, x), 1);
       return S;
+    } else if (isNaN(x)) {
+      console.error('scrollama error: offset value is not a number. Fallbacks to 0.');
     }
     return offsetVal;
   };
 
-  S.onStepEnter = function (cb) {
-    callback.stepEnter = cb;
+  S.onStepEnter = f => {
+    if (typeof f === 'function') cb.stepEnter = f;
+    else console.error('scrollama error: onStepEnter requires a function');
     return S;
   };
 
-  S.onStepExit = function (cb) {
-    callback.stepExit = cb;
+  S.onStepExit = f => {
+    if (typeof f === 'function') cb.stepExit = f;
+    else console.error('scrollama error: onStepExit requires a function');
     return S;
   };
 
-  S.onStepProgress = function (cb) {
-    callback.stepProgress = cb;
-    return S;
-  };
-
-  S.onContainerEnter = function (cb) {
-    callback.containerEnter = cb;
-    return S;
-  };
-
-  S.onContainerExit = function (cb) {
-    callback.containerExit = cb;
+  S.onStepProgress = f => {
+    if (typeof f === 'function') cb.stepProgress = f;
+    else console.error('scrollama error: onStepProgress requires a function');
     return S;
   };
 
   return S;
 }
-
-return scrollama;
-
-})));
-});
 
 function getInternetExplorerVersion() {
 	var ua = window.navigator.userAgent;
@@ -895,6 +717,10 @@ if (GlobalVue) {
 	GlobalVue.use(plugin);
 }
 
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
 var stickyfill = createCommonjsModule(function (module) {
 (function(window, document) {
     
@@ -904,7 +730,7 @@ var stickyfill = createCommonjsModule(function (module) {
      *    of the polyfill, but the API will remain functional to avoid breaking things.
      */
     
-    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) { descriptor.writable = true; } Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) { defineProperties(Constructor.prototype, protoProps); } if (staticProps) { defineProperties(Constructor, staticProps); } return Constructor; }; }();
+    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
     
     function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
     
@@ -913,7 +739,7 @@ var stickyfill = createCommonjsModule(function (module) {
     var isWindowDefined = typeof window !== 'undefined';
     
     // The polyfill can’t function properly without `window` or `window.getComputedStyle`.
-    if (!isWindowDefined || !window.getComputedStyle) { seppuku = true; }
+    if (!isWindowDefined || !window.getComputedStyle) seppuku = true;
     // Dont’t get in a way if the browser supports `position: sticky` natively.
     else {
             (function () {
@@ -925,7 +751,7 @@ var stickyfill = createCommonjsModule(function (module) {
                     } catch (e) {}
     
                     return testNode.style.position != '';
-                })) { seppuku = true; }
+                })) seppuku = true;
             })();
         }
     
@@ -980,10 +806,10 @@ var stickyfill = createCommonjsModule(function (module) {
         function Sticky(node) {
             _classCallCheck(this, Sticky);
     
-            if (!(node instanceof HTMLElement)) { throw new Error('First argument must be HTMLElement'); }
+            if (!(node instanceof HTMLElement)) throw new Error('First argument must be HTMLElement');
             if (stickies.some(function (sticky) {
                 return sticky._node === node;
-            })) { throw new Error('Stickyfill is already applied to this node'); }
+            })) throw new Error('Stickyfill is already applied to this node');
     
             this._node = node;
             this._stickyMode = null;
@@ -997,8 +823,8 @@ var stickyfill = createCommonjsModule(function (module) {
         _createClass(Sticky, [{
             key: 'refresh',
             value: function refresh() {
-                if (seppuku || this._removed) { return; }
-                if (this._active) { this._deactivate(); }
+                if (seppuku || this._removed) return;
+                if (this._active) this._deactivate();
     
                 var node = this._node;
     
@@ -1020,7 +846,7 @@ var stickyfill = createCommonjsModule(function (module) {
                 /*
                  * 2. Check if the node can be activated
                  */
-                if (isNaN(parseFloat(nodeComputedProps.top)) || nodeComputedProps.display == 'table-cell' || nodeComputedProps.display == 'none') { return; }
+                if (isNaN(parseFloat(nodeComputedProps.top)) || nodeComputedProps.display == 'table-cell' || nodeComputedProps.display == 'none') return;
     
                 this._active = true;
     
@@ -1030,7 +856,7 @@ var stickyfill = createCommonjsModule(function (module) {
                  *    is in it’s initial position when we gather its params.
                  */
                 var originalPosition = node.style.position;
-                if (nodeComputedStyle.position == 'sticky' || nodeComputedStyle.position == '-webkit-sticky') { node.style.position = 'static'; }
+                if (nodeComputedStyle.position == 'sticky' || nodeComputedStyle.position == '-webkit-sticky') node.style.position = 'static';
     
                 /*
                  * 4. Get necessary node parameters
@@ -1118,11 +944,11 @@ var stickyfill = createCommonjsModule(function (module) {
         }, {
             key: '_recalcPosition',
             value: function _recalcPosition() {
-                if (!this._active || this._removed) { return; }
+                if (!this._active || this._removed) return;
     
                 var stickyMode = scroll.top <= this._limits.start ? 'start' : scroll.top >= this._limits.end ? 'end' : 'middle';
     
-                if (this._stickyMode == stickyMode) { return; }
+                if (this._stickyMode == stickyMode) return;
     
                 switch (stickyMode) {
                     case 'start':
@@ -1172,16 +998,16 @@ var stickyfill = createCommonjsModule(function (module) {
         }, {
             key: '_fastCheck',
             value: function _fastCheck() {
-                if (!this._active || this._removed) { return; }
+                if (!this._active || this._removed) return;
     
-                if (Math.abs(getDocOffsetTop(this._clone.node) - this._clone.docOffsetTop) > 1 || Math.abs(this._parent.node.offsetHeight - this._parent.offsetHeight) > 1) { this.refresh(); }
+                if (Math.abs(getDocOffsetTop(this._clone.node) - this._clone.docOffsetTop) > 1 || Math.abs(this._parent.node.offsetHeight - this._parent.offsetHeight) > 1) this.refresh();
             }
         }, {
             key: '_deactivate',
             value: function _deactivate() {
                 var _this = this;
     
-                if (!this._active || this._removed) { return; }
+                if (!this._active || this._removed) return;
     
                 this._clone.node.parentNode.removeChild(this._clone.node);
                 delete this._clone;
@@ -1246,13 +1072,13 @@ var stickyfill = createCommonjsModule(function (module) {
             if (!(node instanceof HTMLElement)) {
                 // Maybe it’s a node list of some sort?
                 // Take first node from the list then
-                if (node.length && node[0]) { node = node[0]; }else { return; }
+                if (node.length && node[0]) node = node[0];else return;
             }
     
             // Check if Stickyfill is already applied to the node
             // and return existing sticky
             for (var i = 0; i < stickies.length; i++) {
-                if (stickies[i]._node === node) { return stickies[i]; }
+                if (stickies[i]._node === node) return stickies[i];
             }
     
             // Create and return new sticky
@@ -1260,9 +1086,9 @@ var stickyfill = createCommonjsModule(function (module) {
         },
         add: function add(nodeList) {
             // If it’s a node make an array of one node
-            if (nodeList instanceof HTMLElement) { nodeList = [nodeList]; }
+            if (nodeList instanceof HTMLElement) nodeList = [nodeList];
             // Check if the argument is an iterable of some sort
-            if (!nodeList.length) { return; }
+            if (!nodeList.length) return;
     
             // Add every element as a sticky and return an array of created Sticky instances
             var addedStickies = [];
@@ -1284,7 +1110,7 @@ var stickyfill = createCommonjsModule(function (module) {
                         addedStickies.push(sticky);
                         return true;
                     }
-                })) { return 'continue'; }
+                })) return 'continue';
     
                 // Create and add new sticky
                 addedStickies.push(new Sticky(node));
@@ -1293,7 +1119,7 @@ var stickyfill = createCommonjsModule(function (module) {
             for (var i = 0; i < nodeList.length; i++) {
                 var _ret2 = _loop(i);
     
-                if (_ret2 === 'continue') { continue; }
+                if (_ret2 === 'continue') continue;
             }
     
             return addedStickies;
@@ -1308,7 +1134,7 @@ var stickyfill = createCommonjsModule(function (module) {
             if (!(node instanceof HTMLElement)) {
                 // Maybe it’s a node list of some sort?
                 // Take first node from the list then
-                if (node.length && node[0]) { node = node[0]; }else { return; }
+                if (node.length && node[0]) node = node[0];else return;
             }
     
             // Remove the stickies bound to the nodes in the list
@@ -1321,9 +1147,9 @@ var stickyfill = createCommonjsModule(function (module) {
         },
         remove: function remove(nodeList) {
             // If it’s a node make an array of one node
-            if (nodeList instanceof HTMLElement) { nodeList = [nodeList]; }
+            if (nodeList instanceof HTMLElement) nodeList = [nodeList];
             // Check if the argument is an iterable of some sort
-            if (!nodeList.length) { return; }
+            if (!nodeList.length) return;
     
             // Remove the stickies bound to the nodes in the list
     
@@ -1411,7 +1237,7 @@ var stickyfill = createCommonjsModule(function (module) {
         }
     
         if (visibilityChangeEventName) {
-            if (!document[docHiddenKey]) { startFastCheckTimer(); }
+            if (!document[docHiddenKey]) startFastCheckTimer();
     
             document.addEventListener(visibilityChangeEventName, function () {
                 if (document[docHiddenKey]) {
@@ -1420,15 +1246,15 @@ var stickyfill = createCommonjsModule(function (module) {
                     startFastCheckTimer();
                 }
             });
-        } else { startFastCheckTimer(); }
+        } else startFastCheckTimer();
     }
     
-    if (!seppuku) { init(); }
+    if (!seppuku) init();
     
     /*
      * 7. Expose Stickyfill
      */
-    if (module.exports) {
+    if ( module.exports) {
         module.exports = Stickyfill;
     } else if (isWindowDefined) {
         window.Stickyfill = Stickyfill;
@@ -1443,7 +1269,7 @@ var stickyfill = createCommonjsModule(function (module) {
 var script = {
   name: 'Scrollama',
   components: {
-    ResizeObserver: ResizeObserver
+    ResizeObserver
   },
   props: {
     id: {
@@ -1451,12 +1277,12 @@ var script = {
       validator: function(value) {
         return !/\s/.test(value);
       },
-      default: function () {
-        return Math.random().toString(36).substr(2, 9)
+      default: () => {
+        return Math.random().toString(36).substr(2, 9);
       }
     }
   },
-  mounted: function mounted () {
+  mounted () {
     // polyfill for CSS position sticky
     stickyfill.add(this.$refs['scrollama-graphic']);
 
@@ -1464,59 +1290,57 @@ var script = {
 
     this.setup();
   },
-  beforeDestroy: function beforeDestroy() {
+  beforeDestroy() {
     this.scroller.destroy();
   },
   computed: {
-    opts: function opts() {
+    opts() {
       return Object.assign({}, this.$attrs, {
-        step: ("#scrollama-steps-" + (this.id) + ">div"),
-        container: ("#scrollama-container-" + (this.id)),
-        graphic: ("#scrollama-graphic-" + (this.id)),
-      })
+        step: `#scrollama-steps-${this.id}>div`,
+        container: `#scrollama-container-${this.id}`,
+        graphic: `#scrollama-graphic-${this.id}`,
+      });
     }
   },
   methods: {
-    setup: function setup() {
-      var this$1 = this;
+    setup() {
+      this.scroller.destroy();
 
-      this.scroller.destroy(); 
-      
       this.scroller.setup(this.opts);
 
       if(this.$listeners['step-progress']) {
-        this.scroller.onStepProgress(function (resp) {
-          this$1.$emit('step-progress', resp);
+        this.scroller.onStepProgress(resp => {
+          this.$emit('step-progress', resp);
         });
       }
 
       if(this.$listeners['step-enter']) {
-        this.scroller.onStepEnter(function (resp) {
-          this$1.$emit('step-enter', resp);
+        this.scroller.onStepEnter(resp => {
+          this.$emit('step-enter', resp);
         });
       }
 
       if(this.$listeners['step-exit']) {
-        this.scroller.onStepExit(function (resp) {
-          this$1.$emit('step-exit', resp);
+        this.scroller.onStepExit(resp => {
+          this.$emit('step-exit', resp);
         });
       }
 
       if(this.$listeners['container-enter']) {
-        this.scroller.onContainerEnter(function (resp) {
-          this$1.$emit('container-enter', resp);
+        this.scroller.onContainerEnter(resp => {
+          this.$emit('container-enter', resp);
         });
       }
 
       if(this.$listeners['container-exit']) {
-        this.scroller.onContainerExit(function (resp) {
-          this$1.$emit('container-exit', resp);
+        this.scroller.onContainerExit(resp => {
+          this.$emit('container-exit', resp);
         });
       }
 
       this.scroller.resize();
     },
-    handleResize: function handleResize () {
+    handleResize () {
       this.scroller.resize();
     }
   }
@@ -1608,64 +1432,26 @@ function normalizeComponent(template, style, script, scopeId, isFunctionalTempla
 var normalizeComponent_1 = normalizeComponent;
 
 /* script */
-var __vue_script__ = script;
+const __vue_script__ = script;
 /* template */
-var __vue_render__ = function() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c(
-    "div",
-    {
-      staticClass: "scrollama-container",
-      class: { "with-graphic": _vm.$slots.graphic },
-      attrs: { id: "scrollama-container-" + _vm.id }
-    },
-    [
-      _c(
-        "div",
-        {
-          ref: "scrollama-graphic",
-          staticClass: "scrollama-graphic",
-          attrs: { id: "scrollama-graphic-" + _vm.id }
-        },
-        [_vm._t("graphic")],
-        2
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "scrollama-steps",
-          attrs: { id: "scrollama-steps-" + _vm.id }
-        },
-        [_vm._t("default")],
-        2
-      ),
-      _vm._v(" "),
-      _c("resize-observer", { on: { notify: _vm.handleResize } })
-    ],
-    1
-  )
-};
+var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"scrollama-container",class:{'with-graphic': _vm.$slots.graphic},attrs:{"id":("scrollama-container-" + _vm.id)}},[_c('div',{ref:"scrollama-graphic",staticClass:"scrollama-graphic",attrs:{"id":("scrollama-graphic-" + _vm.id)}},[_vm._t("graphic")],2),_vm._v(" "),_c('div',{staticClass:"scrollama-steps",attrs:{"id":("scrollama-steps-" + _vm.id)}},[_vm._t("default")],2),_vm._v(" "),_c('resize-observer',{on:{"notify":_vm.handleResize}})],1)};
 var __vue_staticRenderFns__ = [];
-__vue_render__._withStripped = true;
 
   /* style */
-  var __vue_inject_styles__ = undefined;
+  const __vue_inject_styles__ = undefined;
   /* scoped */
-  var __vue_scope_id__ = undefined;
+  const __vue_scope_id__ = undefined;
   /* module identifier */
-  var __vue_module_identifier__ = undefined;
+  const __vue_module_identifier__ = undefined;
   /* functional template */
-  var __vue_is_functional_template__ = false;
+  const __vue_is_functional_template__ = false;
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var component = normalizeComponent_1(
+  var Scrollama = normalizeComponent_1(
     { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
     __vue_inject_styles__,
     __vue_script__,
@@ -1676,34 +1462,4 @@ __vue_render__._withStripped = true;
     undefined
   );
 
-// Import vue component
-
-// install function executed by Vue.use()
-function install$1(Vue) {
-  if (install$1.installed) { return; }
-  install$1.installed = true;
-  Vue.component('Scrollama', component);
-}
-
-// Create module definition for Vue.use()
-var plugin$1 = {
-  install: install$1,
-};
-
-// To auto-install when vue is found
-/* global window global */
-var GlobalVue$1 = null;
-if (typeof window !== 'undefined') {
-  GlobalVue$1 = window.Vue;
-} else if (typeof global !== 'undefined') {
-  GlobalVue$1 = global.Vue;
-}
-if (GlobalVue$1) {
-  GlobalVue$1.use(plugin$1);
-}
-
-// It's possible to expose named exports when writing components that can
-// also be used as directives, etc. - eg. import { RollupDemoDirective } from 'rollup-demo';
-// export const RollupDemoDirective = component;
-
-export default component;
+export default Scrollama;
