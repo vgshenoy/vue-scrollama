@@ -27,16 +27,16 @@
   "browser": "./dist/vue-scrollama.js",
   "unpkg": "./dist/vue-scrollama.js",
   "dependencies": {
-    "rollup-plugin-node-resolve": "^5.2.0",
     "scrollama": "^2.1.2",
     "stickyfilljs": "^2.1.0",
     "vue-resize": "^0.4.5"
   },
   "devDependencies": {
-    "rollup": "^1.23.1",
+    "rollup": "^1.24.0",
     "rollup-plugin-buble": "^0.19.8",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-css-only": "^1.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-vue": "^5.0.1",
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"
