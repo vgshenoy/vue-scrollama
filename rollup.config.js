@@ -1,9 +1,7 @@
 import vue from 'rollup-plugin-vue';
 import css from 'rollup-plugin-css-only';
 import commonjs from 'rollup-plugin-commonjs';
-// import buble from 'rollup-plugin-buble';
-import resolve from "rollup-plugin-node-resolve";
-
+import resolve from 'rollup-plugin-node-resolve';
 
 export default [
   // ESM build to be used with webpack/rollup.
