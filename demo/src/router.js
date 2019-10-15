@@ -1,14 +1,14 @@
-import Vue from "vue"
-import Router from "vue-router"
+import Vue from "vue";
+import Router from "vue-router";
 
-import Basic from './views/Basic'
-import Progress from './views/Progress'
-import StickyGraphic1 from './views/StickyGraphic1'
-import StickyGraphic2 from './views/StickyGraphic2'
+import Basic from './views/Basic';
+import Progress from './views/Progress';
+import StickyGraphic1 from './views/StickyGraphic1';
+import StickyGraphic2 from './views/StickyGraphic2';
 
-import { page } from 'vue-analytics'
+import {page} from 'vue-analytics';
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   routes: [
@@ -33,11 +33,10 @@ const router = new Router({
       component: StickyGraphic2
     }
   ]
-})
+});
 
-router.afterEach((to, from) => {
-  // console.log(to)
-  page(to)
-})
+router.afterEach((to) => {
+  page(to);
+});
 
-export default router
+export default router;

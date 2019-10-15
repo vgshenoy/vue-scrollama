@@ -1,7 +1,7 @@
 <template>
   <div>
     <Scrollama :offset="$store.offset" :progress="true" @step-progress="stepProgressHandler">
-      <div 
+      <div
         v-for="step in steps" :key="step.no"
         :data-step-id="step.id"
         class="step"
@@ -17,9 +17,9 @@
 <script>
 
 // polyfill for IntersectionObserver
-import 'intersection-observer'
-// import Scrollama from '../../../src/Scrollama' 
-import Scrollama from 'vue-scrollama'
+import 'intersection-observer';
+// import Scrollama from '../../../src/Scrollama'
+import Scrollama from 'vue-scrollama';
 
 export default {
   components: {
@@ -32,13 +32,13 @@ export default {
         {id: 1, rgb: '250,220,0', progress: 0},
         {id: 2, rgb: '50,250,200', progress: 0}
       ]
-    }
+    };
   },
   methods: {
     stepProgressHandler({element, progress, index}) {
-      console.log({element, progress, index})
-      this.currStepId = element.dataset.stepId
-      this.steps.find(d => d.id == this.currStepId).progress = progress
+      console.log({element, progress, index});
+      this.currStepId = element.dataset.stepId;
+      this.steps.find(d => d.id === this.currStepId).progress = progress;
     }
   }
 }

@@ -2,9 +2,6 @@
   "name": "vue-scrollama",
   "version": "1.1.1",
   "description": "Easy scroll driven interactions (aka scrollytelling) with Vue + Scrollama",
-  "main": "dist/vue-scrollama.umd.js",
-  "module": "dist/vue-scrollama.esm.js",
-  "unpkg": "dist/vue-scrollama.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shenoy/vue-scrollama.git"
@@ -22,26 +19,26 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
-    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/vue-scrollama.umd.js",
-    "build:es": "rollup --config build/rollup.config.js --format es --file dist/vue-scrollama.esm.js",
-    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/vue-scrollama.min.js",
+    "build": "rollup -c --environment BUILD:production",
     "publish": "npm run build && npm publish --access public"
   },
+  "module": "./dist/vue-scrollama.esm.js",
+  "main": "./dist/vue-scrollama.js",
+  "browser": "./dist/vue-scrollama.js",
+  "unpkg": "./dist/vue-scrollama.js",
   "dependencies": {
-    "scrollama": "^1.4.4",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "scrollama": "^2.1.2",
     "stickyfilljs": "^2.1.0",
     "vue-resize": "^0.4.5"
   },
   "devDependencies": {
-    "minimist": "^1.2.0",
-    "rollup": "^0.66.2",
-    "rollup-plugin-buble": "^0.19.6",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-css-only": "^0.4.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-uglify-es": "0.0.1",
-    "rollup-plugin-vue": "^4.7.1",
-    "vue-template-compiler": "^2.6.6"
+    "rollup": "^1.23.1",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-css-only": "^1.0.0",
+    "rollup-plugin-vue": "^5.0.1",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
   }
 }

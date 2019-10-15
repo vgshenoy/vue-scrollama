@@ -1,10 +1,10 @@
 <template>
   <div>
     <Scrollama :offset="$store.offset" @step-enter="stepEnterHandler" @step-exit="stepExitHandler">
-      <div 
+      <div
         v-for="step in steps" :key="step.no"
         :data-step-id="step.id"
-        class="step" :class="{'is-active': step.id == currStepId}">
+        class="step" :class="{'is-active': step.id === currStepId}">
         <p>STEP {{step.id}}</p>
       </div>
     </Scrollama>
@@ -16,8 +16,8 @@
 // polyfill for IntersectionObserver
 import 'intersection-observer'
 // NOTE: In your projects, import Scrollama from 'vue-srollama'
-// import Scrollama from '../../../src/Scrollama' 
-import Scrollama from 'vue-scrollama'
+import Scrollama from '../../../dist/vue-scrollama.esm'
+// import Scrollama from 'vue-scrollama'
 
 export default {
   components: {

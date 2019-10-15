@@ -4,10 +4,10 @@
       <div slot="graphic" class="graphic">
         <p>{{currStepId}}</p>
       </div>
-      <div 
+      <div
         v-for="step in steps" :key="step.no"
         :data-step-id="step.id"
-        class="step" :class="{'is-active': step.id == currStepId}">
+        class="step" :class="{'is-active': step.id === currStepId}">
         <p>STEP {{step.id}}</p>
       </div>
     </Scrollama>
@@ -18,7 +18,7 @@
 
 // polyfill for IntersectionObserver
 import 'intersection-observer'
-// import Scrollama from '../../../src/Scrollama' 
+// import Scrollama from '../../../src/Scrollama'
 import Scrollama from 'vue-scrollama'
 
 
