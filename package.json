@@ -27,8 +27,8 @@
     "src/*",
     "*.json"
   ],
-  "main": "./dist/vue-scrollama.js",
-  "module": "./dist/vue-scrollama.js",
+  "main": "./dist/vue-scrollama.esm.js",
+  "module": "./dist/vue-scrollama.esm.js",
   "browser": ",./dist/vue-scrollama.min.js",
   "unpkg": "./dist/vue-scrollama.min.js",
   "dependencies": {
