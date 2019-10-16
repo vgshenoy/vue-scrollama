@@ -9,20 +9,6 @@ export default [
     input: './src/Scrollama.vue',
     output: {
       format: 'esm',
-      file: 'dist/vue-scrollama.esm.js'
-    },
-    plugins: [
-      resolve(),
-      commonjs(),
-      css({output: false}),
-      vue({css: false})
-    ]
-  },
-  // Browser build.
-  {
-    input: './src/wrapper.js',
-    output: {
-      format: 'iife',
       file: 'dist/vue-scrollama.js'
     },
     plugins: [
