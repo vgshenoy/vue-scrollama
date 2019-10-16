@@ -27,8 +27,8 @@
     "src/*",
     "*.json"
   ],
-  "main": "./dist/vue-scrollama.esm.js",
-  "module": "./dist/vue-scrollama.esm.js",
+  "main": "./dist/vue-scrollama.js",
+  "module": "./dist/vue-scrollama.js",
   "browser": ",./dist/vue-scrollama.min.js",
   "unpkg": "./dist/vue-scrollama.min.js",
   "dependencies": {
@@ -38,9 +38,11 @@
   },
   "devDependencies": {
     "rollup": "^1.24.0",
+    "rollup-plugin-buble": "^0.19.8",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-css-only": "^1.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-uglify": "^6.0.3",
     "rollup-plugin-vue": "^5.0.1",
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"
