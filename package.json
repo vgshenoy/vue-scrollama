@@ -22,10 +22,15 @@
     "build": "rollup -c --environment BUILD:production",
     "publish": "npm run build && npm publish --access public"
   },
+  "files": [
+    "dist/*",
+    "src/*",
+    "*.json"
+  ],
   "main": "./dist/vue-scrollama.esm.js",
   "module": "./dist/vue-scrollama.esm.js",
-  "browser": "./dist/vue-scrollama.js",
-  "unpkg": "./dist/vue-scrollama.js",
+  "browser": ",./dist/vue-scrollama.min.js",
+  "unpkg": "./dist/vue-scrollama.min.js",
   "dependencies": {
     "scrollama": "^2.1.2",
     "stickyfilljs": "^2.1.0",
