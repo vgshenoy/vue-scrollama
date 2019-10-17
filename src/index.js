@@ -1,3 +1,3 @@
-import Scrollama from "./Scrollama";
+import Scrollama from "./Scrollama.vue";
 
 export default Scrollama;
