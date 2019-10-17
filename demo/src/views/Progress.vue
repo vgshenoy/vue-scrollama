@@ -28,8 +28,8 @@ export default {
     return {
       currStepId: null,
       steps: [
-        {id: 1, rgb: '250,220,0', progress: 0},
-        {id: 2, rgb: '50,250,200', progress: 0}
+        {id: '1', rgb: '250,220,0', progress: 0},
+        {id: '2', rgb: '50,250,200', progress: 0}
       ]
     };
   },

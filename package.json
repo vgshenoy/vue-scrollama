@@ -19,8 +19,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c --environment BUILD:production",
-    "publish": "npm run build && npm publish --access public"
+    "build": "rollup -c --environment BUILD:production"
   },
   "files": [
     "dist/*",
@@ -29,7 +28,6 @@
   ],
   "main": "./dist/vue-scrollama.umd.js",
   "module": "./dist/vue-scrollama.esm.js",
-  "browser": "./dist/vue-scrollama.min.js",
   "unpkg": "./dist/vue-scrollama.min.js",
   "dependencies": {
     "scrollama": "^2.1.2",
