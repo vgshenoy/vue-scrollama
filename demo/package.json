@@ -14,11 +14,11 @@
     "vue": "^2.6.10",
     "vue-analytics": "^5.17.2",
     "vue-router": "^3.1.3",
-    "vue-scrollama": "^1.1.5"
+    "vue-scrollama": "^1.1.8"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.0.0",
-    "@vue/cli-service": "^4.0.0",
+    "@vue/cli-plugin-babel": "^4.0.3",
+    "@vue/cli-service": "^4.0.3",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.6.10"
