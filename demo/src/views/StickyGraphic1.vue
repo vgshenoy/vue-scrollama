@@ -18,7 +18,7 @@
 
 // polyfill for IntersectionObserver
 import 'intersection-observer'
-import Scrollama from '../../../src/Scrollama'
+import Scrollama from 'vue-scrollama'
 
 
 export default {
