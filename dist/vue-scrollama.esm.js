@@ -1306,37 +1306,17 @@ var script = {
     setup() {
       this.scroller.destroy();
 
-      this.scroller.setup(this.opts);
-
-      if(this.$listeners['step-progress']) {
-        this.scroller.onStepProgress(resp => {
+      this.scroller
+        .setup(this.opts)
+        .onStepProgress(resp => {
           this.$emit('step-progress', resp);
-        });
-      }
-
-      if(this.$listeners['step-enter']) {
-        this.scroller.onStepEnter(resp => {
+        })
+        .onStepEnter(resp => {
           this.$emit('step-enter', resp);
-        });
-      }
-
-      if(this.$listeners['step-exit']) {
-        this.scroller.onStepExit(resp => {
+        })
+        .onStepExit(resp => {
           this.$emit('step-exit', resp);
         });
-      }
-
-      if(this.$listeners['container-enter']) {
-        this.scroller.onContainerEnter(resp => {
-          this.$emit('container-enter', resp);
-        });
-      }
-
-      if(this.$listeners['container-exit']) {
-        this.scroller.onContainerExit(resp => {
-          this.$emit('container-exit', resp);
-        });
-      }
 
       this.scroller.resize();
     },
