@@ -85,6 +85,7 @@ export default {
 
 .scrollama-graphic {
   position: sticky;
+  position: -webkit-sticky; /* Safari */
   top: 0;
 }
 
