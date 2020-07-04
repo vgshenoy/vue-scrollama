@@ -90,11 +90,11 @@ Use Scrollama in your components/templates, etc.
 ```vue
 <template>
   <client-only>
-      <Scrollama @step-enter="stepEnterHandler">
-        <div class="step1" data-step="a">...</div> // classes like .step1 are helpful to adjust the style and dimensions of a step
-        <div class="step2" data-step="b">...</div> // data-* attributes are helpful to store instructions to be used in handlers
-        <div class="step3" data-step="c">...</div>
-      </Scrollama>
+    <Scrollama @step-enter="stepEnterHandler">
+      <div class="step1" data-step="a">...</div> // classes like .step1 are helpful to adjust the style and dimensions of a step
+      <div class="step2" data-step="b">...</div> // data-* attributes are helpful to store instructions to be used in handlers
+      <div class="step3" data-step="c">...</div>
+    </Scrollama>
   </client-only />
 </template>
 
