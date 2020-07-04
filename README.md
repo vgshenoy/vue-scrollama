@@ -138,7 +138,7 @@ Props passed to the `Scrollama` component will be passed on to scrollama's [setu
 * `once`: (boolean): Only trigger the step to enter once then remove listener. **default: false**
 * `threshold`: (number, 1+): The granularity of the progress interval, in pixels (smaller = more granular updates). **(default: 4)**
 
-```html
+```vue
 // example with offset set to 0.8
   <Scrollama @step-enter="stepHandler" :offset="0.8">
       ...
