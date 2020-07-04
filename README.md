@@ -30,7 +30,7 @@ Any elements placed directly inside a `Scrollama` component will be considered a
 
 Here's a simple example with three `<div>` elements as steps and a `step-enter` event
 
-```html
+```vue
 <template>
   <Scrollama @step-enter="stepEnterHandler">
     <div class="step1" data-step="a">...</div> // classes like .step1 are helpful to adjust the style and dimensions of a step
@@ -60,6 +60,56 @@ export default {
 /* your styles here */
 </style>
 
+```
+
+### NuxtJS Usage
+For usage with NuxtJS & for SSR support, you must create a custom NuxtJS plugin.
+
+#### Create plugin
+plugins/scrollama.client.js
+```javascript
+import Vue from 'vue';
+import 'intersection-observer' // for cross-browser support
+import Scrollama from 'vue-scrollama'
+
+Vue.component('Scrollama', Scrollama);
+```
+
+#### Include in ``nuxt.config.js``
+nuxt.config.js
+
+```javascript
+  plugins: [
+    { src: '~/plugins/scrollama.client.js' }
+  ]
+```
+
+#### Usage
+Use Scrollama in your components/templates, etc.
+
+```vue
+<template>
+  <Scrollama @step-enter="stepEnterHandler">
+    <div class="step1" data-step="a">...</div> // classes like .step1 are helpful to adjust the style and dimensions of a step
+    <div class="step2" data-step="b">...</div> // data-* attributes are helpful to store instructions to be used in handlers
+    <div class="step3" data-step="c">...</div>
+  </Scrollama>
+</template>
+
+<script>
+export default {
+  methods: {
+    stepEnterHandler ({element, index, direction}) {
+      // handle the step-event as required here
+      console.log(element, index, direction)
+    }
+  }
+}
+
+<style src="vue-scrollama/dist/vue-scrollama.css"></style>
+<style>
+/* your styles here */
+</style>
 ```
 
 ### Sticky Graphic
