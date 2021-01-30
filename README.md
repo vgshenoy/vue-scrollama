@@ -30,11 +30,11 @@ Any elements placed directly inside a `Scrollama` component will be considered a
 
 Here's a simple example with three `<div>` elements as steps and a `step-enter` event
 
-```html
+```vue
 <template>
   <Scrollama @step-enter="stepEnterHandler">
     <div class="step1" data-step="a">...</div> // classes like .step1 are helpful to adjust the style and dimensions of a step
-    <div class="step2" data-step="b">...</div> // data-* attributes are helpful to store instructions to be used in handlers
+    <div class="step2" data-step="b">...</div> // data-* attributes can be helpful to store instructions to be used in handlers
     <div class="step3" data-step="c">...</div>
   </Scrollama>
 </template>
@@ -45,31 +45,35 @@ import Scrollama from 'vue-scrollama'
 
 export default {
   components: {
-    Scrollama
+    Scrollama // local registration in this example, can also be globally registered 
   },
   methods: {
     stepEnterHandler ({element, index, direction}) {
       // handle the step-event as required here
-      console.log(element, index, direction)
+      console.log({ element, index, direction });
+      // use the data attributes if needed
+      console.log(element.dataset.step) // a, b or c 
     }
   }
 }
+</script>
 
 <style src="vue-scrollama/dist/vue-scrollama.css"></style>
 <style>
 /* your styles here */
 </style>
-
 ```
 
 ### Sticky Graphic
 To add a sticky graphic element ([example](https://vue-scrollama.now.sh/#/stickygraphic1)), place it into a slot with name 'graphic'.
 
-```html
+```vue
 // classes are helpful to adjust the style and dimensions of the graphic
 <template>
   <Scrollama @step-enter="stepEnterHandler">
-    <div slot="graphic" class="graphic">...</div> 
+    <template v-slot:graphic>
+      <div class="graphic">...</div>
+    </template>
     <div class="step1" data-step="a">...</div>
     <div class="step2" data-step="b">...</div>
     <div class="step3" data-step="c">...</div>
@@ -116,4 +120,4 @@ On CodeSandbox:
 * [Sticky Graphic 1](https://codesandbox.io/s/j3oy2k6lxv)
 * [Sticky Graphic 2](https://codesandbox.io/s/jznvyjpr9w)
 
-and [more](https://codesandbox.io/search?query=vue-scrollama%20shenoy&page=1&refinementList%5Bnpm_dependencies.dependency%5D%5B0%5D=vue-scrollama).
+and [more](https://codesandbox.io/search?query=vue-scrollama%20vgshenoy&page=1&refinementList%5Bnpm_dependencies.dependency%5D%5B0%5D=vue-scrollama).
