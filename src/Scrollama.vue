@@ -14,7 +14,6 @@
 import scrollama from 'scrollama';
 import { ResizeObserver } from 'vue-resize';
 import 'vue-resize/dist/vue-resize.css';
-import Stickyfill from 'stickyfilljs';
 
 
 export default {
@@ -34,11 +33,7 @@ export default {
     }
   },
   mounted () {
-    // polyfill for CSS position sticky
-    Stickyfill.add(this.$refs['scrollama-graphic']);
-
     this.scroller = scrollama();
-
     this.setup();
   },
   beforeDestroy() {
