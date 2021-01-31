@@ -30,7 +30,7 @@ Any elements placed directly inside a `Scrollama` component will be considered a
 
 Here's a simple example with three `<div>` elements as steps and a `step-enter` event
 
-```html
+```vue
 <template>
   <Scrollama @step-enter="stepEnterHandler">
     <div class="step1" data-step="a">...</div> // classes like .step1 are helpful to adjust the style and dimensions of a step
@@ -62,6 +62,58 @@ export default {
 
 ```
 
+### NuxtJS Usage
+For usage with NuxtJS & for SSR support, you must create a custom NuxtJS plugin.
+
+#### Create plugin
+plugins/scrollama.client.js
+```javascript
+import Vue from 'vue';
+import 'intersection-observer' // for cross-browser support
+import Scrollama from 'vue-scrollama'
+
+Vue.component('Scrollama', Scrollama);
+```
+
+#### Include in ``nuxt.config.js``
+nuxt.config.js
+
+```javascript
+  plugins: [
+    { src: '~/plugins/scrollama.client.js' }
+  ]
+```
+
+#### Usage
+Use Scrollama in your components/templates, etc.
+
+```vue
+<template>
+  <client-only>
+    <Scrollama @step-enter="stepEnterHandler">
+      <div class="step1" data-step="a">...</div> // classes like .step1 are helpful to adjust the style and dimensions of a step
+      <div class="step2" data-step="b">...</div> // data-* attributes are helpful to store instructions to be used in handlers
+      <div class="step3" data-step="c">...</div>
+    </Scrollama>
+  </client-only />
+</template>
+
+<script>
+export default {
+  methods: {
+    stepEnterHandler ({element, index, direction}) {
+      // handle the step-event as required here
+      console.log(element, index, direction)
+    }
+  }
+}
+
+<style src="vue-scrollama/dist/vue-scrollama.css"></style>
+<style>
+/* your styles here */
+</style>
+```
+
 ### Sticky Graphic
 To add a sticky graphic element ([example](https://vue-scrollama.now.sh/#/stickygraphic1)), place it into a slot with name 'graphic'.
 
@@ -88,7 +140,7 @@ Props passed to the `Scrollama` component will be passed on to scrollama's [setu
 * `once`: (boolean): Only trigger the step to enter once then remove listener. **default: false**
 * `threshold`: (number, 1+): The granularity of the progress interval, in pixels (smaller = more granular updates). **(default: 4)**
 
-```html
+```vue
 // example with offset set to 0.8
   <Scrollama @step-enter="stepHandler" :offset="0.8">
       ...
