@@ -1,10 +1,10 @@
 <template>
   <div :id="`scrollama-container-${id}`" class="scrollama-container" :class="{'with-graphic': $slots.graphic}">
     <div :id="`scrollama-graphic-${id}`" class="scrollama-graphic" ref="scrollama-graphic">
-      <slot name="graphic"></slot>
+      <slot name="graphic" />
     </div>
     <div :id="`scrollama-steps-${id}`" class="scrollama-steps">
-      <slot></slot>
+      <slot />
     </div>
     <resize-observer @notify="handleResize"/>
   </div>
@@ -14,7 +14,6 @@
 import scrollama from 'scrollama';
 import { ResizeObserver } from 'vue-resize';
 import 'vue-resize/dist/vue-resize.css';
-
 
 export default {
   name: 'Scrollama',
@@ -33,11 +32,11 @@ export default {
     }
   },
   mounted () {
-    this.scroller = scrollama();
+    this._scroller = scrollama();
     this.setup();
   },
   beforeDestroy() {
-    this.scroller.destroy();
+    this._scroller.destroy();
   },
   computed: {
     opts() {
@@ -50,9 +49,9 @@ export default {
   },
   methods: {
     setup() {
-      this.scroller.destroy();
+      this._scroller.destroy();
 
-      this.scroller
+      this._scroller
         .setup(this.opts)
         .onStepProgress(resp => {
           this.$emit('step-progress', resp)
@@ -64,10 +63,10 @@ export default {
           this.$emit('step-exit', resp);
         });
 
-      this.scroller.resize();
+      this._scroller.resize();
     },
     handleResize () {
-      this.scroller.resize();
+      this._scroller.resize();
     }
   }
 };
