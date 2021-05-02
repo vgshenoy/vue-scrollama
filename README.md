@@ -78,7 +78,7 @@ Props passed to the `Scrollama` component will be passed on to scrollama's [setu
 
 ## Examples
 
-On CodeSandbox:
+### Codesandbox
 
 * [Basic](https://codesandbox.io/s/5kn98j4w74)
 * [Progress](https://codesandbox.io/s/ryx25zrj5q)
@@ -86,6 +86,10 @@ On CodeSandbox:
 * [Sticky Graphic 2](https://codesandbox.io/s/jznvyjpr9w)
 
 and [more](https://codesandbox.io/search?query=vue-scrollama%20vgshenoy&page=1&refinementList%5Bnpm_dependencies.dependency%5D%5B0%5D=vue-scrollama).
+
+### Nuxt
+
+Example repo [here](https://github.com/vgshenoy/vue-scrollama-demo-nuxt).
 
 ## Release Notes
 
