@@ -80,6 +80,8 @@ Props passed to the `Scrollama` component will be passed on to scrollama's [setu
 
 ### Codesandbox
 
+Note: The triggering might not work precisely in the split window browser in CodeSandbox. Open in a new window for more precise triggering.
+
 * [Basic](https://codesandbox.io/s/5kn98j4w74)
 * [Progress](https://codesandbox.io/s/ryx25zrj5q)
 * [Sticky Graphic 1](https://codesandbox.io/s/j3oy2k6lxv)
