@@ -33,16 +33,14 @@
     "./sfc": "src/Scrollama.vue"
   },
   "dependencies": {
-    "scrollama": "^2.2.2",
-    "vue-resize": "^1.0.1"
+    "scrollama": "^2.2.2"
   },
   "devDependencies": {
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
-    "postcss": "^8.2.10",
-    "rollup": "^2.45.2",
-    "rollup-plugin-css-only": "^3.1.0",
+    "postcss": "^8.2.13",
+    "rollup": "^2.46.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-vue": "^5.1.9",
     "vue": "^2.6.12",
