@@ -657,16 +657,12 @@
   //
 
   var script = {
+    inheritAttrs: false,
     name: 'Scrollama',
     props: {
       id: {
         type: String,
-        validator: function(value) {
-          return !/\s/.test(value);
-        },
-        default: () => {
-          return Math.random().toString(36).substr(2, 9);
-        }
+        required: true
       }
     },
     mounted () {
@@ -678,9 +674,10 @@
     },
     computed: {
       opts() {
-        return Object.assign({}, this.$attrs, {
-          step: `#scrollama-steps-${this.id}>div`
-        });
+        return Object.assign({},  {
+          step: this.$el.childNodes,
+          progress: !!this.$listeners['step-progress']
+        }, this.$attrs);
       }
     },
     methods: {
@@ -784,8 +781,9 @@
 
   /* script */
   const __vue_script__ = script;
+
   /* template */
-  var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"scrollama__container",attrs:{"id":("scrollama__container-" + _vm.id)}},[_c('div',{staticClass:"scrollama__steps",attrs:{"id":("scrollama__steps-" + _vm.id)}},[_vm._t("default")],2)])};
+  var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"scrollama__steps"},[_vm._t("default")],2)};
   var __vue_staticRenderFns__ = [];
 
     /* style */

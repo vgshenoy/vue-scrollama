@@ -1,8 +1,6 @@
 <template>
-  <div :id="`scrollama__container-${id}`" class="scrollama__container">
-    <div :id="`scrollama__steps-${id}`" class="scrollama__steps">
-      <slot />
-    </div>
+  <div class="scrollama__steps">
+    <slot />
   </div>
 </template>
 
@@ -10,16 +8,12 @@
 import scrollama from 'scrollama';
 
 export default {
+  inheritAttrs: false,
   name: 'Scrollama',
   props: {
     id: {
       type: String,
-      validator: function(value) {
-        return !/\s/.test(value);
-      },
-      default: () => {
-        return Math.random().toString(36).substr(2, 9);
-      }
+      required: true
     }
   },
   mounted () {
@@ -31,9 +25,10 @@ export default {
   },
   computed: {
     opts() {
-      return Object.assign({}, this.$attrs, {
-        step: `#scrollama-steps-${this.id}>div`
-      });
+      return Object.assign({},  {
+        step: this.$el.childNodes,
+        progress: !!this.$listeners['step-progress']
+      }, this.$attrs);
     }
   },
   methods: {
@@ -60,13 +55,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.scrollama__container {
-  position: relative;
-}
-
-.scrollama__steps {
-  position: relative;
-}
-</style>

@@ -11,7 +11,11 @@
 
 A Vue component to easily setup scroll-driven interactions (aka scrollytelling). Uses [Scrollama](https://github.com/russellgoldenberg/scrollama) under the hood.
 
-Jump straight to examples [here](#examples).
+The best way to understand what it can do for you is to check out the examples [here](https://vue-scrollama.vercel.app) and [here](#examples).
+
+## Update
+
+Recommended updating to v2.0.0 or later, a few previous versions were reported to have unreliable event triggering on mobile devices. Release notes [here](#release-notes).
 
 ## Installation
 
@@ -33,15 +37,15 @@ Here's a simple example with three `<div>` elements as steps and a `step-enter` 
 ```vue
 <template>
   <Scrollama @step-enter="stepEnterHandler">
-    <div class="step1" data-step="a">...</div> // classes like .step1 are helpful to adjust the style and dimensions of a step
-    <div class="step2" data-step="b">...</div> // data-* attributes can be helpful to store instructions to be used in handlers
-    <div class="step3" data-step="c">...</div>
+    <div class="step-1" data-step="a">...</div> // classes like .step-1 may be used to adjust the style and dimensions of a step
+    <div class="step-2" data-step="b">...</div> // data-* attributes can be helpful to store instructions to be used in handlers
+    <div class="step-3" data-step="c">...</div>
   </Scrollama>
 </template>
 
 <script>
 import 'intersection-observer' // for cross-browser support
-import Scrollama from 'vue-scrollama'
+import Scrollama from 'vue-scrollama' // local registration in this example, can also be globally registered
 
 export default {
   components: {
@@ -57,111 +61,20 @@ export default {
   }
 }
 </script>
-
-<style src="vue-scrollama/dist/vue-scrollama.css"></style>
-<style>
-/* your styles here */
-</style>
-```
-
-### NuxtJS Usage
-For usage with NuxtJS & for SSR support, you must create a custom NuxtJS plugin.
-
-#### Create plugin
-plugins/scrollama.client.js
-```javascript
-import Vue from 'vue';
-import 'intersection-observer' // for cross-browser support
-import Scrollama from 'vue-scrollama'
-
-Vue.component('Scrollama', Scrollama);
-```
-
-#### Include in ``nuxt.config.js``
-nuxt.config.js
-
-```javascript
-  plugins: [
-    { src: '~/plugins/scrollama.client.js' }
-  ]
-```
-
-#### Usage
-Use Scrollama in your components/templates, etc.
-
-```vue
-<template>
-  <client-only>
-    <Scrollama @step-enter="stepEnterHandler">
-      <div class="step1" data-step="a">...</div> // classes like .step1 are helpful to adjust the style and dimensions of a step
-      <div class="step2" data-step="b">...</div> // data-* attributes are helpful to store instructions to be used in handlers
-      <div class="step3" data-step="c">...</div>
-    </Scrollama>
-  </client-only />
-</template>
-
-<script>
-export default {
-  methods: {
-    stepEnterHandler ({element, index, direction}) {
-      // handle the step-event as required here
-      console.log(element, index, direction)
-    }
-  }
-}
-
-<style src="vue-scrollama/dist/vue-scrollama.css"></style>
-<style>
-/* your styles here */
-</style>
-```
-
-### Sticky Graphic
-To add a sticky graphic element ([example](https://vue-scrollama.now.sh/#/stickygraphic1)), place it into a slot with name 'graphic'.
-
-```vue
-// classes are helpful to adjust the style and dimensions of the graphic
-<template>
-  <Scrollama @step-enter="stepEnterHandler">
-    <template v-slot:graphic>
-      <div class="graphic">...</div>
-    </template>
-    <div class="step1" data-step="a">...</div>
-    <div class="step2" data-step="b">...</div>
-    <div class="step3" data-step="c">...</div>
-  </Scrollama>
-</template>
 ```
 
 ## Scrollama Options
 
 Props passed to the `Scrollama` component will be passed on to scrollama's [setup method](https://github.com/russellgoldenberg/scrollama#scrollamasetupoptions):
 
-* `offset`: (number, 0 - 1): How far from the top of the viewport to trigger a step. **(default: 0.5)** 
-* `progress`: (boolean): Whether to fire incremental step progress updates or not. **(default: false)**
-* `debug`: (boolean): Whether to show visual debugging tools or not. **(default: false)**
-* `order`: (boolean): Whether to preserve step triggering order if they fire out of sync (eg. ensure step 2 enters after 1 exits). **(default: true)**
-* `once`: (boolean): Only trigger the step to enter once then remove listener. **default: false**
-* `threshold`: (number, 1+): The granularity of the progress interval, in pixels (smaller = more granular updates). **(default: 4)**
-
 ```vue
 // example with offset set to 0.8
+<template>
   <Scrollama @step-enter="stepHandler" :offset="0.8">
       ...
   </Scrollama>
 </template>
 ```
-
-## Styling
-If you inspect the DOM elements set up by `Scrollama`, you'll see three `div` elements:
-
-* `.scrollama-container`: overall container
-* `.scrollama-steps`: container for your step elements
-* `.scrollama-graphic`: container for your sticky graphic
-
-Add to/override styles of these as per your requirements. 
-
-For higher specificity, passing an `id` prop to `Scrollama` will accordingly postfix the ids of the above `div` elements. See this [example](https://codesandbox.io/s/jv7kx29mry) on CodeSandbox.
 
 ## Examples
 
@@ -173,3 +86,13 @@ On CodeSandbox:
 * [Sticky Graphic 2](https://codesandbox.io/s/jznvyjpr9w)
 
 and [more](https://codesandbox.io/search?query=vue-scrollama%20vgshenoy&page=1&refinementList%5Bnpm_dependencies.dependency%5D%5B0%5D=vue-scrollama).
+
+## Release Notes
+
+### v2.0
+
+* Updated in accordance with the latest `scrollama` API
+* *Breaking*: No more `graphic` slot, create your graphic outside the `Scrollama` component now and style it as per your needs (have a look at the examples above for guidance)
+* DOM scaffolding generated by `Scrollama` has been simplified
+* No need to import CSS any more, the DOM scaffolding is just one `div` and can be styled by adding classes or styles on the `Scrollama` component
+* This update also fixes some buggy behaviour observed on mobile devices

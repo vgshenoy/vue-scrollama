@@ -1,7 +1,6 @@
 import vue from 'rollup-plugin-vue';
-import css from 'rollup-plugin-css-only';
 import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import buble from "@rollup/plugin-buble";
 import { terser } from 'rollup-plugin-terser';
 
@@ -15,10 +14,9 @@ export default [
       exports: 'named'
     },
     plugins: [
-      resolve(),
+      nodeResolve({exportConditions: ['node']}),
       commonjs({include: 'node_modules/**'}),
-      css({output: 'vue-scrollama.css'}),
-      vue({css: false})
+      vue()
     ]
   },
   // ESM build to be used with webpack/rollup.
@@ -30,10 +28,9 @@ export default [
       exports: 'named'
     },
     plugins: [
-      resolve(),
+      nodeResolve({exportConditions: ['node']}),
       commonjs({include: 'node_modules/**'}),
-      css({output: 'vue-scrollama.css'}),
-      vue({css: false})
+      vue()
     ]
   },
   // Browser build.
@@ -46,10 +43,9 @@ export default [
       exports: 'named'
     },
     plugins: [
-      resolve(),
+      nodeResolve({exportConditions: ['node']}),
       commonjs({include: 'node_modules/**'}),
-      css({output: 'vue-scrollama.css'}),
-      vue({css: false}),
+      vue(),
       buble(),
       terser()
     ]
