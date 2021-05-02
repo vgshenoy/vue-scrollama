@@ -653,12 +653,6 @@ function scrollama() {
 var script = {
   inheritAttrs: false,
   name: 'Scrollama',
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
   mounted () {
     this._scroller = scrollama();
     this.setup();
