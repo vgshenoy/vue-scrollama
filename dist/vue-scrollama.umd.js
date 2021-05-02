@@ -654,283 +654,10 @@
     return S;
   }
 
-  function getInternetExplorerVersion() {
-    var ua = window.navigator.userAgent;
-    var msie = ua.indexOf('MSIE ');
-
-    if (msie > 0) {
-      // IE 10 or older => return version number
-      return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-    }
-
-    var trident = ua.indexOf('Trident/');
-
-    if (trident > 0) {
-      // IE 11 => return version number
-      var rv = ua.indexOf('rv:');
-      return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-    }
-
-    var edge = ua.indexOf('Edge/');
-
-    if (edge > 0) {
-      // Edge (IE 12+) => return version number
-      return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-    } // other browser
-
-
-    return -1;
-  }
-
-  //
-  var isIE;
-
-  function initCompat() {
-    if (!initCompat.init) {
-      initCompat.init = true;
-      isIE = getInternetExplorerVersion() !== -1;
-    }
-  }
-
-  var script$1 = {
-    name: 'ResizeObserver',
-    props: {
-      emitOnMount: {
-        type: Boolean,
-        default: false
-      },
-      ignoreWidth: {
-        type: Boolean,
-        default: false
-      },
-      ignoreHeight: {
-        type: Boolean,
-        default: false
-      }
-    },
-    mounted: function mounted() {
-      var _this = this;
-
-      initCompat();
-      this.$nextTick(function () {
-        _this._w = _this.$el.offsetWidth;
-        _this._h = _this.$el.offsetHeight;
-
-        if (_this.emitOnMount) {
-          _this.emitSize();
-        }
-      });
-      var object = document.createElement('object');
-      this._resizeObject = object;
-      object.setAttribute('aria-hidden', 'true');
-      object.setAttribute('tabindex', -1);
-      object.onload = this.addResizeHandlers;
-      object.type = 'text/html';
-
-      if (isIE) {
-        this.$el.appendChild(object);
-      }
-
-      object.data = 'about:blank';
-
-      if (!isIE) {
-        this.$el.appendChild(object);
-      }
-    },
-    beforeDestroy: function beforeDestroy() {
-      this.removeResizeHandlers();
-    },
-    methods: {
-      compareAndNotify: function compareAndNotify() {
-        if (!this.ignoreWidth && this._w !== this.$el.offsetWidth || !this.ignoreHeight && this._h !== this.$el.offsetHeight) {
-          this._w = this.$el.offsetWidth;
-          this._h = this.$el.offsetHeight;
-          this.emitSize();
-        }
-      },
-      emitSize: function emitSize() {
-        this.$emit('notify', {
-          width: this._w,
-          height: this._h
-        });
-      },
-      addResizeHandlers: function addResizeHandlers() {
-        this._resizeObject.contentDocument.defaultView.addEventListener('resize', this.compareAndNotify);
-
-        this.compareAndNotify();
-      },
-      removeResizeHandlers: function removeResizeHandlers() {
-        if (this._resizeObject && this._resizeObject.onload) {
-          if (!isIE && this._resizeObject.contentDocument) {
-            this._resizeObject.contentDocument.defaultView.removeEventListener('resize', this.compareAndNotify);
-          }
-
-          this.$el.removeChild(this._resizeObject);
-          this._resizeObject.onload = null;
-          this._resizeObject = null;
-        }
-      }
-    }
-  };
-
-  function normalizeComponent$1(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
-  /* server only */
-  , shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
-    if (typeof shadowMode !== 'boolean') {
-      createInjectorSSR = createInjector;
-      createInjector = shadowMode;
-      shadowMode = false;
-    } // Vue.extend constructor export interop.
-
-
-    var options = typeof script === 'function' ? script.options : script; // render functions
-
-    if (template && template.render) {
-      options.render = template.render;
-      options.staticRenderFns = template.staticRenderFns;
-      options._compiled = true; // functional template
-
-      if (isFunctionalTemplate) {
-        options.functional = true;
-      }
-    } // scopedId
-
-
-    if (scopeId) {
-      options._scopeId = scopeId;
-    }
-
-    var hook;
-
-    if (moduleIdentifier) {
-      // server build
-      hook = function hook(context) {
-        // 2.3 injection
-        context = context || // cached call
-        this.$vnode && this.$vnode.ssrContext || // stateful
-        this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
-        // 2.2 with runInNewContext: true
-
-        if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-          context = __VUE_SSR_CONTEXT__;
-        } // inject component styles
-
-
-        if (style) {
-          style.call(this, createInjectorSSR(context));
-        } // register component module identifier for async chunk inference
-
-
-        if (context && context._registeredComponents) {
-          context._registeredComponents.add(moduleIdentifier);
-        }
-      }; // used by ssr in case component is cached and beforeCreate
-      // never gets called
-
-
-      options._ssrRegister = hook;
-    } else if (style) {
-      hook = shadowMode ? function (context) {
-        style.call(this, createInjectorShadow(context, this.$root.$options.shadowRoot));
-      } : function (context) {
-        style.call(this, createInjector(context));
-      };
-    }
-
-    if (hook) {
-      if (options.functional) {
-        // register for functional component in vue file
-        var originalRender = options.render;
-
-        options.render = function renderWithStyleInjection(h, context) {
-          hook.call(context);
-          return originalRender(h, context);
-        };
-      } else {
-        // inject component registration as beforeCreate hook
-        var existing = options.beforeCreate;
-        options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
-      }
-    }
-
-    return script;
-  }
-
-  /* script */
-  var __vue_script__$1 = script$1;
-  /* template */
-
-  var __vue_render__$1 = function __vue_render__() {
-    var _vm = this;
-
-    var _h = _vm.$createElement;
-
-    var _c = _vm._self._c || _h;
-
-    return _c("div", {
-      staticClass: "resize-observer",
-      attrs: {
-        tabindex: "-1"
-      }
-    });
-  };
-
-  var __vue_staticRenderFns__$1 = [];
-  __vue_render__$1._withStripped = true;
-  /* style */
-
-  var __vue_inject_styles__$1 = undefined;
-  /* scoped */
-
-  var __vue_scope_id__$1 = "data-v-8859cc6c";
-  /* module identifier */
-
-  var __vue_module_identifier__$1 = undefined;
-  /* functional template */
-
-  var __vue_is_functional_template__$1 = false;
-  /* style inject */
-
-  /* style inject SSR */
-
-  /* style inject shadow dom */
-
-  var __vue_component__$1 = /*#__PURE__*/normalizeComponent$1({
-    render: __vue_render__$1,
-    staticRenderFns: __vue_staticRenderFns__$1
-  }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);
-
-  function install(Vue) {
-    // eslint-disable-next-line vue/component-definition-name-casing
-    Vue.component('resize-observer', __vue_component__$1);
-    Vue.component('ResizeObserver', __vue_component__$1);
-  }
-
-  var plugin = {
-    // eslint-disable-next-line no-undef
-    version: "1.0.1",
-    install: install
-  };
-
-  var GlobalVue = null;
-
-  if (typeof window !== 'undefined') {
-    GlobalVue = window.Vue;
-  } else if (typeof global !== 'undefined') {
-    GlobalVue = global.Vue;
-  }
-
-  if (GlobalVue) {
-    GlobalVue.use(plugin);
-  }
-
   //
 
   var script = {
     name: 'Scrollama',
-    components: {
-      ResizeObserver: __vue_component__$1
-    },
     props: {
       id: {
         type: String,
@@ -952,9 +679,7 @@
     computed: {
       opts() {
         return Object.assign({}, this.$attrs, {
-          step: `#scrollama-steps-${this.id}>div`,
-          container: `#scrollama-container-${this.id}`,
-          graphic: `#scrollama-graphic-${this.id}`,
+          step: `#scrollama-steps-${this.id}>div`
         });
       }
     },
@@ -974,7 +699,7 @@
             this.$emit('step-exit', resp);
           });
 
-        this._scroller.resize();
+        window.addEventListener('resize', this.handleResize);
       },
       handleResize () {
         this._scroller.resize();
@@ -1060,7 +785,7 @@
   /* script */
   const __vue_script__ = script;
   /* template */
-  var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"scrollama-container",class:{'with-graphic': _vm.$slots.graphic},attrs:{"id":("scrollama-container-" + _vm.id)}},[_c('div',{ref:"scrollama-graphic",staticClass:"scrollama-graphic",attrs:{"id":("scrollama-graphic-" + _vm.id)}},[_vm._t("graphic")],2),_vm._v(" "),_c('div',{staticClass:"scrollama-steps",attrs:{"id":("scrollama-steps-" + _vm.id)}},[_vm._t("default")],2),_vm._v(" "),_c('resize-observer',{on:{"notify":_vm.handleResize}})],1)};
+  var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"scrollama__container",attrs:{"id":("scrollama__container-" + _vm.id)}},[_c('div',{staticClass:"scrollama__steps",attrs:{"id":("scrollama__steps-" + _vm.id)}},[_vm._t("default")],2)])};
   var __vue_staticRenderFns__ = [];
 
     /* style */

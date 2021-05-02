@@ -1,25 +1,16 @@
 <template>
-  <div :id="`scrollama-container-${id}`" class="scrollama-container" :class="{'with-graphic': $slots.graphic}">
-    <div :id="`scrollama-graphic-${id}`" class="scrollama-graphic" ref="scrollama-graphic">
-      <slot name="graphic" />
-    </div>
-    <div :id="`scrollama-steps-${id}`" class="scrollama-steps">
+  <div :id="`scrollama__container-${id}`" class="scrollama__container">
+    <div :id="`scrollama__steps-${id}`" class="scrollama__steps">
       <slot />
     </div>
-    <resize-observer @notify="handleResize"/>
   </div>
 </template>
 
 <script>
 import scrollama from 'scrollama';
-import { ResizeObserver } from 'vue-resize';
-import 'vue-resize/dist/vue-resize.css';
 
 export default {
   name: 'Scrollama',
-  components: {
-    ResizeObserver
-  },
   props: {
     id: {
       type: String,
@@ -41,9 +32,7 @@ export default {
   computed: {
     opts() {
       return Object.assign({}, this.$attrs, {
-        step: `#scrollama-steps-${this.id}>div`,
-        container: `#scrollama-container-${this.id}`,
-        graphic: `#scrollama-graphic-${this.id}`,
+        step: `#scrollama-steps-${this.id}>div`
       });
     }
   },
@@ -63,7 +52,7 @@ export default {
           this.$emit('step-exit', resp);
         });
 
-      this._scroller.resize();
+      window.addEventListener('resize', this.handleResize);
     },
     handleResize () {
       this._scroller.resize();
@@ -73,16 +62,11 @@ export default {
 </script>
 
 <style>
-.scrollama-container {
+.scrollama__container {
   position: relative;
 }
 
-.scrollama-graphic {
-  position: sticky;
-  top: 0;
-}
-
-.scrollama-steps {
+.scrollama__steps {
   position: relative;
 }
 </style>
