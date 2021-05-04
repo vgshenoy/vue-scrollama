@@ -13,9 +13,11 @@ A Vue component to easily setup scroll-driven interactions (aka scrollytelling).
 
 The best way to understand what it can do for you is to check out the examples [here](https://vue-scrollama.vercel.app) and [here](#examples).
 
-## Update
+## Latest Release
 
-Recommended updating to v2.0.0 or later, a few previous versions were reported to have unreliable event triggering on mobile devices. Release notes [here](#release-notes).
+For users still on 1.x.x, I'd recommend updating to the latest 2.x.x, a few previous versions were reported to have unreliable event triggering on mobile devices. It does bring with it some small breaking changes though, so do take care of those. I've updated all [examples](#examples) to 2.x.x, so you can check those out for guidance. 
+
+Release notes [here](#release-notes).
 
 ## Installation
 
