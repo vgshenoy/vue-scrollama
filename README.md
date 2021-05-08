@@ -15,7 +15,9 @@ The best way to understand what it can do for you is to check out the examples [
 
 ## Latest Release
 
-For users still on 1.x.x, I'd recommend updating to the latest 2.x.x, a few previous versions were reported to have unreliable event triggering on mobile devices. It does bring with it some small breaking changes though, so do take care of those. I've updated all [examples](#examples) to 2.x.x, so you can check those out for guidance. 
+For users still on 1.x.x, I'd recommend updating to the latest 2.x.x, a few previous versions were reported to have unreliable event triggering on mobile devices. 
+
+It does bring with it some small breaking changes though, so do take care of those. I've updated all [examples](#examples) to 2.x.x, so you can check those out for guidance. 
 
 Release notes [here](#release-notes).
 
