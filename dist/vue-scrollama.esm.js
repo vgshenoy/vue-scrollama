@@ -663,7 +663,7 @@ var script = {
   computed: {
     opts() {
       return Object.assign({},  {
-        step: this.$el.childNodes,
+        step: this.$el.children,
         progress: !!this.$listeners['step-progress']
       }, this.$attrs);
     }
