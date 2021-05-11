@@ -669,7 +669,7 @@
     computed: {
       opts() {
         return Object.assign({},  {
-          step: this.$el.children,
+          step: Array.from(this.$el.children),
           progress: !!this.$listeners['step-progress']
         }, this.$attrs);
       }
