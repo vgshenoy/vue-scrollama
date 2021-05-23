@@ -67,18 +67,25 @@ export default {
 </script>
 ```
 
-## Scrollama Options
+## API Reference
 
-Props passed to the `Scrollama` component will be passed on to scrollama's [setup method](https://github.com/russellgoldenberg/scrollama#scrollamasetupoptions):
+### Props
+Props passed to the `Scrollama` component will simply be passed on to scrollama's [setup method](https://github.com/russellgoldenberg/scrollama#scrollamasetupoptions):
 
 ```vue
-// example with offset set to 0.8
+// example with offset prop set to 0.8
 <template>
   <Scrollama @step-enter="stepHandler" :offset="0.8">
       ...
   </Scrollama>
 </template>
 ```
+
+### Events
+* `step-enter`
+* `step-exit`
+* `step-progress`
+
 
 ## Examples
 
