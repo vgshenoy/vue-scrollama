@@ -100,6 +100,13 @@ Example repo [here](https://github.com/vgshenoy/vue-scrollama-demo-nuxt).
 
 ## Release Notes
 
+### v3.0
+
+* Requires Vue ^3.5.0 and Scrollama ~3.2.0
+* Scrollama's `order` option is no longer supported - it was removed in Scrollama 3.x
+* Scrollama 3.x uses a built-in resize observer, so manual resize handling is no longer needed
+* The `intersection-observer` polyfill is no longer required for modern browsers
+
 ### v2.0
 
 * Fixes buggy behaviour and improves performance on mobile devices

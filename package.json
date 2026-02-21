@@ -40,10 +40,10 @@
     }
   },
   "peerDependencies": {
-    "vue": "^3.4.0"
+    "vue": "^3.5.0"
   },
   "dependencies": {
-    "scrollama": "^2.2.2"
+    "scrollama": "~3.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.33",
