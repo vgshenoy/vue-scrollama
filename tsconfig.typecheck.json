@@ -15,8 +15,7 @@
     "src/**/*.js",
     "src/**/*.vue",
     "test/**/*.js",
-    "vite.config.mjs",
-    "vite.wrapper.config.mjs"
+    "vite.config.mjs"
   ],
   "exclude": ["node_modules", "dist"]
 }

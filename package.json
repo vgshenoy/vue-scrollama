@@ -19,34 +19,28 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "vite build && vite build --config vite.wrapper.config.mjs && npm run build:types",
+    "build": "vite build && npm run build:types",
     "build:types": "vue-tsc --project tsconfig.build.json",
     "test": "vitest run",
     "lint": "eslint \"src/**/*.{js,vue}\" \"test/**/*.js\"",
-    "typecheck": "vue-tsc --noEmit --project tsconfig.typecheck.json"
+    "typecheck": "vue-tsc --noEmit --project tsconfig.typecheck.json",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
   },
   "files": [
-    "dist/**/*",
-    "src/*",
-    "*.json"
+    "dist"
   ],
-  "main": "./dist/vue-scrollama.umd.js",
-  "module": "./dist/vue-scrollama.esm.js",
+  "main": "./dist/vue-scrollama.cjs",
+  "module": "./dist/vue-scrollama.mjs",
   "types": "./dist/types/index.d.ts",
-  "unpkg": "./dist/vue-scrollama.min.js",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/vue-scrollama.esm.js",
-      "require": "./dist/vue-scrollama.umd.js"
-    },
-    "./sfc": "./src/Scrollama.vue"
-  },
-  "browser": {
-    "./sfc": "src/Scrollama.vue"
+      "import": "./dist/vue-scrollama.mjs",
+      "require": "./dist/vue-scrollama.cjs"
+    }
   },
   "peerDependencies": {
-    "vue": "^3.5.0"
+    "vue": "^3.4.0"
   },
   "dependencies": {
     "scrollama": "^2.2.2"
@@ -63,5 +57,8 @@
     "vue": "^3.5.28",
     "vue-eslint-parser": "^9.4.3",
     "vue-tsc": "^2.2.12"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
