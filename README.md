@@ -190,6 +190,103 @@ The `useScrollama` composable and `Scrollama` component both defer DOM access to
 
 A working Nuxt example is available in `examples/nuxt/`.
 
+## Upgrade from v2 to v3
+
+### Breaking Changes Checklist
+
+- [ ] Vue 3.5+ is now required (was Vue 2)
+- [ ] Scrollama upgraded from 2.x to 3.2 - the `order` option is no longer supported
+- [ ] `intersection-observer` polyfill is no longer required (modern browsers have native support)
+- [ ] Import path changed: `import Scrollama from 'vue-scrollama'` still works, but the package now ships ESM/CJS via Vite instead of UMD/ESM via Rollup
+- [ ] If using Nuxt/SSR, wrap scrollama content in `<ClientOnly>` (see [Nuxt 4 / SSR Usage](#nuxt-4--ssr-usage))
+
+### Before (v2 - Vue 2 Options API)
+
+```vue
+<template>
+  <Scrollama @step-enter="onStepEnter" @step-exit="onStepExit" :offset="0.5">
+    <div class="step" data-step="a">Step A</div>
+    <div class="step" data-step="b">Step B</div>
+  </Scrollama>
+</template>
+
+<script>
+import 'intersection-observer'
+import Scrollama from 'vue-scrollama'
+
+export default {
+  components: { Scrollama },
+  methods: {
+    onStepEnter({ element, index, direction }) {
+      console.log('enter', element.dataset.step)
+    },
+    onStepExit({ element, index, direction }) {
+      console.log('exit', element.dataset.step)
+    }
+  }
+}
+</script>
+```
+
+### After (v3 - Vue 3 Composition API)
+
+The component API is unchanged - only the Vue 2 boilerplate changes:
+
+```vue
+<template>
+  <Scrollama @step-enter="onStepEnter" @step-exit="onStepExit" :offset="0.5">
+    <div class="step" data-step="a">Step A</div>
+    <div class="step" data-step="b">Step B</div>
+  </Scrollama>
+</template>
+
+<script setup>
+import Scrollama from 'vue-scrollama'
+
+function onStepEnter({ element, index, direction }) {
+  console.log('enter', element.dataset.step)
+}
+
+function onStepExit({ element, index, direction }) {
+  console.log('exit', element.dataset.step)
+}
+</script>
+```
+
+Or use the new `useScrollama` composable for direct control:
+
+```vue
+<template>
+  <div ref="container">
+    <div class="step" data-step="a">Step A</div>
+    <div class="step" data-step="b">Step B</div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { useScrollama } from 'vue-scrollama'
+
+const container = ref(null)
+
+useScrollama({
+  get step() { return Array.from(container.value.children) },
+  offset: 0.5,
+  onStepEnter({ element, index, direction }) {
+    console.log('enter', element.dataset.step)
+  },
+  onStepExit({ element, index, direction }) {
+    console.log('exit', element.dataset.step)
+  },
+})
+</script>
+```
+
+### SSR and Polyfills
+
+- **IntersectionObserver**: Modern browsers (Chrome 51+, Firefox 55+, Safari 12.1+, Edge 15+) have native support. You can drop the `intersection-observer` polyfill unless you need to support older browsers.
+- **SSR/Nuxt**: Scrollama requires `window` and DOM access. Wrap your scrollama content in `<ClientOnly>` to prevent hydration mismatches. See the [Nuxt 4 / SSR Usage](#nuxt-4--ssr-usage) section for full examples.
+
 ## Release Notes
 
 ### v3.0
