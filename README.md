@@ -98,6 +98,98 @@ and [more](https://codesandbox.io/search?query=vue-scrollama%20vgshenoy&page=1&r
 
 Example repo [here](https://github.com/vgshenoy/vue-scrollama-demo-nuxt).
 
+## Nuxt 4 / SSR Usage
+
+Scrollama requires `window` and DOM access, so it must run client-side only. Both the `Scrollama` component and `useScrollama` composable are SSR-safe - they defer all DOM access to `onMounted` - but the component must be rendered inside `<ClientOnly>` to prevent hydration mismatches.
+
+### Using the Scrollama component
+
+Wrap your scrollama component in `<ClientOnly>` to skip server rendering:
+
+```vue
+<!-- app.vue or any page -->
+<template>
+  <ClientOnly>
+    <ScrollamaStory />
+  </ClientOnly>
+</template>
+```
+
+```vue
+<!-- components/ScrollamaStory.vue -->
+<template>
+  <Scrollama
+    @step-enter="onStepEnter"
+    @step-exit="onStepExit"
+    @step-progress="onStepProgress"
+    :offset="0.5"
+  >
+    <div v-for="n in 3" :key="n" :data-step="n" class="step">
+      Step {{ n }}
+    </div>
+  </Scrollama>
+</template>
+
+<script setup>
+import Scrollama from 'vue-scrollama'
+
+function onStepEnter({ element, index, direction }) {
+  console.log('enter', { step: element.dataset.step, index, direction })
+}
+
+function onStepExit({ element, index, direction }) {
+  console.log('exit', { step: element.dataset.step, index, direction })
+}
+
+function onStepProgress({ element, index, direction, progress }) {
+  console.log('progress', { step: element.dataset.step, index, direction, progress })
+}
+</script>
+```
+
+### Using the useScrollama composable
+
+The composable also works inside `<ClientOnly>` components:
+
+```vue
+<!-- components/ScrollamaComposable.vue -->
+<template>
+  <div ref="container">
+    <div v-for="n in 3" :key="n" :data-step="n" class="step">
+      Step {{ n }}
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { useScrollama } from 'vue-scrollama'
+
+const container = ref(null)
+
+useScrollama({
+  get step() { return Array.from(container.value.children) },
+  offset: 0.5,
+  progress: true,
+  onStepEnter({ element, index, direction }) {
+    console.log('enter', { step: element.dataset.step, index, direction })
+  },
+  onStepExit({ element, index, direction }) {
+    console.log('exit', { step: element.dataset.step, index, direction })
+  },
+  onStepProgress({ element, index, direction, progress }) {
+    console.log('progress', { step: element.dataset.step, index, direction, progress })
+  },
+})
+</script>
+```
+
+### Why `<ClientOnly>`?
+
+The `useScrollama` composable and `Scrollama` component both defer DOM access to `onMounted`, so they won't crash during SSR. However, the step elements rendered inside them would produce HTML on the server that scrollama then manipulates on the client, causing hydration mismatches. Wrapping in `<ClientOnly>` avoids this entirely.
+
+A working Nuxt example is available in `examples/nuxt/`.
+
 ## Release Notes
 
 ### v3.0
