@@ -8,28 +8,48 @@
 import scrollama from 'scrollama';
 
 export default {
-  inheritAttrs: false,
   name: 'Scrollama',
-  mounted () {
-    this._scroller = scrollama();
-    this.setup();
-  },
-  beforeDestroy() {
-    this._scroller.destroy();
+  inheritAttrs: false,
+  emits: ['step-progress', 'step-enter', 'step-exit'],
+  data () {
+    return {
+      scroller: null
+    };
   },
   computed: {
     opts() {
+      const listenerProps =
+        this.$ && this.$.vnode && this.$.vnode.props ? this.$.vnode.props : {};
+      const hasProgressListener = Object.prototype.hasOwnProperty.call(
+        listenerProps,
+        'onStepProgress'
+      );
+
       return Object.assign({},  {
         step: Array.from(this.$el.children),
-        progress: !!this.$listeners['step-progress']
+        progress: hasProgressListener
       }, this.$attrs);
     }
   },
+  mounted () {
+    this.scroller = scrollama();
+    this.setup();
+  },
+  beforeUnmount() {
+    if (this.scroller) {
+      this.scroller.destroy();
+    }
+    window.removeEventListener('resize', this.handleResize);
+  },
   methods: {
     setup() {
-      this._scroller.destroy();
+      if (!this.scroller) {
+        return;
+      }
 
-      this._scroller
+      this.scroller.destroy();
+
+      this.scroller
         .setup(this.opts)
         .onStepProgress(resp => {
           this.$emit('step-progress', resp)
@@ -44,7 +64,9 @@ export default {
       window.addEventListener('resize', this.handleResize);
     },
     handleResize () {
-      this._scroller.resize();
+      if (this.scroller) {
+        this.scroller.resize();
+      }
     }
   }
 };

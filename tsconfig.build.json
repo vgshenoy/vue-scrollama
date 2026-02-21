@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.typecheck.json",
+  "compilerOptions": {
+    "checkJs": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "dist/types",
+    "noEmit": false
+  },
+  "include": ["src/**/*.js", "src/**/*.vue"]
+}

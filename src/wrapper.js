@@ -1,7 +1,12 @@
 import Scrollama from "./Scrollama.vue";
 
-if (typeof Vue !== undefined) {
-  Vue.component('Scrollama', Scrollama);
+const globalVue =
+  typeof globalThis !== 'undefined'
+    ? /** @type {{ component?: (name: string, definition: unknown) => void } | undefined} */ (globalThis.Vue)
+    : undefined;
+
+if (globalVue && typeof globalVue.component === 'function') {
+  globalVue.component('Scrollama', Scrollama);
 }
 
 export default Scrollama;

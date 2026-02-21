@@ -2,14 +2,21 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2020", "DOM"],
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["node"],
+    "types": ["node", "vite/client"],
     "strict": false
   },
-  "include": ["src/**/*.js", "types/**/*.d.ts"],
+  "include": [
+    "src/**/*.js",
+    "src/**/*.vue",
+    "test/**/*.js",
+    "vite.config.mjs",
+    "vite.wrapper.config.mjs"
+  ],
   "exclude": ["node_modules", "dist"]
 }
