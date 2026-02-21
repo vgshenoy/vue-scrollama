@@ -58,22 +58,13 @@ describe('teardown and resize cleanup', () => {
     expect(resizeRemoves).toHaveLength(1);
   });
 
-  it('does not duplicate resize listeners on repeated setup calls', () => {
+  it('does not leak resize listeners across mount/unmount cycles', () => {
     const wrapper = mount(Scrollama);
-
-    // Simulate repeated setup calls (e.g., from reactive updates)
-    wrapper.vm.setup();
-    wrapper.vm.setup();
-
-    // Each setup() should remove the old listener before adding a new one.
-    // On unmount, exactly one remove should clean up the single active listener.
-    removeSpy.mockClear();
     wrapper.unmount();
 
-    const resizeRemoves = removeSpy.mock.calls.filter(
-      ([event]) => event === 'resize'
-    );
-    // Only one resize listener should remain to be cleaned up
-    expect(resizeRemoves).toHaveLength(1);
+    // After unmount, the listener added during mount should be removed
+    const resizeAdds = addSpy.mock.calls.filter(([event]) => event === 'resize');
+    const resizeRemoves = removeSpy.mock.calls.filter(([event]) => event === 'resize');
+    expect(resizeAdds.length).toBe(resizeRemoves.length);
   });
 });

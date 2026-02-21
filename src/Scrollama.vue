@@ -1,74 +1,36 @@
 <template>
-  <div class="scrollama__steps">
+  <div ref="root" class="scrollama__steps">
     <slot />
   </div>
 </template>
 
 <script>
-import scrollama from 'scrollama';
+import { ref, getCurrentInstance } from 'vue';
+import { useScrollama } from './useScrollama.js';
 
 export default {
   name: 'Scrollama',
   inheritAttrs: false,
   emits: ['step-progress', 'step-enter', 'step-exit'],
-  data () {
-    return {
-      scroller: null
-    };
-  },
-  computed: {
-    opts() {
-      const listenerProps =
-        this.$ && this.$.vnode && this.$.vnode.props ? this.$.vnode.props : {};
-      const hasProgressListener = Object.prototype.hasOwnProperty.call(
-        listenerProps,
-        'onStepProgress'
-      );
+  setup(_, { emit, attrs }) {
+    const root = ref(null);
+    const instance = getCurrentInstance();
+    const listenerProps = instance?.vnode?.props ?? {};
+    const hasProgressListener = Object.prototype.hasOwnProperty.call(
+      listenerProps,
+      'onStepProgress'
+    );
 
-      return Object.assign({},  {
-        step: Array.from(this.$el.children),
-        progress: hasProgressListener
-      }, this.$attrs);
-    }
-  },
-  mounted () {
-    this.scroller = scrollama();
-    this.setup();
-  },
-  beforeUnmount() {
-    if (this.scroller) {
-      this.scroller.destroy();
-    }
-    window.removeEventListener('resize', this.handleResize);
-  },
-  methods: {
-    setup() {
-      if (!this.scroller) {
-        return;
-      }
+    useScrollama({
+      get step() { return Array.from(root.value.children); },
+      ...attrs,
+      progress: hasProgressListener,
+      onStepEnter: (resp) => emit('step-enter', resp),
+      onStepExit: (resp) => emit('step-exit', resp),
+      onStepProgress: (resp) => emit('step-progress', resp),
+    });
 
-      this.scroller.destroy();
-
-      this.scroller
-        .setup(this.opts)
-        .onStepProgress(resp => {
-          this.$emit('step-progress', resp)
-        })
-        .onStepEnter(resp => {
-          this.$emit('step-enter', resp);
-        })
-        .onStepExit(resp => {
-          this.$emit('step-exit', resp);
-        });
-
-      window.removeEventListener('resize', this.handleResize);
-      window.addEventListener('resize', this.handleResize);
-    },
-    handleResize () {
-      if (this.scroller) {
-        this.scroller.resize();
-      }
-    }
-  }
+    return { root };
+  },
 };
 </script>
