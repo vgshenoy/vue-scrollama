@@ -203,6 +203,10 @@ A working Nuxt example is in `apps/example/`.
 - Demo app: `apps/example/`
 - Extra historical examples: [CodeSandbox search](https://codesandbox.io/search?query=vue-scrollama%20vgshenoy&page=1&refinementList%5Bnpm_dependencies.dependency%5D%5B0%5D=vue-scrollama)
 
+## Releasing
+
+- Release flow and pipeline details: [`RELEASING.md`](./RELEASING.md)
+
 ## License
 
 MIT

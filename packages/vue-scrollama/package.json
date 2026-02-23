@@ -25,7 +25,7 @@
     "test": "vitest run",
     "lint": "eslint \"src/**/*.{js,vue}\" \"test/**/*.js\"",
     "typecheck": "vue-tsc --noEmit --project tsconfig.typecheck.json",
-    "prepublishOnly": "pnpm run typecheck && pnpm run test && pnpm run build"
+    "prepublishOnly": "pnpm -w run sync:readme && pnpm -w run sync:readme:check && pnpm run typecheck && pnpm run test && pnpm run build"
   },
   "files": [
     "dist"

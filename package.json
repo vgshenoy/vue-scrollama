@@ -3,7 +3,9 @@
   "private": true,
   "packageManager": "pnpm@10.18.1",
   "scripts": {
-    "build": "pnpm --filter vue-scrollama run build",
+    "sync:readme": "node scripts/sync-readme.mjs",
+    "sync:readme:check": "node scripts/sync-readme.mjs --check",
+    "build": "pnpm run sync:readme:check && pnpm --filter vue-scrollama run build",
     "build:all": "pnpm -r run build",
     "test": "pnpm --filter vue-scrollama run test",
     "lint": "pnpm --filter vue-scrollama run lint",
