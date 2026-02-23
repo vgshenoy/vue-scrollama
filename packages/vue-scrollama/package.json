@@ -1,6 +1,6 @@
 {
   "name": "vue-scrollama",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Easy scroll driven interactions (aka scrollytelling) with Vue + Scrollama",
   "repository": {
     "type": "git",
