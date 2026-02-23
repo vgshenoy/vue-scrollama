@@ -30,15 +30,18 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/vue-scrollama.cjs",
+  "main": "./dist/vue-scrollama.mjs",
   "module": "./dist/vue-scrollama.mjs",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/vue-scrollama.mjs",
-      "require": "./dist/vue-scrollama.cjs"
+      "default": "./dist/vue-scrollama.mjs"
     }
+  },
+  "engines": {
+    "node": ">=20"
   },
   "peerDependencies": {
     "vue": "^3.5.0"

@@ -8,11 +8,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
       name: 'VueScrollama',
-      formats: ['es', 'cjs'],
-      fileName: (format) => {
-        if (format === 'es') return 'vue-scrollama.mjs';
-        return 'vue-scrollama.cjs';
-      },
+      formats: ['es'],
+      fileName: () => 'vue-scrollama.mjs',
     },
     rollupOptions: {
       external: ['vue'],

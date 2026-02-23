@@ -166,6 +166,8 @@ A working Nuxt example is in `apps/example/`.
 
 ## Compatibility
 
+- Module format: ESM only
+- Node: `>=20`
 - Vue: `^3.5.0`
 - Scrollama: `~3.2.0`
 - Polyfill: `intersection-observer` not required for modern browsers
@@ -193,9 +195,9 @@ A working Nuxt example is in `apps/example/`.
 
 ## Upgrade notes (v2 -> v3)
 
+- Package is now ESM-only (CommonJS `require('vue-scrollama')` is not supported)
 - Vue 3.5+ is required
 - Scrollama upgraded to 3.x (`order` option removed upstream)
-- Package now ships Vite-built ESM/CJS outputs
 - For SSR/Nuxt, use `<ClientOnly>` around stories
 
 ## Examples
