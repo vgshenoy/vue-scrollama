@@ -1,66 +1,14 @@
 {
-  "name": "vue-scrollama",
-  "version": "2.0.6",
-  "description": "Easy scroll driven interactions (aka scrollytelling) with Vue + Scrollama",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shenoy/vue-scrollama.git"
-  },
-  "keywords": [
-    "vue",
-    "scrollama",
-    "scroll",
-    "scroll-driven",
-    "scrollytelling"
-  ],
-  "author": "Vignesh Shenoy <vignesh.shenoy@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/shenoy/vue-scrollama/issues"
-  },
-  "license": "MIT",
+  "name": "vue-scrollama-workspace",
+  "private": true,
+  "packageManager": "pnpm@10.18.1",
   "scripts": {
-    "build": "vite build && npm run build:types",
-    "build:types": "vue-tsc --project tsconfig.build.json",
-    "test": "vitest run",
-    "lint": "eslint \"src/**/*.{js,vue}\" \"test/**/*.js\"",
-    "typecheck": "vue-tsc --noEmit --project tsconfig.typecheck.json",
-    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
-  },
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/vue-scrollama.cjs",
-  "module": "./dist/vue-scrollama.mjs",
-  "types": "./dist/types/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/vue-scrollama.mjs",
-      "require": "./dist/vue-scrollama.cjs"
-    }
-  },
-  "peerDependencies": {
-    "vue": "^3.5.0"
-  },
-  "dependencies": {
-    "scrollama": "~3.2.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.19.33",
-    "@vitejs/plugin-vue": "^5.2.4",
-    "@vue/compiler-sfc": "^3.5.28",
-    "@vue/test-utils": "^2.4.6",
-    "eslint": "^8.57.1",
-    "eslint-plugin-vue": "^9.33.0",
-    "jsdom": "^28.1.0",
-    "typescript": "^5.9.3",
-    "vite": "^6.4.1",
-    "vitest": "^2.1.9",
-    "vue": "^3.5.28",
-    "vue-eslint-parser": "^9.4.3",
-    "vue-tsc": "^2.2.12"
-  },
-  "publishConfig": {
-    "access": "public"
+    "build": "pnpm --filter vue-scrollama run build",
+    "build:all": "pnpm -r run build",
+    "test": "pnpm --filter vue-scrollama run test",
+    "lint": "pnpm --filter vue-scrollama run lint",
+    "typecheck": "pnpm --filter vue-scrollama run typecheck",
+    "dev:demo": "pnpm --filter vue-scrollama-example run dev",
+    "build:demo": "pnpm --filter vue-scrollama-example run build"
   }
 }

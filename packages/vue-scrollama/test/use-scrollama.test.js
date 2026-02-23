@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, ref } from 'vue';
 import { useScrollama } from '../src/useScrollama.js';
 
 let callbacks;
@@ -23,13 +23,16 @@ vi.mock('scrollama', () => ({
 
 /**
  * Helper to create a wrapper component that calls useScrollama.
- * @param {Parameters<typeof useScrollama>[0]} options
+ * @param {Omit<Parameters<typeof useScrollama>[0], 'container'>} options
+ * @param {(controls: ReturnType<typeof useScrollama>) => void} [onSetup]
  */
-function createHost(options) {
+function createHost(options, onSetup) {
   return defineComponent({
     setup() {
-      useScrollama(options);
-      return () => h('div', { class: 'steps' }, [h('div', 'Step 1')]);
+      const container = ref(null);
+      const controls = useScrollama({ container, ...options });
+      if (onSetup) onSetup(controls);
+      return () => h('div', { ref: container, class: 'steps' }, [h('div', { class: 'step' }, 'Step 1')]);
     },
   });
 }
@@ -53,16 +56,19 @@ describe('useScrollama composable', () => {
   });
 
   it('calls scrollama setup with forwarded options on mount', () => {
-    const wrapper = mount(createHost({ step: '.step', offset: 0.5 }));
+    const wrapper = mount(createHost({ offset: 0.5 }));
 
-    expect(mockScroller.setup).toHaveBeenCalledWith({ step: '.step', offset: 0.5 });
+    const setupArg = mockScroller.setup.mock.calls[0][0];
+    expect(setupArg.offset).toBe(0.5);
+    expect(setupArg.step).toHaveLength(1);
+    expect(setupArg.step[0]).toBeInstanceOf(HTMLElement);
 
     wrapper.unmount();
   });
 
   it('wires onStepEnter callback', () => {
     const onStepEnter = vi.fn();
-    const wrapper = mount(createHost({ step: '.step', onStepEnter }));
+    const wrapper = mount(createHost({ onStepEnter }));
 
     expect(mockScroller.onStepEnter).toHaveBeenCalled();
 
@@ -75,7 +81,7 @@ describe('useScrollama composable', () => {
 
   it('wires onStepExit callback', () => {
     const onStepExit = vi.fn();
-    const wrapper = mount(createHost({ step: '.step', onStepExit }));
+    const wrapper = mount(createHost({ onStepExit }));
 
     expect(mockScroller.onStepExit).toHaveBeenCalled();
 
@@ -87,7 +93,7 @@ describe('useScrollama composable', () => {
   });
 
   it('wires onStepProgress callback only when provided', () => {
-    const wrapper = mount(createHost({ step: '.step' }));
+    const wrapper = mount(createHost({}));
 
     // No onStepProgress provided, so it should not be wired
     expect(mockScroller.onStepProgress).not.toHaveBeenCalled();
@@ -97,7 +103,7 @@ describe('useScrollama composable', () => {
 
   it('wires onStepProgress callback when provided', () => {
     const onStepProgress = vi.fn();
-    const wrapper = mount(createHost({ step: '.step', onStepProgress }));
+    const wrapper = mount(createHost({ onStepProgress }));
 
     expect(mockScroller.onStepProgress).toHaveBeenCalled();
 
@@ -110,7 +116,7 @@ describe('useScrollama composable', () => {
 
   it('does not call scrollama before mount (SSR-safe)', () => {
     // Just creating the component definition should not invoke scrollama
-    const Host = createHost({ step: '.step' });
+    const Host = createHost({});
 
     // scrollama() is only called when mounted
     expect(mockScroller).toBeNull();
@@ -122,7 +128,7 @@ describe('useScrollama composable', () => {
   });
 
   it('calls destroy and removes resize listener on unmount', () => {
-    const wrapper = mount(createHost({ step: '.step' }));
+    const wrapper = mount(createHost({}));
 
     removeSpy.mockClear();
     wrapper.unmount();
@@ -137,7 +143,6 @@ describe('useScrollama composable', () => {
 
   it('does not pass callback options to scrollama.setup()', () => {
     const wrapper = mount(createHost({
-      step: '.step',
       offset: 0.3,
       onStepEnter: vi.fn(),
       onStepExit: vi.fn(),
@@ -145,11 +150,27 @@ describe('useScrollama composable', () => {
     }));
 
     const setupArg = mockScroller.setup.mock.calls[0][0];
-    expect(setupArg).toEqual({ step: '.step', offset: 0.3 });
+    expect(setupArg.offset).toBe(0.3);
+    expect(setupArg.step).toHaveLength(1);
     expect(setupArg).not.toHaveProperty('onStepEnter');
     expect(setupArg).not.toHaveProperty('onStepExit');
     expect(setupArg).not.toHaveProperty('onStepProgress');
 
     wrapper.unmount();
+  });
+
+  it('returns composable controls and reactive ready state', () => {
+    /** @type {ReturnType<typeof useScrollama> | null} */
+    let controls = null;
+    const wrapper = mount(createHost({}, (value) => { controls = value; }));
+
+    expect(controls).not.toBeNull();
+    expect(typeof controls.resize).toBe('function');
+    expect(typeof controls.rebuild).toBe('function');
+    expect(typeof controls.destroy).toBe('function');
+    expect(controls.isReady.value).toBe(true);
+
+    wrapper.unmount();
+    expect(controls.isReady.value).toBe(false);
   });
 });

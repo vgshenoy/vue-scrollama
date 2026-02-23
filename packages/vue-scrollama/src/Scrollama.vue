@@ -1,5 +1,8 @@
 <template>
-  <div ref="root" class="scrollama__steps">
+  <div
+    ref="root"
+    class="scrollama__steps"
+  >
     <slot />
   </div>
 </template>
@@ -22,7 +25,7 @@ export default {
     );
 
     useScrollama({
-      get step() { return Array.from(root.value.children); },
+      container: root,
       ...attrs,
       progress: hasProgressListener,
       onStepEnter: (resp) => emit('step-enter', resp),

@@ -1,5 +1,7 @@
 .DS_Store
 node_modules
+.nuxt
+.output
 
 # local env files
 .env.local
@@ -18,3 +20,14 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Local AI agent/tooling metadata
+.agents/
+.claude/
+.codex/
+.cursor/
+.factory/
+.gemini/
+.opencode/
+.github/skills
+.vercel
