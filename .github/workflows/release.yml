@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      dist_tag:
+        description: "npm dist-tag override"
+        required: true
+        default: auto
+        type: choice
+        options:
+          - auto
+          - latest
+          - next
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate tag and package version
+        run: |
+          VERSION="$(node -p "require('./packages/vue-scrollama/package.json').version")"
+          echo "Package version: $VERSION"
+
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            TAG_VERSION="${GITHUB_REF_NAME#v}"
+            echo "Git tag version: $TAG_VERSION"
+            if [ "$TAG_VERSION" != "$VERSION" ]; then
+              echo "Tag v$TAG_VERSION does not match package version $VERSION"
+              exit 1
+            fi
+          fi
+
+      - name: Quality gates
+        run: |
+          pnpm run build
+          pnpm run test
+          pnpm run lint
+          pnpm run typecheck
+
+      - name: Resolve npm dist-tag
+        id: dist-tag
+        run: |
+          VERSION="$(node -p "require('./packages/vue-scrollama/package.json').version")"
+          if [[ "$VERSION" == *-* ]]; then
+            AUTO_TAG="next"
+          else
+            AUTO_TAG="latest"
+          fi
+
+          DIST_TAG="$AUTO_TAG"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dist_tag }}" != "auto" ]; then
+            DIST_TAG="${{ inputs.dist_tag }}"
+          fi
+
+          echo "dist_tag=$DIST_TAG" >> "$GITHUB_OUTPUT"
+          echo "Publishing with dist-tag: $DIST_TAG"
+
+      - name: Publish package to npm
+        run: pnpm --filter vue-scrollama publish --access public --no-git-checks --tag ${{ steps.dist-tag.outputs.dist_tag }}

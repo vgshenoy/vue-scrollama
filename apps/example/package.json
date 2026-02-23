@@ -1,0 +1,16 @@
+{
+  "name": "vue-scrollama-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "lucide-vue-next": "^0.575.0",
+    "nuxt": "^3.16.0",
+    "vue": "^3.5.0",
+    "vue-scrollama": "workspace:*"
+  }
+}
