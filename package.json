@@ -2,6 +2,9 @@
   "name": "vue-scrollama-workspace",
   "private": true,
   "packageManager": "pnpm@10.18.1",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "sync:readme": "node scripts/sync-readme.mjs",
     "sync:readme:check": "node scripts/sync-readme.mjs --check",
