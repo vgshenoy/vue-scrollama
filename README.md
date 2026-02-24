@@ -105,35 +105,6 @@ Scrollama requires browser DOM APIs, so render scroll stories client-side:
 
 ## API
 
-### Component props
-
-`<Scrollama />` forwards props to `scrollama.setup(options)`:
-
-- `offset?: number`
-- `once?: boolean`
-- `threshold?: number`
-- `debug?: boolean`
-- `parent?: HTMLElement`
-- `container?: HTMLElement`
-- `root?: HTMLElement`
-
-Reference: [scrollama.setup(options)](https://github.com/russellsamora/scrollama#scrollamasetupoptions)
-
-### Component events
-
-- `step-enter`: `{ element, index, direction }`
-- `step-exit`: `{ element, index, direction }`
-- `step-progress`: `{ element, index, direction, progress }`
-
-Note: for the component API, progress tracking auto-enables when you listen to `@step-progress`.
-
-### Step element vs `data-step`
-
-- A step element is the DOM element tracked by Scrollama.
-- `data-step` is optional metadata you define on each step element.
-- Use `data-step` (or any `data-*`) when you want stable IDs/labels in handlers.
-- If you do not need custom metadata, rely on `index` from the payload.
-
 ### `useScrollama(options)`
 
 Required:
@@ -162,6 +133,35 @@ Returns:
 - `destroy(): void`
 
 `useScrollama` automatically calls `resize()` on window resize, orientation changes, and container size changes.
+
+### Component props
+
+`<Scrollama />` forwards props to `scrollama.setup(options)`:
+
+- `offset?: number`
+- `once?: boolean`
+- `threshold?: number`
+- `debug?: boolean`
+- `parent?: HTMLElement`
+- `container?: HTMLElement`
+- `root?: HTMLElement`
+
+Reference: [scrollama.setup(options)](https://github.com/russellsamora/scrollama#scrollamasetupoptions)
+
+### Component events
+
+- `step-enter`: `{ element, index, direction }`
+- `step-exit`: `{ element, index, direction }`
+- `step-progress`: `{ element, index, direction, progress }`
+
+Note: for the component API, progress tracking auto-enables when you listen to `@step-progress`.
+
+### Step element vs `data-step`
+
+- A step element is the DOM element tracked by Scrollama.
+- `data-step` is optional metadata you define on each step element.
+- Use `data-step` (or any `data-*`) when you want stable IDs/labels in handlers.
+- If you do not need custom metadata, rely on `index` from the payload.
 
 ## Compatibility
 
