@@ -12,5 +12,10 @@
     "typecheck": "pnpm --filter vue-scrollama run typecheck",
     "dev:demo": "pnpm --filter vue-scrollama-example run dev",
     "build:demo": "pnpm --filter vue-scrollama-example run build"
+  },
+  "pnpm": {
+    "overrides": {
+      "minimatch": "^10.2.2"
+    }
   }
 }
