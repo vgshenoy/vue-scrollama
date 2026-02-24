@@ -1,5 +1,4 @@
 {
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm --filter vue-scrollama-example build",
-  "outputDirectory": "apps/example/.output/public"
+  "buildCommand": "pnpm --filter vue-scrollama-example build"
 }
