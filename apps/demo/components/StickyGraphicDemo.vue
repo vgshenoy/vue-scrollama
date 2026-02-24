@@ -1,16 +1,12 @@
 <template>
   <div class="mx-auto max-w-5xl px-4 pb-24">
     <div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_360px] md:items-start">
-      <Scrollama
-        :offset="props.offset"
-        @step-enter="onStepEnter"
-        @step-progress="onStepProgress"
-      >
+      <section ref="storyContainer" class="order-2 md:order-1">
         <article
           v-for="scene in scenes"
           :key="scene.id"
           :data-step="scene.id"
-          class="step mb-10 flex min-h-[75vh] items-center"
+          class="step mb-10 flex min-h-[75vh] items-start top-[12vh]"
         >
           <div
             :class="[
@@ -22,13 +18,13 @@
             <h3 class="mt-2 text-2xl font-bold text-slate-900">{{ scene.title }}</h3>
             <p class="mt-3 leading-relaxed text-slate-600">{{ scene.description }}</p>
             <p class="mt-4 text-sm font-medium text-slate-500">
-              progress: {{ getStepProgress(scene.id) }}%
+              progress: {{ stepProgress[scene.id] ?? 0 }}%
             </p>
           </div>
         </article>
-      </Scrollama>
+      </section>
 
-      <aside class="md:sticky md:top-[12vh]">
+      <aside class="order-1 sticky top-3 z-10 md:order-2 md:top-[12vh]">
         <div class="rounded-2xl border border-slate-200 bg-slate-900 p-6 text-slate-100 shadow-lg">
           <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Sticky Graphic</p>
           <div class="mt-4 h-56 rounded-xl p-4 transition-all" :class="activeScene.colorClass">
@@ -46,8 +42,8 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import Scrollama from 'vue-scrollama'
+import { computed, reactive, ref } from 'vue'
+import { useScrollama } from 'vue-scrollama'
 
 const props = defineProps({
   offset: {
@@ -83,23 +79,26 @@ const scenes = [
   },
 ]
 
+const storyContainer = ref(null)
 const activeStep = ref(scenes[0].id)
-const stepProgress = ref({})
+const stepProgress = reactive({})
+const sceneById = Object.fromEntries(scenes.map((scene) => [scene.id, scene]))
 
-const activeScene = computed(() => scenes.find((scene) => scene.id === activeStep.value) ?? scenes[0])
+const activeScene = computed(() => sceneById[activeStep.value] ?? scenes[0])
 
-function getStepProgress(stepId) {
-  return stepProgress.value[stepId] ?? 0
-}
-
-function onStepEnter({ element }) {
-  const stepId = element.dataset.step
-  activeStep.value = stepId
-  stepProgress.value[stepId] = stepProgress.value[stepId] ?? 0
-}
-
-function onStepProgress({ element, progress }) {
-  const stepId = element.dataset.step
-  stepProgress.value[stepId] = Math.round(progress * 100)
-}
+useScrollama({
+  container: storyContainer,
+  stepSelector: '.step',
+  offset: props.offset,
+  progress: true,
+  onStepEnter({ element }) {
+    const stepId = element.dataset.step
+    activeStep.value = stepId
+    stepProgress[stepId] = stepProgress[stepId] ?? 0
+  },
+  onStepProgress({ element, progress }) {
+    const stepId = element.dataset.step
+    stepProgress[stepId] = Math.round(progress * 100)
+  },
+})
 </script>
