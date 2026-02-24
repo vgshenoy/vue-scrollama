@@ -17,28 +17,6 @@ Easy scroll-driven interactions (scrollytelling) for Vue 3, powered by [Scrollam
 npm install vue-scrollama
 ```
 
-## TypeScript
-
-`vue-scrollama` ships first-class TypeScript declarations.
-
-You can import these types:
-
-- `UseScrollamaOptions`
-- `UseScrollamaControls`
-- `ScrollamaCallbackPayload`
-- `ScrollamaProgressPayload`
-
-```ts
-import type { ScrollamaCallbackPayload, UseScrollamaOptions } from 'vue-scrollama'
-
-const options: UseScrollamaOptions = {
-  container: document.createElement('div'),
-  onStepEnter(payload: ScrollamaCallbackPayload) {
-    console.log(payload.index, payload.direction)
-  },
-}
-```
-
 ## Quickstart - Composable API
 
 Use this when you want direct setup and lifecycle control.
@@ -109,6 +87,21 @@ function onStepProgress({ element, index, direction, progress }) {
   console.log('progress', { stepId: element.dataset.step, index, direction, progress })
 }
 </script>
+```
+
+## Nuxt / SSR
+
+Scrollama requires browser DOM APIs, so render scroll stories client-side:
+
+```vue
+<template>
+  <ClientOnly>
+    <ScrollamaStory />
+  </ClientOnly>
+</template>
+```
+
+`useScrollama` and `<Scrollama>` defer DOM access to `onMounted`, so they are SSR-safe to import, but story content should still be client-only to avoid hydration mismatch.
 
 ## API
 
@@ -170,20 +163,6 @@ Returns:
 
 `useScrollama` automatically calls `resize()` on window resize, orientation changes, and container size changes.
 
-## Nuxt / SSR
-
-Scrollama requires browser DOM APIs, so render scroll stories client-side:
-
-```vue
-<template>
-  <ClientOnly>
-    <ScrollamaStory />
-  </ClientOnly>
-</template>
-```
-
-`useScrollama` and `<Scrollama>` defer DOM access to `onMounted`, so they are SSR-safe to import, but story content should still be client-only to avoid hydration mismatch.
-
 ## Compatibility
 
 - Module format: ESM only
@@ -223,7 +202,6 @@ Scrollama requires browser DOM APIs, so render scroll stories client-side:
 ## Examples
 
 - Demo app: `apps/demo/`
-- Extra historical examples: [CodeSandbox search](https://codesandbox.io/search?query=vue-scrollama%20vgshenoy&page=1&refinementList%5Bnpm_dependencies.dependency%5D%5B0%5D=vue-scrollama)
 
 ## Releasing
 
