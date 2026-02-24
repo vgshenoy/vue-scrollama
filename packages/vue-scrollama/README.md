@@ -53,7 +53,6 @@ const { isReady, rebuild, resize, destroy } = useScrollama({
 })
 
 console.log(isReady.value) // false before mount, true after setup
-window.addEventListener('orientationchange', () => resize())
 // call rebuild() if step elements are added/removed dynamically
 // call destroy() if you need manual early teardown
 </script>
@@ -88,7 +87,6 @@ function onStepProgress({ element, index, direction, progress }) {
   console.log('progress', { stepId: element.dataset.step, index, direction, progress })
 }
 </script>
-```
 
 ## API
 
@@ -148,6 +146,8 @@ Returns:
 - `rebuild(): boolean`
 - `destroy(): void`
 
+`useScrollama` automatically calls `resize()` on window resize, orientation changes, and container size changes.
+
 ## Nuxt / SSR
 
 Scrollama requires browser DOM APIs, so render scroll stories client-side:
@@ -161,8 +161,6 @@ Scrollama requires browser DOM APIs, so render scroll stories client-side:
 ```
 
 `useScrollama` and `<Scrollama>` defer DOM access to `onMounted`, so they are SSR-safe to import, but story content should still be client-only to avoid hydration mismatch.
-
-A working Nuxt example is in `apps/demo/`.
 
 ## Compatibility
 

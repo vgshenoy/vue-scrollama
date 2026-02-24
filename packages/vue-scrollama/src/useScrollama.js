@@ -119,6 +119,7 @@ export function useScrollama(options) {
     }
     if (handleResize) {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
       handleResize = null;
     }
     if (scroller) {
@@ -175,6 +176,7 @@ export function useScrollama(options) {
       resize();
     };
     window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize, { passive: true });
 
     const containerEl = resolveContainerElement(options.container);
     if (containerEl && typeof ResizeObserver !== 'undefined') {

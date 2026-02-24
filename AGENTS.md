@@ -1,3 +1,5 @@
+Monorepo workspace for package `vue-scrollama`.
+
 # Agent Notes
 
 ## README Sync Source Of Truth

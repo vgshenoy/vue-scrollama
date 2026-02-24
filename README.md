@@ -17,37 +17,6 @@ Easy scroll-driven interactions (scrollytelling) for Vue 3, powered by [Scrollam
 npm install vue-scrollama
 ```
 
-## Quickstart - Component API
-
-Any direct child of `<Scrollama>` is treated as a step element.
-The component API manages setup/teardown lifecycle for you.
-
-```vue
-<template>
-  <Scrollama @step-enter="onStepEnter" @step-exit="onStepExit" @step-progress="onStepProgress" :offset="0.5">
-    <div v-for="n in 3" :key="n" :data-step="n" class="step">
-      Step {{ n }}
-    </div>
-  </Scrollama>
-</template>
-
-<script setup>
-import Scrollama from 'vue-scrollama'
-
-function onStepEnter({ element, index, direction }) {
-  console.log('enter', { stepId: element.dataset.step, index, direction })
-}
-
-function onStepExit({ element, index, direction }) {
-  console.log('exit', { stepId: element.dataset.step, index, direction })
-}
-
-function onStepProgress({ element, index, direction, progress }) {
-  console.log('progress', { stepId: element.dataset.step, index, direction, progress })
-}
-</script>
-```
-
 ## Quickstart - Composable API
 
 Use this when you want direct setup and lifecycle control.
@@ -84,11 +53,40 @@ const { isReady, rebuild, resize, destroy } = useScrollama({
 })
 
 console.log(isReady.value) // false before mount, true after setup
-window.addEventListener('orientationchange', () => resize())
 // call rebuild() if step elements are added/removed dynamically
 // call destroy() if you need manual early teardown
 </script>
 ```
+
+## Quickstart - Component API
+
+Any direct child of `<Scrollama>` is treated as a step element.
+The component API manages setup/teardown lifecycle for you.
+
+```vue
+<template>
+  <Scrollama @step-enter="onStepEnter" @step-exit="onStepExit" @step-progress="onStepProgress" :offset="0.5">
+    <div v-for="n in 3" :key="n" :data-step="n" class="step">
+      Step {{ n }}
+    </div>
+  </Scrollama>
+</template>
+
+<script setup>
+import Scrollama from 'vue-scrollama'
+
+function onStepEnter({ element, index, direction }) {
+  console.log('enter', { stepId: element.dataset.step, index, direction })
+}
+
+function onStepExit({ element, index, direction }) {
+  console.log('exit', { stepId: element.dataset.step, index, direction })
+}
+
+function onStepProgress({ element, index, direction, progress }) {
+  console.log('progress', { stepId: element.dataset.step, index, direction, progress })
+}
+</script>
 
 ## API
 
@@ -147,6 +145,8 @@ Returns:
 - `resize(): boolean`
 - `rebuild(): boolean`
 - `destroy(): void`
+
+`useScrollama` automatically calls `resize()` on window resize, orientation changes, and container size changes.
 
 ## Nuxt / SSR
 
