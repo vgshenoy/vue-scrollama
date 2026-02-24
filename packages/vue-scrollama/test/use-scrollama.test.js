@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { defineComponent, h, ref } from 'vue';
-import { useScrollama } from '../src/useScrollama.js';
+import { useScrollama } from '../src/useScrollama';
 
 let callbacks;
 let mockScroller;

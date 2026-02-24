@@ -12,7 +12,7 @@
     "strict": false
   },
   "include": [
-    "src/**/*.js",
+    "src/**/*.ts",
     "src/**/*.vue",
     "test/**/*.js",
     "vite.config.mjs"

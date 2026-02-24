@@ -7,33 +7,32 @@
   </div>
 </template>
 
-<script>
-import { ref, getCurrentInstance } from 'vue';
-import { useScrollama } from './useScrollama.js';
+<script setup lang="ts">
+import { getCurrentInstance, ref, useAttrs } from 'vue';
+import {
+  useScrollama,
+  type ScrollamaCallbackPayload,
+  type ScrollamaProgressPayload,
+} from './useScrollama';
 
-export default {
+defineOptions({
   name: 'Scrollama',
   inheritAttrs: false,
-  emits: ['step-progress', 'step-enter', 'step-exit'],
-  setup(_, { emit, attrs }) {
-    const root = ref(null);
-    const instance = getCurrentInstance();
-    const listenerProps = instance?.vnode?.props ?? {};
-    const hasProgressListener = Object.prototype.hasOwnProperty.call(
-      listenerProps,
-      'onStepProgress'
-    );
+});
 
-    useScrollama({
-      container: root,
-      ...attrs,
-      progress: hasProgressListener,
-      onStepEnter: (resp) => emit('step-enter', resp),
-      onStepExit: (resp) => emit('step-exit', resp),
-      onStepProgress: (resp) => emit('step-progress', resp),
-    });
+const emit = defineEmits(['step-progress', 'step-enter', 'step-exit']);
 
-    return { root };
-  },
-};
+const attrs = useAttrs();
+const root = ref<HTMLElement | null>(null);
+const stepProgressListener = getCurrentInstance()?.vnode.props?.onStepProgress;
+const hasProgressListener = !!stepProgressListener;
+
+useScrollama({
+  container: root,
+  ...attrs,
+  progress: hasProgressListener,
+  onStepEnter: (resp: ScrollamaCallbackPayload) => emit('step-enter', resp),
+  onStepExit: (resp: ScrollamaCallbackPayload) => emit('step-exit', resp),
+  onStepProgress: (resp: ScrollamaProgressPayload) => emit('step-progress', resp),
+});
 </script>

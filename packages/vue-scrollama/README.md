@@ -17,6 +17,28 @@ Easy scroll-driven interactions (scrollytelling) for Vue 3, powered by [Scrollam
 npm install vue-scrollama
 ```
 
+## TypeScript
+
+`vue-scrollama` ships first-class TypeScript declarations.
+
+You can import these types:
+
+- `UseScrollamaOptions`
+- `UseScrollamaControls`
+- `ScrollamaCallbackPayload`
+- `ScrollamaProgressPayload`
+
+```ts
+import type { ScrollamaCallbackPayload, UseScrollamaOptions } from 'vue-scrollama'
+
+const options: UseScrollamaOptions = {
+  container: document.createElement('div'),
+  onStepEnter(payload: ScrollamaCallbackPayload) {
+    console.log(payload.index, payload.direction)
+  },
+}
+```
+
 ## Quickstart - Composable API
 
 Use this when you want direct setup and lifecycle control.
@@ -94,7 +116,7 @@ function onStepProgress({ element, index, direction, progress }) {
 
 `<Scrollama />` forwards props to `scrollama.setup(options)`:
 
-- `offset?: number | string`
+- `offset?: number`
 - `once?: boolean`
 - `threshold?: number`
 - `debug?: boolean`
@@ -128,7 +150,7 @@ Required:
 Optional:
 
 - `stepSelector?: string` (defaults to direct container children)
-- `offset?: number | string`
+- `offset?: number`
 - `progress?: boolean` (set `true` when using `onStepProgress`)
 - `once?: boolean`
 - `threshold?: number`

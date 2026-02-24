@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.33",
+    "@typescript-eslint/parser": "^8.56.1",
     "@vitejs/plugin-vue": "^6.0.4",
     "@vue/compiler-sfc": "^3.5.28",
     "@vue/test-utils": "^2.4.6",

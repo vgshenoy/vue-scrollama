@@ -7,5 +7,5 @@
     "declarationDir": "dist/types",
     "noEmit": false
   },
-  "include": ["src/**/*.js", "src/**/*.vue"]
+  "include": ["src/**/*.ts", "src/**/*.vue"]
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import Scrollama from '../src/index.js';
+import Scrollama from '../src/index';
 
 describe('component contract', () => {
   it('exposes Scrollama with expected component contract', () => {
