@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@10.18.1",
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "scripts": {
     "sync:readme": "node scripts/sync-readme.mjs",
@@ -13,8 +13,8 @@
     "test": "pnpm --filter vue-scrollama run test",
     "lint": "pnpm --filter vue-scrollama run lint",
     "typecheck": "pnpm --filter vue-scrollama run typecheck",
-    "dev:demo": "pnpm --filter vue-scrollama-example run dev",
-    "build:demo": "pnpm --filter vue-scrollama-example run build"
+    "dev:demo": "pnpm --filter vue-scrollama-demo run dev",
+    "build:demo": "pnpm --filter vue-scrollama-demo run build"
   },
   "pnpm": {
     "overrides": {

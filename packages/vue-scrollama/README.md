@@ -162,7 +162,7 @@ Scrollama requires browser DOM APIs, so render scroll stories client-side:
 
 `useScrollama` and `<Scrollama>` defer DOM access to `onMounted`, so they are SSR-safe to import, but story content should still be client-only to avoid hydration mismatch.
 
-A working Nuxt example is in `apps/example/`.
+A working Nuxt example is in `apps/demo/`.
 
 ## Compatibility
 
@@ -202,7 +202,7 @@ A working Nuxt example is in `apps/example/`.
 
 ## Examples
 
-- Demo app: `apps/example/`
+- Demo app: `apps/demo/`
 - Extra historical examples: [CodeSandbox search](https://codesandbox.io/search?query=vue-scrollama%20vgshenoy&page=1&refinementList%5Bnpm_dependencies.dependency%5D%5B0%5D=vue-scrollama)
 
 ## Releasing

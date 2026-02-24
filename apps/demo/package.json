@@ -1,5 +1,5 @@
 {
-  "name": "vue-scrollama-example",
+  "name": "vue-scrollama-demo",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "lucide-vue-next": "^0.575.0",
-    "nuxt": "^3.16.0",
+    "nuxt": "^4.3.1",
     "vue": "^3.5.0",
     "vue-scrollama": "workspace:*"
   }
