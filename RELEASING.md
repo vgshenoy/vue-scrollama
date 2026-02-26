@@ -17,11 +17,23 @@ This repo publishes from tags using `.github/workflows/release.yml`.
 
 ## One-time setup
 
-1. Create npm automation token with publish access to `vue-scrollama`.
+1. Create npm granular access token with publish access to `vue-scrollama`.
+   - Go to `npmjs.com -> Access Tokens -> Generate New Token -> Granular Access Token`.
+   - Fill form as follows:
+     - **Token name**: `github-actions-release-vue-scrollama` (or similar unique name)
+     - **Description**: `GitHub Actions release publish for vue-scrollama`
+     - **Bypass two-factor authentication (2FA)**: leave unchecked
+     - **Allowed IP ranges**: leave empty (GitHub Actions IPs vary)
+     - **Packages and scopes -> Permissions**: `Read and write`
+     - **Packages and scopes -> Select Packages**: `Only select packages and scopes`
+     - **Packages and scopes -> Selected entries**: `vue-scrollama` (and scope if applicable)
+     - **Organizations**: `No access` (unless you explicitly need org settings access)
+     - **Expiration**: choose a fixed date (for example 90 days) and rotate before expiry
+   - Click **Generate Token** and copy it immediately (npm only shows full token once).
 2. Add GitHub Actions secret:
    - `Settings -> Secrets and variables -> Actions -> New repository secret`
    - Name: `NPM_TOKEN`
-   - Value: your npm automation token
+   - Value: your npm granular access token
 
 ## Standard release flow
 
