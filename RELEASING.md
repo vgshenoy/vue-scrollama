@@ -22,7 +22,7 @@ This repo publishes from tags using `.github/workflows/release.yml`.
    - Fill form as follows:
      - **Token name**: `github-actions-release-vue-scrollama` (or similar unique name)
      - **Description**: `GitHub Actions release publish for vue-scrollama`
-     - **Bypass two-factor authentication (2FA)**: leave unchecked
+     - **Bypass two-factor authentication (2FA)**: checked
      - **Allowed IP ranges**: leave empty (GitHub Actions IPs vary)
      - **Packages and scopes -> Permissions**: `Read and write`
      - **Packages and scopes -> Select Packages**: `Only select packages and scopes`
