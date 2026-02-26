@@ -1,7 +1,7 @@
 <template>
   <div class="mx-auto max-w-6xl px-4 pb-24">
     <div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_380px] md:items-start">
-      <section ref="storyContainer" class="order-2 md:order-1">
+      <section ref="storyContainer" class="order-1 md:order-1">
         <article
           v-for="phase in phases"
           :key="phase.id"
@@ -10,7 +10,7 @@
         >
           <div
             :class="[
-              'w-full rounded-xl border-2 p-6 shadow-sm transition-colors',
+              'w-full rounded-xl border-2 bg-white p-6 shadow-sm transition-colors',
               activeStep === phase.id ? 'border-amber-400 bg-amber-50' : 'border-slate-200 bg-white'
             ]"
           >
@@ -24,7 +24,7 @@
         </article>
       </section>
 
-      <aside class="order-1 sticky top-3 z-10 md:order-2 md:top-[12vh]">
+      <aside class="order-2 sticky top-3 z-10 md:order-2 md:top-[12vh]">
         <div class="rounded-2xl border border-slate-200 bg-slate-900 p-6 text-slate-100 shadow-lg">
           <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Sticky Graphic</p>
           <div class="mt-4 rounded-xl bg-slate-800 p-4">

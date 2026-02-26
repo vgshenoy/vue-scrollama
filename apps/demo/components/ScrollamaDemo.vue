@@ -21,12 +21,12 @@
         </span>
       </div>
     </Scrollama>
-    <pre class="fixed top-4 right-4 w-72 max-h-[calc(100vh-2rem)] overflow-auto rounded-lg border border-slate-200 bg-slate-900 text-slate-100 text-xs p-4 font-mono shadow-lg">{{ JSON.stringify(lastEvent, null, 2) }}</pre>
+    <pre class="fixed bottom-4 right-4 w-72 max-h-[calc(100vh-2rem)] overflow-auto rounded-lg border border-slate-200 bg-slate-900 text-slate-100 text-xs p-4 font-mono shadow-lg">{{ JSON.stringify(displayEvent, null, 2) }}</pre>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import Scrollama from 'vue-scrollama'
 
 const props = defineProps({
@@ -39,6 +39,13 @@ const props = defineProps({
 const lastEvent = ref(null)
 const activeStep = ref(null)
 const stepProgress = ref({})
+
+const displayEvent = computed(() => (
+  lastEvent.value ?? {
+    event: 'ready',
+    message: 'Scroll to trigger events',
+  }
+))
 
 function getStepProgress(step) {
   return stepProgress.value[String(step)] ?? 0
