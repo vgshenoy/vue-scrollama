@@ -18,7 +18,8 @@
   },
   "pnpm": {
     "overrides": {
-      "editorconfig>minimatch": "9.0.8"
+      "editorconfig>minimatch": "9.0.8",
+      "minimatch@>=10.0.0": ">=10.2.3"
     }
   }
 }
