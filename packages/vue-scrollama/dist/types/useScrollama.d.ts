@@ -1,4 +1,3 @@
-import { type DeepReadonly, type Ref } from 'vue';
 export interface ScrollamaCallbackPayload {
     element: HTMLElement;
     index: number;
@@ -7,26 +6,27 @@ export interface ScrollamaCallbackPayload {
 export interface ScrollamaProgressPayload extends ScrollamaCallbackPayload {
     progress: number;
 }
-type ElementRef = Ref<HTMLElement | null>;
-export interface UseScrollamaOptions {
-    container: HTMLElement | ElementRef;
-    stepSelector?: string;
+type ElementRef = import('vue').Ref<HTMLElement | null>;
+export interface ScrollamaSetupOptions {
     offset?: number;
     progress?: boolean;
     once?: boolean;
     threshold?: number;
     debug?: boolean;
-    parent?: string | HTMLElement;
+    root?: string | HTMLElement;
+}
+export interface UseScrollamaOptions extends ScrollamaSetupOptions {
+    container: HTMLElement | ElementRef;
+    stepSelector?: string;
     onStepEnter?: (payload: ScrollamaCallbackPayload) => void;
     onStepExit?: (payload: ScrollamaCallbackPayload) => void;
     onStepProgress?: (payload: ScrollamaProgressPayload) => void;
-    [key: string]: unknown;
 }
 export interface UseScrollamaControls {
     resize: () => boolean;
     destroy: () => void;
     rebuild: () => boolean;
-    isReady: DeepReadonly<Ref<boolean>>;
+    isReady: import('vue').DeepReadonly<import('vue').Ref<boolean>>;
 }
 export declare function useScrollama(options: UseScrollamaOptions): UseScrollamaControls;
 export {};

@@ -14,12 +14,13 @@ Easy scroll-driven interactions (scrollytelling) for Vue 3, powered by [Scrollam
 ## Install
 
 ```sh
-npm install vue-scrollama
+npm add vue-scrollama
 ```
 
 ## Quickstart - Composable API
 
 Use this when you want direct setup and lifecycle control.
+If you provide `onStepProgress`, the composable auto-enables `progress` for you.
 
 ```vue
 <template>
@@ -96,12 +97,17 @@ Scrollama requires browser DOM APIs, so render scroll stories client-side:
 ```vue
 <template>
   <ClientOnly>
-    <ScrollamaStory />
+    <YourStory /> <!-- your component using useScrollama or <Scrollama> -->
   </ClientOnly>
 </template>
 ```
 
 `useScrollama` and `<Scrollama>` defer DOM access to `onMounted`, so they are SSR-safe to import, but story content should still be client-only to avoid hydration mismatch.
+
+## Examples
+
+- Demo app: `apps/demo/`
+- Sticky graphic (pinned visual + scrolling steps): [`apps/demo/components/StickyGraphicDemo.vue`](./apps/demo/components/StickyGraphicDemo.vue)
 
 ## API
 
@@ -115,15 +121,14 @@ Optional:
 
 - `stepSelector?: string` (defaults to direct container children)
 - `offset?: number`
-- `progress?: boolean` (set `true` when using `onStepProgress`)
+- `progress?: boolean` (auto-enabled when `onStepProgress` is provided)
 - `once?: boolean`
 - `threshold?: number`
 - `debug?: boolean`
-- `parent?: HTMLElement`
-- `root?: HTMLElement`
-- `onStepEnter?: (payload) => void`
-- `onStepExit?: (payload) => void`
-- `onStepProgress?: (payload) => void`
+- `root?: string | HTMLElement`
+- `onStepEnter?: (payload: { element, index, direction }) => void`
+- `onStepExit?: (payload: { element, index, direction }) => void`
+- `onStepProgress?: (payload: { element, index, direction, progress }) => void`
 
 Returns:
 
@@ -139,14 +144,16 @@ Returns:
 `<Scrollama />` forwards props to `scrollama.setup(options)`:
 
 - `offset?: number`
+- `progress?: boolean`
 - `once?: boolean`
 - `threshold?: number`
 - `debug?: boolean`
-- `parent?: HTMLElement`
-- `container?: HTMLElement`
-- `root?: HTMLElement`
+- `root?: string | HTMLElement`
+- `stepSelector?: string`
 
 Reference: [scrollama.setup(options)](https://github.com/russellsamora/scrollama#scrollamasetupoptions)
+
+Non-scrollama attributes (`id`, `data-*`, ARIA, classes, etc.) are forwarded to the root `.scrollama__steps` element.
 
 ### Component events
 
@@ -182,7 +189,7 @@ Note: for the component API, progress tracking auto-enables when you listen to `
 ### `step-progress` never fires
 
 - Component API: attach `@step-progress`
-- Composable API: set `progress: true`
+- Composable API: provide `onStepProgress` (auto-enables progress) or set `progress: true` explicitly
 
 ### Nuxt hydration mismatch
 
@@ -190,7 +197,8 @@ Note: for the component API, progress tracking auto-enables when you listen to `
 
 ### Dynamic step content does not update
 
-- Call `rebuild()` after adding/removing step elements
+- Component API: rebuilds automatically when direct child step elements are added/removed
+- Composable API: call `rebuild()` after adding/removing step elements
 
 ## Upgrade notes (v2 -> v3)
 
@@ -198,10 +206,6 @@ Note: for the component API, progress tracking auto-enables when you listen to `
 - Vue 3.5+ is required
 - Scrollama upgraded to 3.x (`order` option removed upstream)
 - For SSR/Nuxt, use `<ClientOnly>` around stories
-
-## Examples
-
-- Demo app: `apps/demo/`
 
 ## Releasing
 

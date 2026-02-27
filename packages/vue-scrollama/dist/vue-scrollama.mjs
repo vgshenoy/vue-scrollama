@@ -1,66 +1,66 @@
-import { ref as C, onMounted as W, onBeforeUnmount as X, readonly as Z, getCurrentInstance as ee, openBlock as te, createElementBlock as ne, renderSlot as re } from "vue";
-function oe(e, n = document) {
-  return typeof e == "string" ? Array.from(n.querySelectorAll(e)) : e instanceof Element ? [e] : e instanceof NodeList ? Array.from(e) : e instanceof Array ? e : [];
+import { ref as j, onMounted as R, onBeforeUnmount as Y, readonly as Z, defineComponent as ee, useAttrs as te, getCurrentInstance as re, openBlock as ne, createElementBlock as se, mergeProps as oe, unref as ie, renderSlot as le } from "vue";
+function ce(e, r = document) {
+  return typeof e == "string" ? Array.from(r.querySelectorAll(e)) : e instanceof Element ? [e] : e instanceof NodeList ? Array.from(e) : e instanceof Array ? e : [];
 }
-function se(e) {
-  const n = document.createElement("div");
-  n.className = `scrollama__debug-step ${e}`, n.style.position = "fixed", n.style.left = "0", n.style.width = "100%", n.style.zIndex = "9999", n.style.borderTop = "2px solid black", n.style.borderBottom = "2px solid black";
-  const r = document.createElement("p");
-  return r.style.position = "absolute", r.style.left = "0", r.style.height = "1px", r.style.width = "100%", r.style.borderTop = "1px dashed black", n.appendChild(r), document.body.appendChild(n), n;
+function fe(e) {
+  const r = document.createElement("div");
+  r.className = `scrollama__debug-step ${e}`, r.style.position = "fixed", r.style.left = "0", r.style.width = "100%", r.style.zIndex = "9999", r.style.borderTop = "2px solid black", r.style.borderBottom = "2px solid black";
+  const n = document.createElement("p");
+  return n.style.position = "absolute", n.style.left = "0", n.style.height = "1px", n.style.width = "100%", n.style.borderTop = "1px dashed black", r.appendChild(n), document.body.appendChild(r), r;
 }
-function ie({ id: e, step: n, marginTop: r }) {
-  const { index: o, height: c } = n, a = `scrollama__debug-step--${e}-${o}`;
-  let p = document.querySelector(`.${a}`);
-  p || (p = se(a)), p.style.top = `${r * -1}px`, p.style.height = `${c}px`, p.querySelector("p").style.top = `${c / 2}px`;
+function ae({ id: e, step: r, marginTop: n }) {
+  const { index: o, height: a } = r, f = `scrollama__debug-step--${e}-${o}`;
+  let d = document.querySelector(`.${f}`);
+  d || (d = fe(f)), d.style.top = `${n * -1}px`, d.style.height = `${a}px`, d.querySelector("p").style.top = `${a / 2}px`;
 }
-function ce() {
-  const e = "abcdefghijklmnopqrstuvwxyz", n = Date.now(), r = [];
+function ue() {
+  const e = "abcdefghijklmnopqrstuvwxyz", r = Date.now(), n = [];
   for (let o = 0; o < 6; o += 1) {
-    const c = e[Math.floor(Math.random() * e.length)];
-    r.push(c);
+    const a = e[Math.floor(Math.random() * e.length)];
+    n.push(a);
   }
-  return `${r.join("")}${n}`;
-}
-function z(e) {
-  console.error(`scrollama error: ${e}`);
+  return `${n.join("")}${r}`;
 }
 function $(e) {
+  console.error(`scrollama error: ${e}`);
+}
+function T(e) {
   return +e.getAttribute("data-scrollama-index");
 }
-function le(e, n) {
-  const r = Math.ceil(e / n), o = [], c = 1 / r;
-  for (let a = 0; a < r + 1; a += 1)
-    o.push(a * c);
+function pe(e, r) {
+  const n = Math.ceil(e / r), o = [], a = 1 / n;
+  for (let f = 0; f < n + 1; f += 1)
+    o.push(f * a);
   return o;
 }
-function L(e) {
+function _(e) {
   if (typeof e == "string" && e.indexOf("px") > 0) {
-    const n = +e.replace("px", "");
-    return isNaN(n) ? (err("offset value must be in 'px' format. Fallback to 0.5."), { format: "percent", value: 0.5 }) : { format: "pixels", value: n };
+    const r = +e.replace("px", "");
+    return isNaN(r) ? (err("offset value must be in 'px' format. Fallback to 0.5."), { format: "percent", value: 0.5 }) : { format: "pixels", value: r };
   } else if (typeof e == "number" || !isNaN(+e))
     return e > 1 && err("offset value is greater than 1. Fallback to 1."), e < 0 && err("offset value is lower than 0. Fallback to 0."), { format: "percent", value: Math.min(Math.max(0, e), 1) };
   return null;
 }
-function fe(e) {
+function de(e) {
   e.forEach(
-    (n) => n.node.setAttribute("data-scrollama-index", n.index)
+    (r) => r.node.setAttribute("data-scrollama-index", r.index)
   );
 }
-function ae(e) {
-  const { top: n } = e.getBoundingClientRect(), r = window.pageYOffset, o = document.body.clientTop || 0;
-  return n + r - o;
+function ge(e) {
+  const { top: r } = e.getBoundingClientRect(), n = window.pageYOffset, o = document.body.clientTop || 0;
+  return r + n - o;
 }
-let y, k, h;
-function R(e) {
-  const n = e ? e.scrollTop : window.pageYOffset;
-  y !== n && (y = n, y > k ? h = "down" : y < k && (h = "up"), k = y);
+let O, L, b;
+function F(e) {
+  const r = e ? e.scrollTop : window.pageYOffset;
+  O !== r && (O = r, O > L ? b = "down" : O < L && (b = "up"), L = O);
 }
-function ue(e) {
-  y = 0, k = 0, document.addEventListener("scroll", () => R(e));
+function he(e) {
+  O = 0, L = 0, document.addEventListener("scroll", () => F(e));
 }
-function pe() {
-  let e = {}, n = ce(), r = [], o, c, a, p = 0, g = !1, d = !1, v = !1, O = !1, E = [];
-  function w() {
+function ve() {
+  let e = {}, r = ue(), n = [], o, a, f, d = 0, m = !1, h = !1, v = !1, E = !1, u = [];
+  function g() {
     e = {
       stepEnter: () => {
       },
@@ -68,183 +68,182 @@ function pe() {
       },
       stepProgress: () => {
       }
-    }, E = [];
+    }, u = [];
   }
-  function S(t) {
-    t && !g && A(), !t && g && N(), g = t;
+  function x(t) {
+    t && !m && A(), !t && m && q(), m = t;
   }
-  function M(t, i) {
-    const s = $(t), l = r[s];
+  function k(t, i) {
+    const s = T(t), l = n[s];
     i !== void 0 && (l.progress = i);
-    const u = { element: t, index: s, progress: i, direction: h };
-    l.state === "enter" && e.stepProgress(u);
+    const p = { element: t, index: s, progress: i, direction: b };
+    l.state === "enter" && e.stepProgress(p);
   }
-  function Y(t, i = !0) {
-    const s = $(t), l = r[s], u = { element: t, index: s, direction: h };
-    l.direction = h, l.state = "enter", E[s] || e.stepEnter(u), O && (E[s] = !0);
+  function D(t, i = !0) {
+    const s = T(t), l = n[s], p = { element: t, index: s, direction: b };
+    l.direction = b, l.state = "enter", u[s] || e.stepEnter(p), E && (u[s] = !0);
   }
-  function F(t, i = !0) {
-    const s = $(t), l = r[s];
+  function U(t, i = !0) {
+    const s = T(t), l = n[s];
     if (!l.state) return !1;
-    const u = { element: t, index: s, direction: h };
-    d && (h === "down" && l.progress < 1 ? M(t, 1) : h === "up" && l.progress > 0 && M(t, 0)), l.direction = h, l.state = "exit", e.stepExit(u);
+    const p = { element: t, index: s, direction: b };
+    h && (b === "down" && l.progress < 1 ? k(t, 1) : b === "up" && l.progress > 0 && k(t, 0)), l.direction = b, l.state = "exit", e.stepExit(p);
   }
-  function D([t]) {
-    const i = $(t.target), s = r[i], l = t.target.offsetHeight;
-    l !== s.height && (s.height = l, I(s), H(s), q(s));
+  function G([t]) {
+    const i = T(t.target), s = n[i], l = t.target.offsetHeight;
+    l !== s.height && (s.height = l, B(s), I(s), H(s));
+  }
+  function J([t]) {
+    F(a);
+    const { isIntersecting: i, target: s } = t;
+    i ? D(s) : U(s);
   }
   function K([t]) {
-    R(c);
-    const { isIntersecting: i, target: s } = t;
-    i ? Y(s) : F(s);
+    const i = T(t.target), s = n[i], { isIntersecting: l, intersectionRatio: p, target: S } = t;
+    l && s.state === "enter" && k(S, p);
   }
-  function U([t]) {
-    const i = $(t.target), s = r[i], { isIntersecting: l, intersectionRatio: u, target: m } = t;
-    l && s.state === "enter" && M(m, u);
-  }
-  function I({ observers: t }) {
+  function B({ observers: t }) {
     Object.keys(t).map((i) => {
       t[i].disconnect();
     });
   }
-  function N() {
-    r.forEach(I);
-  }
-  function q(t) {
-    const i = new ResizeObserver(D);
-    i.observe(t.node), t.observers.resize = i;
-  }
-  function G() {
-    r.forEach(q);
+  function q() {
+    n.forEach(B);
   }
   function H(t) {
-    const i = window.innerHeight, s = t.offset || o, l = s.format === "pixels" ? 1 : i, u = s.value * l, m = t.height / 2 - u, P = t.height / 2 - (i - u), x = { rootMargin: `${m}px 0px ${P}px 0px`, threshold: 0.5, root: a }, B = new IntersectionObserver(K, x);
-    B.observe(t.node), t.observers.step = B, v && ie({ id: n, step: t, marginTop: m });
+    const i = new ResizeObserver(G);
+    i.observe(t.node), t.observers.resize = i;
   }
-  function J() {
-    r.forEach(H);
+  function Q() {
+    n.forEach(H);
   }
-  function Q(t) {
-    const i = window.innerHeight, s = t.offset || o, l = s.format === "pixels" ? 1 : i, u = s.value * l, m = -u + t.height, P = u - i, _ = `${m}px 0px ${P}px 0px`, T = le(t.height, p), b = { rootMargin: _, threshold: T }, x = new IntersectionObserver(U, b);
-    x.observe(t.node), t.observers.progress = x;
+  function I(t) {
+    const i = window.innerHeight, s = t.offset || o, l = s.format === "pixels" ? 1 : i, p = s.value * l, S = t.height / 2 - p, P = t.height / 2 - (i - p), w = { rootMargin: `${S}px 0px ${P}px 0px`, threshold: 0.5, root: f }, N = new IntersectionObserver(J, w);
+    N.observe(t.node), t.observers.step = N, v && ae({ id: r, step: t, marginTop: S });
   }
   function V() {
-    r.forEach(Q);
+    n.forEach(I);
+  }
+  function W(t) {
+    const i = window.innerHeight, s = t.offset || o, l = s.format === "pixels" ? 1 : i, p = s.value * l, S = -p + t.height, P = p - i, M = `${S}px 0px ${P}px 0px`, z = pe(t.height, d), y = { rootMargin: M, threshold: z }, w = new IntersectionObserver(K, y);
+    w.observe(t.node), t.observers.progress = w;
+  }
+  function X() {
+    n.forEach(W);
   }
   function A() {
-    N(), G(), J(), d && V();
+    q(), Q(), V(), h && X();
   }
-  const f = {};
-  return f.setup = ({
+  const c = {};
+  return c.setup = ({
     step: t,
     parent: i,
     offset: s = 0.5,
     threshold: l = 4,
-    progress: u = !1,
-    once: m = !1,
+    progress: p = !1,
+    once: S = !1,
     debug: P = !1,
-    container: _ = void 0,
-    root: T = null
-  }) => (ue(_), r = oe(t, i).map((b, x) => ({
-    index: x,
+    container: M = void 0,
+    root: z = null
+  }) => (he(M), n = ce(t, i).map((y, w) => ({
+    index: w,
     direction: void 0,
-    height: b.offsetHeight,
-    node: b,
+    height: y.offsetHeight,
+    node: y,
     observers: {},
-    offset: L(b.dataset.offset),
-    top: ae(b),
+    offset: _(y.dataset.offset),
+    top: ge(y),
     progress: 0,
     state: void 0
-  })), r.length ? (d = u, O = m, v = P, p = Math.max(1, +l), o = L(s), c = _, a = T, w(), fe(r), S(!0), f) : (z("no step elements"), f)), f.enable = () => (S(!0), f), f.disable = () => (S(!1), f), f.destroy = () => (S(!1), w(), f), f.resize = () => (A(), f), f.offset = (t) => t == null ? o.value : (o = L(t), A(), f), f.onStepEnter = (t) => (typeof t == "function" ? e.stepEnter = t : z("onStepEnter requires a function"), f), f.onStepExit = (t) => (typeof t == "function" ? e.stepExit = t : z("onStepExit requires a function"), f), f.onStepProgress = (t) => (typeof t == "function" ? e.stepProgress = t : z("onStepProgress requires a function"), f), f;
+  })), n.length ? (h = p, E = S, v = P, d = Math.max(1, +l), o = _(s), a = M, f = z, g(), de(n), x(!0), c) : ($("no step elements"), c)), c.enable = () => (x(!0), c), c.disable = () => (x(!1), c), c.destroy = () => (x(!1), g(), c), c.resize = () => (A(), c), c.offset = (t) => t == null ? o.value : (o = _(t), A(), c), c.onStepEnter = (t) => (typeof t == "function" ? e.stepEnter = t : $("onStepEnter requires a function"), c), c.onStepExit = (t) => (typeof t == "function" ? e.stepExit = t : $("onStepExit requires a function"), c), c.onStepProgress = (t) => (typeof t == "function" ? e.stepProgress = t : $("onStepProgress requires a function"), c), c;
 }
-const de = /* @__PURE__ */ new Set([
-  "container",
-  "stepSelector",
-  "step",
-  "onStepEnter",
-  "onStepExit",
-  "onStepProgress"
-]);
-function j(e) {
+function C(e) {
   return e && typeof e == "object" && "value" in e && e.value instanceof HTMLElement ? e.value : e instanceof HTMLElement ? e : null;
 }
-function ge(e, n) {
-  return n ? Array.from(e.querySelectorAll(n)).filter(
-    (r) => r instanceof HTMLElement
+function me(e, r) {
+  return r ? Array.from(e.querySelectorAll(r)).filter(
+    (n) => n instanceof HTMLElement
   ) : Array.from(e.children).filter(
-    (r) => r instanceof HTMLElement
+    (n) => n instanceof HTMLElement
   );
 }
-function he(e) {
-  let n = null;
-  const r = C(!1);
-  let o = null, c = null;
-  const a = () => !n || !r.value ? !1 : (n.resize(), !0), p = () => {
-    r.value = !1, c && (c.disconnect(), c = null), o && (window.removeEventListener("resize", o), window.removeEventListener("orientationchange", o), o = null), n && n.destroy();
-  }, g = () => {
-    if (!n) return !1;
-    const v = j(e.container);
+function be(e) {
+  let r = null;
+  const n = j(!1);
+  let o = null, a = null;
+  const f = () => !r || !n.value ? !1 : (r.resize(), !0), d = () => {
+    n.value = !1, a && (a.disconnect(), a = null), o && (window.removeEventListener("resize", o), window.removeEventListener("orientationchange", o), o = null), r && r.destroy();
+  }, m = () => {
+    if (!r) return !1;
+    const v = C(e.container);
     if (!v)
       return !1;
-    const O = ge(v, e.stepSelector);
-    O.length === 0 && e.stepSelector;
-    const E = { step: O };
-    for (const [w, S] of Object.entries(e))
-      de.has(w) || (E[w] = S);
-    return n.setup(E), e.onStepEnter && n.onStepEnter(e.onStepEnter), e.onStepExit && n.onStepExit(e.onStepExit), e.onStepProgress && n.onStepProgress(e.onStepProgress), r.value = !0, !0;
-  }, d = () => n ? (n.destroy(), r.value = !1, g()) : !1;
-  return W(() => {
-    n = pe(), g(), o = () => {
-      a();
+    const E = me(v, e.stepSelector);
+    E.length === 0 && e.stepSelector;
+    const u = {
+      step: E
+    };
+    return e.offset !== void 0 && (u.offset = e.offset), e.progress !== void 0 && (u.progress = e.progress), e.once !== void 0 && (u.once = e.once), e.threshold !== void 0 && (u.threshold = e.threshold), e.debug !== void 0 && (u.debug = e.debug), e.root !== void 0 && (u.root = e.root), e.onStepProgress && !u.progress && (e.progress, u.progress = !0), r.setup(u), e.onStepEnter && r.onStepEnter(e.onStepEnter), e.onStepExit && r.onStepExit(e.onStepExit), e.onStepProgress && r.onStepProgress(e.onStepProgress), n.value = !0, !0;
+  }, h = () => r ? (r.destroy(), n.value = !1, m()) : !1;
+  return R(() => {
+    r = ve(), m(), o = () => {
+      f();
     }, window.addEventListener("resize", o), window.addEventListener("orientationchange", o, { passive: !0 });
-    const v = j(e.container);
-    v && typeof ResizeObserver < "u" && (c = new ResizeObserver(() => {
-      a();
-    }), c.observe(v));
-  }), X(() => {
-    p(), n = null;
+    const v = C(e.container);
+    v && typeof ResizeObserver < "u" && (a = new ResizeObserver(() => {
+      f();
+    }), a.observe(v));
+  }), Y(() => {
+    d(), r = null;
   }), {
-    resize: a,
-    destroy: p,
-    rebuild: d,
-    isReady: Z(r)
+    resize: f,
+    destroy: d,
+    rebuild: h,
+    isReady: Z(n)
   };
 }
-const ve = {
+const Se = /* @__PURE__ */ ee({
   name: "Scrollama",
   inheritAttrs: !1,
-  emits: ["step-progress", "step-enter", "step-exit"],
-  setup(e, { emit: n, attrs: r }) {
-    var g;
-    const o = C(null), c = ee(), a = ((g = c == null ? void 0 : c.vnode) == null ? void 0 : g.props) ?? {}, p = Object.prototype.hasOwnProperty.call(
-      a,
-      "onStepProgress"
-    );
-    return he({
-      container: o,
-      ...r,
-      progress: p,
-      onStepEnter: (d) => n("step-enter", d),
-      onStepExit: (d) => n("step-exit", d),
-      onStepProgress: (d) => n("step-progress", d)
-    }), { root: o };
+  __name: "Scrollama",
+  props: {
+    stepSelector: {},
+    offset: {},
+    progress: { type: Boolean },
+    once: { type: Boolean },
+    threshold: {},
+    debug: { type: Boolean },
+    root: {}
+  },
+  emits: ["step-enter", "step-exit", "step-progress"],
+  setup(e, { emit: r }) {
+    var E, u;
+    const n = e, o = r, a = te(), f = j(null), m = !!((u = (E = re()) == null ? void 0 : E.vnode.props) == null ? void 0 : u.onStepProgress);
+    let h = null;
+    const { rebuild: v } = be({
+      container: f,
+      ...n,
+      progress: m || n.progress,
+      onStepEnter: (g) => o("step-enter", g),
+      onStepExit: (g) => o("step-exit", g),
+      onStepProgress: m || n.progress ? (g) => o("step-progress", g) : void 0
+    });
+    return R(() => {
+      !f.value || typeof MutationObserver > "u" || (h = new MutationObserver((g) => {
+        g.some((x) => x.type === "childList") && v();
+      }), h.observe(f.value, { childList: !0 }));
+    }), Y(() => {
+      h && (h.disconnect(), h = null);
+    }), (g, x) => (ne(), se("div", oe({
+      ref_key: "root",
+      ref: f,
+      class: "scrollama__steps"
+    }, ie(a)), [
+      le(g.$slots, "default")
+    ], 16));
   }
-}, me = (e, n) => {
-  const r = e.__vccOpts || e;
-  for (const [o, c] of n)
-    r[o] = c;
-  return r;
-}, be = {
-  ref: "root",
-  class: "scrollama__steps"
-};
-function Ee(e, n, r, o, c, a) {
-  return te(), ne("div", be, [
-    re(e.$slots, "default")
-  ], 512);
-}
-const xe = /* @__PURE__ */ me(ve, [["render", Ee]]);
+});
 export {
-  xe as default,
-  he as useScrollama
+  Se as default,
+  be as useScrollama
 };

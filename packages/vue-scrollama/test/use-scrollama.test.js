@@ -114,6 +114,15 @@ describe('useScrollama composable', () => {
     wrapper.unmount();
   });
 
+  it('auto-enables progress when onStepProgress is provided', () => {
+    const wrapper = mount(createHost({ onStepProgress: vi.fn() }));
+
+    const setupArg = mockScroller.setup.mock.calls[0][0];
+    expect(setupArg.progress).toBe(true);
+
+    wrapper.unmount();
+  });
+
   it('does not call scrollama before mount (SSR-safe)', () => {
     // Just creating the component definition should not invoke scrollama
     const Host = createHost({});

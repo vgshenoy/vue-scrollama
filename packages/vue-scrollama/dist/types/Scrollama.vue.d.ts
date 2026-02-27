@@ -1,10 +1,25 @@
-import { type Ref } from 'vue';
+import { type ScrollamaCallbackPayload, type ScrollamaSetupOptions, type ScrollamaProgressPayload } from './useScrollama';
+interface ScrollamaProps extends ScrollamaSetupOptions {
+    stepSelector?: string;
+}
+declare var __VLS_1: {};
+type __VLS_Slots = {} & {
+    default?: (props: typeof __VLS_1) => any;
+};
+declare const __VLS_base: import("vue").DefineComponent<ScrollamaProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
+    "step-enter": (payload: ScrollamaCallbackPayload) => any;
+    "step-exit": (payload: ScrollamaCallbackPayload) => any;
+    "step-progress": (payload: ScrollamaProgressPayload) => any;
+}, string, import("vue").PublicProps, Readonly<ScrollamaProps> & Readonly<{
+    "onStep-enter"?: (payload: ScrollamaCallbackPayload) => any;
+    "onStep-exit"?: (payload: ScrollamaCallbackPayload) => any;
+    "onStep-progress"?: (payload: ScrollamaProgressPayload) => any;
+}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+declare const __VLS_export: __VLS_WithSlots<typeof __VLS_base, __VLS_Slots>;
 declare const _default: typeof __VLS_export;
 export default _default;
-declare const __VLS_export: import("vue").DefineComponent<{}, {
-    root: Ref<HTMLElement, HTMLElement>;
-}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("step-progress" | "step-enter" | "step-exit")[], "step-progress" | "step-enter" | "step-exit", import("vue").PublicProps, Readonly<{}> & Readonly<{
-    "onStep-progress"?: (...args: any[]) => any;
-    "onStep-enter"?: (...args: any[]) => any;
-    "onStep-exit"?: (...args: any[]) => any;
-}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};

@@ -13,19 +13,21 @@ export interface ScrollamaProgressPayload extends ScrollamaCallbackPayload {
 
 type ElementRef = import('vue').Ref<HTMLElement | null>;
 
-export interface UseScrollamaOptions {
-  container: HTMLElement | ElementRef;
-  stepSelector?: string;
+export interface ScrollamaSetupOptions {
   offset?: number;
   progress?: boolean;
   once?: boolean;
   threshold?: number;
   debug?: boolean;
-  parent?: string | HTMLElement;
+  root?: string | HTMLElement;
+}
+
+export interface UseScrollamaOptions extends ScrollamaSetupOptions {
+  container: HTMLElement | ElementRef;
+  stepSelector?: string;
   onStepEnter?: (payload: ScrollamaCallbackPayload) => void;
   onStepExit?: (payload: ScrollamaCallbackPayload) => void;
   onStepProgress?: (payload: ScrollamaProgressPayload) => void;
-  [key: string]: unknown;
 }
 
 export interface UseScrollamaControls {
@@ -34,15 +36,6 @@ export interface UseScrollamaControls {
   rebuild: () => boolean;
   isReady: import('vue').DeepReadonly<import('vue').Ref<boolean>>;
 }
-
-const INTERNAL_OPTION_KEYS = new Set([
-  'container',
-  'stepSelector',
-  'step',
-  'onStepEnter',
-  'onStepExit',
-  'onStepProgress',
-]);
 
 function resolveContainerElement(maybeRef: unknown): HTMLElement | null {
   if (
@@ -117,20 +110,31 @@ export function useScrollama(options: UseScrollamaOptions): UseScrollamaControls
       warn('No step elements found in container. Check `stepSelector` or children.');
     }
 
-    const setupOpts: Record<string, unknown> = { step: stepElements };
+    const setupOpts: ScrollamaSetupOptions & { step: HTMLElement[] } = {
+      step: stepElements,
+    };
 
-    for (const [key, value] of Object.entries(options)) {
-      if (!INTERNAL_OPTION_KEYS.has(key)) {
-        setupOpts[key] = value;
+    if (options.offset !== undefined) setupOpts.offset = options.offset;
+    if (options.progress !== undefined) setupOpts.progress = options.progress;
+    if (options.once !== undefined) setupOpts.once = options.once;
+    if (options.threshold !== undefined) setupOpts.threshold = options.threshold;
+    if (options.debug !== undefined) setupOpts.debug = options.debug;
+    if (options.root !== undefined) setupOpts.root = options.root;
+
+    if (options.onStepProgress && !setupOpts.progress) {
+      if (options.progress === false) {
+        warn('`onStepProgress` provided with `progress: false`; auto-enabling `progress`.');
       }
+      setupOpts.progress = true;
     }
 
-    // scrollama typings are stricter than runtime-supported options.
-    scroller.setup(setupOpts as never);
+    // scrollama types are stricter than runtime: offset/threshold use literal unions,
+    // root is undeclared, and ProgressCallbackResponse omits direction.
+    scroller.setup(setupOpts as any);
 
-    if (options.onStepEnter) scroller.onStepEnter(options.onStepEnter as never);
-    if (options.onStepExit) scroller.onStepExit(options.onStepExit as never);
-    if (options.onStepProgress) scroller.onStepProgress(options.onStepProgress as never);
+    if (options.onStepEnter) scroller.onStepEnter(options.onStepEnter as any);
+    if (options.onStepExit) scroller.onStepExit(options.onStepExit as any);
+    if (options.onStepProgress) scroller.onStepProgress(options.onStepProgress as any);
 
     isReady.value = true;
     return true;

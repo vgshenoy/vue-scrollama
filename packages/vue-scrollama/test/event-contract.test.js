@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { defineComponent, nextTick, ref } from 'vue';
 import Scrollama from '../src/Scrollama.vue';
 
 // Capture callbacks registered via scrollama's chainable API
@@ -28,7 +29,11 @@ describe('emitted event contract', () => {
   });
 
   it('emits exactly step-enter, step-exit, and step-progress', () => {
-    expect(Scrollama.emits).toEqual(['step-progress', 'step-enter', 'step-exit']);
+    const emits = Array.isArray(Scrollama.emits)
+      ? Scrollama.emits
+      : Object.keys(Scrollama.emits ?? {});
+    expect(emits).toEqual(expect.arrayContaining(['step-progress', 'step-enter', 'step-exit']));
+    expect(emits).toHaveLength(3);
   });
 
   it('wires callbacks only after mount', () => {
@@ -37,10 +42,11 @@ describe('emitted event contract', () => {
 
     const wrapper = mount(Scrollama);
 
-    // After mount, all three callbacks should be registered
+    // After mount, enter/exit callbacks are always registered.
+    // Progress callback is only registered when progress tracking is enabled.
     expect(callbacks.stepEnter).toBeTypeOf('function');
     expect(callbacks.stepExit).toBeTypeOf('function');
-    expect(callbacks.stepProgress).toBeTypeOf('function');
+    expect(callbacks.stepProgress).toBeUndefined();
 
     wrapper.unmount();
   });
@@ -76,7 +82,11 @@ describe('emitted event contract', () => {
   });
 
   it('emits step-progress with element, index, direction, and progress payload keys', () => {
-    const wrapper = mount(Scrollama);
+    const wrapper = mount(Scrollama, {
+      attrs: {
+        onStepProgress: vi.fn(),
+      },
+    });
 
     const payload = { element: document.createElement('div'), index: 0, direction: 'down', progress: 0.5 };
     callbacks.stepProgress(payload);
@@ -92,7 +102,11 @@ describe('emitted event contract', () => {
   });
 
   it('passes payload values through unchanged', () => {
-    const wrapper = mount(Scrollama);
+    const wrapper = mount(Scrollama, {
+      attrs: {
+        onStepProgress: vi.fn(),
+      },
+    });
 
     const el = document.createElement('div');
     const payload = { element: el, index: 2, direction: 'down', progress: 0.75 };
@@ -103,6 +117,56 @@ describe('emitted event contract', () => {
     expect(emitted.index).toBe(2);
     expect(emitted.direction).toBe('down');
     expect(emitted.progress).toBe(0.75);
+
+    wrapper.unmount();
+  });
+
+  it('forwards non-scrollama attrs to root element', () => {
+    const wrapper = mount(Scrollama, {
+      attrs: {
+        id: 'story-steps',
+        role: 'region',
+        'data-track': 'scrollytelling',
+      },
+    });
+
+    const root = wrapper.get('.scrollama__steps');
+    expect(root.attributes('id')).toBe('story-steps');
+    expect(root.attributes('role')).toBe('region');
+    expect(root.attributes('data-track')).toBe('scrollytelling');
+
+    const setupArg = mockScroller.setup.mock.calls[0][0];
+    expect(setupArg).not.toHaveProperty('id');
+    expect(setupArg).not.toHaveProperty('role');
+    expect(setupArg).not.toHaveProperty('data-track');
+
+    wrapper.unmount();
+  });
+
+  it('rebuilds when default slot child count changes', async () => {
+    const Host = defineComponent({
+      components: { Scrollama },
+      setup() {
+        const count = ref(1);
+        return { count };
+      },
+      template: `
+        <Scrollama>
+          <div v-for="n in count" :key="n">Step {{ n }}</div>
+        </Scrollama>
+      `,
+    });
+
+    const wrapper = mount(Host);
+    expect(mockScroller.setup).toHaveBeenCalledTimes(1);
+    expect(mockScroller.destroy).toHaveBeenCalledTimes(0);
+
+    wrapper.vm.count = 2;
+    await nextTick();
+    await nextTick();
+
+    expect(mockScroller.destroy).toHaveBeenCalledTimes(1);
+    expect(mockScroller.setup).toHaveBeenCalledTimes(2);
 
     wrapper.unmount();
   });
