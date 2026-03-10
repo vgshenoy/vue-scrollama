@@ -17,6 +17,7 @@ export default defineNuxtConfig({
         { name: 'twitter:description', content: 'Vue 3 component for scroll-driven interactions and scrollytelling.' },
       ],
       link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'canonical', href: 'https://vue-scrollama.pages.dev' },
         {
           rel: 'stylesheet',
