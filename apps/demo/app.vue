@@ -13,10 +13,7 @@
       <p class="mt-3 text-base text-slate-600 max-w-xl mx-auto">
         A drop-in Vue 3 component to setup scroll-driven interactions (aka scrollytelling).
       </p>
-      <p class="mt-3 text-lg text-slate-600 max-w-xl mx-auto">
-        Scroll down to explore component primitives and real-world scrollytelling patterns.
-      </p>
-      <p class="mt-5 flex flex-wrap items-center justify-center gap-2 text-lg leading-6 text-slate-600">
+      <p class="mt-5 flex flex-wrap items-center justify-center gap-2 text-base leading-6 text-slate-600">
         <span>Get started on </span>
         <a
           href="https://github.com/vgshenoy/vue-scrollama"
@@ -28,6 +25,9 @@
           <Github class="h-4 w-4" :stroke-width="2" />
           <span>GitHub</span>
         </a>
+      </p>
+      <p class="mt-3 text-base text-slate-600 max-w-xl mx-auto">
+        Scroll down to explore component primitives and real-world scrollytelling patterns.
       </p>
       <div class="mt-8 inline-flex flex-wrap justify-center gap-2 rounded-lg border border-slate-300 bg-white p-1 shadow-sm">
         <button
