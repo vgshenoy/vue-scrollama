@@ -10,6 +10,9 @@
       <h1 class="text-4xl font-bold tracking-tight text-slate-900">
         vue-scrollama
       </h1>
+      <p class="mt-3 text-base text-slate-600 max-w-xl mx-auto">
+        A drop-in Vue 3 component to setup scroll-driven interactions (aka scrollytelling).
+      </p>
       <p class="mt-3 text-lg text-slate-600 max-w-xl mx-auto">
         Scroll down to explore component primitives and real-world scrollytelling patterns.
       </p>
