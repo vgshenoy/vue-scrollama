@@ -20,7 +20,7 @@
     "url": "https://github.com/shenoy/vue-scrollama/issues"
   },
   "license": "MIT",
-  "packageManager": "pnpm@10.18.1",
+  "packageManager": "pnpm@11.8.0",
   "scripts": {
     "build": "vite build && pnpm run build:types",
     "build:types": "vue-tsc --project tsconfig.build.json",
@@ -52,20 +52,20 @@
     "scrollama": "~3.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20.19.33",
-    "@typescript-eslint/parser": "^8.59.3",
-    "@vitejs/plugin-vue": "^6.0.4",
-    "@vue/compiler-sfc": "^3.5.34",
-    "@vue/test-utils": "^2.4.6",
+    "@types/node": "^20.19.43",
+    "@typescript-eslint/parser": "^8.61.1",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/compiler-sfc": "^3.5.38",
+    "@vue/test-utils": "^2.4.11",
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.33.0",
     "jsdom": "^28.1.0",
     "typescript": "^5.9.3",
-    "vite": "^6.4.2",
-    "vitest": "^4.1.6",
-    "vue": "^3.5.34",
+    "vite": "^6.4.3",
+    "vitest": "^4.1.9",
+    "vue": "^3.5.38",
     "vue-eslint-parser": "^9.4.3",
-    "vue-tsc": "^3.2.5"
+    "vue-tsc": "^3.3.5"
   },
   "publishConfig": {
     "access": "public"

@@ -1,7 +1,7 @@
 {
   "name": "vue-scrollama-workspace",
   "private": true,
-  "packageManager": "pnpm@10.18.1",
+  "packageManager": "pnpm@11.8.0",
   "engines": {
     "node": "24.x"
   },
@@ -15,13 +15,5 @@
     "typecheck": "pnpm --filter vue-scrollama run typecheck",
     "dev:demo": "pnpm --filter vue-scrollama-demo run dev",
     "build:demo": "pnpm --filter vue-scrollama-demo run build"
-  },
-  "pnpm": {
-    "overrides": {
-      "brace-expansion@5.0.2": "5.0.6",
-      "editorconfig>minimatch": "9.0.8",
-      "minimatch@>=10.0.0": ">=10.2.3",
-      "picomatch@4.0.3": "4.0.4"
-    }
   }
 }
