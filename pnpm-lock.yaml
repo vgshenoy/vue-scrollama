@@ -5,11 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  brace-expansion@5.0.2: 5.0.6
-  editorconfig>minimatch: 9.0.8
   esbuild@>=0.27.3 <0.28.1: 0.28.1
-  minimatch@>=10.0.0: '>=10.2.3'
-  picomatch@4.0.3: 4.0.4
 
 importers:
 
@@ -2451,7 +2447,7 @@ packages:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
-      picomatch: 4.0.4
+      picomatch: ^3 || ^4
     peerDependenciesMeta:
       picomatch:
         optional: true

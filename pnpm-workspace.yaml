@@ -3,11 +3,7 @@ packages:
   - apps/*
 
 overrides:
-  brace-expansion@5.0.2: 5.0.6
-  editorconfig>minimatch: 9.0.8
   esbuild@>=0.27.3 <0.28.1: 0.28.1
-  minimatch@>=10.0.0: ">=10.2.3"
-  picomatch@4.0.3: 4.0.4
 
 allowBuilds:
   '@parcel/watcher': true
