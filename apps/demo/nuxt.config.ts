@@ -34,7 +34,7 @@ export default defineNuxtConfig({
             name: 'vue-scrollama',
             description: 'Vue 3 component for scroll-driven interactions and scrollytelling, powered by Scrollama and IntersectionObserver.',
             url: 'https://vue-scrollama.pages.dev',
-            codeRepository: 'https://github.com/shenoy/vue-scrollama',
+            codeRepository: 'https://github.com/vgshenoy/vue-scrollama',
             programmingLanguage: ['TypeScript', 'Vue'],
             runtimePlatform: 'Vue 3',
             license: 'https://opensource.org/licenses/MIT',
@@ -42,7 +42,7 @@ export default defineNuxtConfig({
             author: {
               '@type': 'Person',
               name: 'Vignesh Shenoy',
-              url: 'https://github.com/shenoy',
+              url: 'https://github.com/vgshenoy',
             },
           }),
         },

@@ -4,7 +4,7 @@
   "description": "Easy scroll-driven interactions (scrollytelling) for Vue 3, powered by Scrollama",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shenoy/vue-scrollama.git"
+    "url": "git+https://github.com/vgshenoy/vue-scrollama.git"
   },
   "keywords": [
     "vue",
@@ -15,9 +15,9 @@
     "scrollytelling",
     "scroller"
   ],
-  "author": "Vignesh Shenoy <vignesh.shenoy@gmail.com>",
+  "author": "Vignesh Shenoy (https://github.com/vgshenoy)",
   "bugs": {
-    "url": "https://github.com/shenoy/vue-scrollama/issues"
+    "url": "https://github.com/vgshenoy/vue-scrollama/issues"
   },
   "license": "MIT",
   "packageManager": "pnpm@11.8.0",
